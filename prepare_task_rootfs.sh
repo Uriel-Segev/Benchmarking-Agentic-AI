@@ -33,8 +33,14 @@ log() { echo -e "\n[prepare-rootfs] $*\n"; }
 die() { echo -e "\nERROR: $*\n" >&2; exit 1; }
 
 cleanup_mount() {
+  # Unmount chroot filesystems first (use -lf for resilience)
+  umount -lf "${MOUNT_POINT}/sys" 2>/dev/null || true
+  umount -lf "${MOUNT_POINT}/proc" 2>/dev/null || true
+  umount -lf "${MOUNT_POINT}/dev/pts" 2>/dev/null || true
+  umount -lf "${MOUNT_POINT}/dev" 2>/dev/null || true
+  # Then unmount the rootfs
   if mountpoint -q "${MOUNT_POINT}" 2>/dev/null; then
-    umount "${MOUNT_POINT}" || true
+    umount -lf "${MOUNT_POINT}" || true
   fi
 }
 
@@ -111,12 +117,30 @@ log "Installing dependencies in rootfs (via chroot)"
 # Copy DNS resolution into chroot
 cp /etc/resolv.conf "${MOUNT_POINT}/etc/resolv.conf" 2>/dev/null || true
 
+# Mount essential filesystems for chroot (apt needs /dev/null, /proc, etc.)
+# Use guards to make mounts idempotent (safe if script crashed mid-run previously)
+log "Mounting essential filesystems for chroot"
+mountpoint -q "${MOUNT_POINT}/dev"     || mount --bind /dev "${MOUNT_POINT}/dev"
+mountpoint -q "${MOUNT_POINT}/dev/pts" || mount --bind /dev/pts "${MOUNT_POINT}/dev/pts" 2>/dev/null || true
+mountpoint -q "${MOUNT_POINT}/proc"    || mount -t proc proc "${MOUNT_POINT}/proc"
+mountpoint -q "${MOUNT_POINT}/sys"     || mount -t sysfs sysfs "${MOUNT_POINT}/sys"
+
 # Install Python and dependencies via chroot
 chroot "${MOUNT_POINT}" /bin/bash <<'CHROOT_INSTALL'
 set -e
 
 export DEBIAN_FRONTEND=noninteractive
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Validate base rootfs has proper dpkg database
+[[ -f /var/lib/dpkg/status ]] || { echo "ERROR: /var/lib/dpkg/status missing; base rootfs is not a normal Ubuntu rootfs"; exit 1; }
+
+# Validate gpgv is available for apt signature verification
+if ! command -v gpgv &>/dev/null && ! command -v gpgv1 &>/dev/null && ! command -v gpgv2 &>/dev/null; then
+  echo "ERROR: gpgv not found; base rootfs is missing package signing tools"
+  echo "Fix the base rootfs or use a proper Ubuntu image"
+  exit 1
+fi
 
 # Update and install Python
 apt-get update
@@ -313,7 +337,7 @@ chmod +x "${MOUNT_POINT}/etc/rc.local"
 
 log "Finalizing rootfs"
 sync
-umount "${MOUNT_POINT}"
+cleanup_mount
 trap - EXIT
 
 echo ""
