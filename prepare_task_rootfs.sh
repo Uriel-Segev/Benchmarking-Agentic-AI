@@ -143,6 +143,13 @@ if ! command -v gpgv &>/dev/null && ! command -v gpgv1 &>/dev/null && ! command 
 fi
 
 # Update and install Python
+# Enable universe repository (needed for python3-pip, python3-venv)
+if ! grep -Rqs "^deb .* jammy universe" /etc/apt; then
+  echo "Enabling Ubuntu universe repository"
+  echo "deb http://archive.ubuntu.com/ubuntu jammy universe" \
+    > /etc/apt/sources.list.d/universe.list
+fi
+
 apt-get update
 apt-get install -y --no-install-recommends \
   python3 \
