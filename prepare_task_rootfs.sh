@@ -97,6 +97,11 @@ trap cleanup_mount EXIT
 
 mount -o loop "${OUTPUT_ROOTFS}" "${MOUNT_POINT}"
 
+# Ensure /tmp exists and is writable inside the rootfs (APT needs this)
+mkdir -p "${MOUNT_POINT}/tmp"
+chmod 1777 "${MOUNT_POINT}/tmp"
+
+
 # ---------------------------
 # Install dependencies inside rootfs
 # ---------------------------
