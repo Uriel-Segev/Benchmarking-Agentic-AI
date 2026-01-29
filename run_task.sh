@@ -223,7 +223,14 @@ rm -f "${VM_CONFIG}"
 
 log "Extracting results from rootfs"
 
-mount -o loop,ro "${TASK_ROOTFS}" "${MOUNT_POINT}"
+# Mount read-write first (ext4 may refuse ro mount if dirty after VM kill)
+# Then we'll sync and it will be fine
+mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}" || {
+  # If mount fails, try fsck first
+  log "Mount failed, attempting fsck..."
+  e2fsck -y "${TASK_ROOTFS}" || true
+  mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}"
+}
 
 # Check for completion marker
 if [[ -f "${MOUNT_POINT}/app/TASK_COMPLETE" ]]; then
