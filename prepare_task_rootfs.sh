@@ -295,7 +295,7 @@ touch /app/TASK_COMPLETE
 sync
 sleep 2
 echo "Shutting down VM..."
-poweroff -f
+reboot -f
 AUTORUN_SCRIPT
 
 chmod +x "${MOUNT_POINT}/app/autorun.sh"
@@ -327,16 +327,6 @@ SYSTEMD_SERVICE
 # Enable the service
 chroot "${MOUNT_POINT}" /bin/bash -c "systemctl enable task-runner.service" 2>/dev/null || true
 
-# Also add to rc.local as fallback
-cat > "${MOUNT_POINT}/etc/rc.local" <<'RC_LOCAL'
-#!/bin/bash
-# Fallback auto-run for task execution
-if [[ -f /app/autorun.sh ]] && [[ ! -f /app/TASK_COMPLETE ]]; then
-  /bin/bash /app/autorun.sh &
-fi
-exit 0
-RC_LOCAL
-chmod +x "${MOUNT_POINT}/etc/rc.local"
 
 # ---------------------------
 # Unmount and finalize

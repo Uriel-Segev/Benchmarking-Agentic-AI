@@ -1,0 +1,36 @@
+hostname
+lsb_release -a || cat /etc/os-release
+uname -r
+ls -l /dev/kvm
+
+
+chmod +x install_firecracker.sh prepare_task_rootfs.sh run_task.sh after_install_commands.sh setup_base_rootfs.sh
+
+
+sudo DRY_RUN=1 Benchmarking-Agentic-AI/install_firecracker.sh
+
+
+sudo ROOTFS_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/ubuntu-22.04.ext4" \
+     KERNEL_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/vmlinux-5.10.225" \
+     Benchmarking-Agentic-AI/install_firecracker.sh
+
+ip a | grep -E "tap0|192\.168\.100\.1" -n
+ip route | head
+
+
+sudo apt-get update
+sudo apt-get install -y git
+git clone https://github.com/laude-institute/terminal-bench.git
+
+
+sudo ./Benchmarking-Agentic-AI/setup_base_rootfs.sh
+
+
+sudo Benchmarking-Agentic-AI/prepare_task_rootfs.sh terminal-bench/original-tasks/hello-world
+
+
+sudo Benchmarking-Agentic-AI/run_task.sh /opt/firecracker/rootfs-task.ext4
+
+
+
+
