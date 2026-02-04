@@ -40,6 +40,10 @@ TAP_IP="${TAP_IP:-192.168.100.1}"
 FC_IP="${FC_IP:-192.168.100.2}"
 NETMASK="${NETMASK:-255.255.255.252}"
 
+# Parallel execution support
+SKIP_ARP_CHECK="${SKIP_ARP_CHECK:-0}"
+INSTANCE_ID="${INSTANCE_ID:-0}"
+
 # ---------------------------
 # Helpers
 # ---------------------------
@@ -81,7 +85,7 @@ command -v firecracker >/dev/null || die "firecracker not found in PATH"
 
 trap cleanup EXIT
 
-log "Running task in Firecracker"
+log "Running task in Firecracker (instance ${INSTANCE_ID})"
 echo "  Rootfs: ${TASK_ROOTFS}"
 echo "  Kernel: ${KERNEL}"
 echo "  Timeout: ${TASK_TIMEOUT}s"
@@ -96,6 +100,8 @@ mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}"
 rm -f "${MOUNT_POINT}/app/TASK_COMPLETE"
 rm -f "${MOUNT_POINT}/app/results.json"
 rm -f "${MOUNT_POINT}/app/run.log"
+rm -f "${MOUNT_POINT}/app/timing.json"
+rm -f "${MOUNT_POINT}/app/timing_combined.json"
 sync
 umount "${MOUNT_POINT}"
 
@@ -121,12 +127,16 @@ if [[ "${_tap_ip_dev}" != "${TAP_DEV}" ]]; then
 fi
 echo "  TAP_IP scope check passed (only on ${TAP_DEV})"
 
-# ARP safety check on DEFAULT_IFACE
-echo "  ARP safety check (10s) - checking for dangerous ARP on ${DEFAULT_IFACE}..."
-if timeout 10 tcpdump -n -c 1 -i "${DEFAULT_IFACE}" "arp and host ${TAP_IP}" 2>/dev/null; then
-  die "REFUSING TO RUN (CLOUDLAB SAFETY): Saw ARP involving TAP_IP (${TAP_IP}) on ${DEFAULT_IFACE}. This is dangerous on CloudLab!"
+# ARP safety check on DEFAULT_IFACE (skippable for parallel runs where wrapper already checked)
+if [[ "${SKIP_ARP_CHECK}" != "1" ]]; then
+  echo "  ARP safety check (10s) - checking for dangerous ARP on ${DEFAULT_IFACE}..."
+  if timeout 10 tcpdump -n -c 1 -i "${DEFAULT_IFACE}" "arp and host ${TAP_IP}" 2>/dev/null; then
+    die "REFUSING TO RUN (CLOUDLAB SAFETY): Saw ARP involving TAP_IP (${TAP_IP}) on ${DEFAULT_IFACE}. This is dangerous on CloudLab!"
+  fi
+  echo "  ARP check passed (no TAP_IP ARP seen on ${DEFAULT_IFACE})"
+else
+  echo "  ARP safety check skipped (SKIP_ARP_CHECK=1)"
 fi
-echo "  ARP check passed (no TAP_IP ARP seen on ${DEFAULT_IFACE})"
 
 # ---------------------------
 # Create VM config
@@ -150,7 +160,7 @@ cat > "${VM_CONFIG}" <<EOF
   "network-interfaces": [
     {
       "iface_id": "eth0",
-      "guest_mac": "AA:FC:00:00:00:01",
+      "guest_mac": "AA:FC:00:00:00:$(printf '%02X' $((INSTANCE_ID + 1)))",
       "host_dev_name": "${TAP_DEV}"
     }
   ],
@@ -169,6 +179,7 @@ log "Starting Firecracker VM"
 
 # Run firecracker in background, capturing output
 FC_LOG=$(mktemp)
+HOST_LAUNCH_EPOCH=$(date +%s.%N 2>/dev/null || date +%s)
 firecracker --api-sock "${SOCKET_PATH}" --config-file "${VM_CONFIG}" > "${FC_LOG}" 2>&1 &
 FC_PID=$!
 
@@ -190,6 +201,7 @@ while true; do
 
   # Check if VM process is still running
   if ! kill -0 "${FC_PID}" 2>/dev/null; then
+    HOST_VM_EXIT_EPOCH=$(date +%s.%N 2>/dev/null || date +%s)
     echo "  VM has shut down after ${ELAPSED}s"
     COMPLETED=true
     break
@@ -197,6 +209,7 @@ while true; do
 
   # Check timeout
   if [[ ${ELAPSED} -ge ${TASK_TIMEOUT} ]]; then
+    HOST_VM_EXIT_EPOCH=$(date +%s.%N 2>/dev/null || date +%s)
     echo "  Timeout reached (${TASK_TIMEOUT}s)"
     echo "  Killing VM..."
     kill "${FC_PID}" 2>/dev/null || true
@@ -262,6 +275,58 @@ else
   FAILED=0
 fi
 
+# ---------------------------
+# Extract timing data
+# ---------------------------
+
+TIMING_FILE="${MOUNT_POINT}/app/timing.json"
+if [[ -f "${TIMING_FILE}" ]]; then
+  # Read guest-side timestamps
+  GUEST_BOOT_DONE=$(grep -oP '"guest_boot_done_epoch":\s*\K[0-9.]+' "${TIMING_FILE}" || echo "0")
+  GUEST_SOLUTION_START=$(grep -oP '"guest_solution_start_epoch":\s*\K[0-9.]+' "${TIMING_FILE}" || echo "0")
+  GUEST_SOLUTION_END=$(grep -oP '"guest_solution_end_epoch":\s*\K[0-9.]+' "${TIMING_FILE}" || echo "0")
+  GUEST_TESTS_START=$(grep -oP '"guest_tests_start_epoch":\s*\K[0-9.]+' "${TIMING_FILE}" || echo "0")
+  GUEST_TESTS_END=$(grep -oP '"guest_tests_end_epoch":\s*\K[0-9.]+' "${TIMING_FILE}" || echo "0")
+  GUEST_SHUTDOWN_START=$(grep -oP '"guest_shutdown_start_epoch":\s*\K[0-9.]+' "${TIMING_FILE}" || echo "0")
+
+  # Compute derived metrics using awk (bash can't do float math)
+  BOOT_TIME=$(awk "BEGIN {printf \"%.3f\", ${GUEST_BOOT_DONE} - ${HOST_LAUNCH_EPOCH}}")
+  SOLUTION_TIME=$(awk "BEGIN {printf \"%.3f\", ${GUEST_SOLUTION_END} - ${GUEST_SOLUTION_START}}")
+  TEST_TIME=$(awk "BEGIN {printf \"%.3f\", ${GUEST_TESTS_END} - ${GUEST_TESTS_START}}")
+  TASK_TOTAL_TIME=$(awk "BEGIN {printf \"%.3f\", ${GUEST_SHUTDOWN_START} - ${GUEST_BOOT_DONE}}")
+  SHUTDOWN_TIME=$(awk "BEGIN {printf \"%.3f\", ${HOST_VM_EXIT_EPOCH} - ${GUEST_SHUTDOWN_START}}")
+  TOTAL_LIFECYCLE=$(awk "BEGIN {printf \"%.3f\", ${HOST_VM_EXIT_EPOCH} - ${HOST_LAUNCH_EPOCH}}")
+else
+  echo "  WARNING: No timing.json found"
+  BOOT_TIME="N/A"
+  SOLUTION_TIME="N/A"
+  TEST_TIME="N/A"
+  TASK_TOTAL_TIME="N/A"
+  SHUTDOWN_TIME="N/A"
+  TOTAL_LIFECYCLE=$(awk "BEGIN {printf \"%.3f\", ${HOST_VM_EXIT_EPOCH} - ${HOST_LAUNCH_EPOCH}}")
+fi
+
+# Write combined timing into rootfs for run_parallel.sh to extract
+cat > "${MOUNT_POINT}/app/timing_combined.json" <<EOF
+{
+  "host_launch_epoch": ${HOST_LAUNCH_EPOCH},
+  "host_vm_exit_epoch": ${HOST_VM_EXIT_EPOCH},
+  "guest_boot_done_epoch": ${GUEST_BOOT_DONE:-0},
+  "guest_solution_start_epoch": ${GUEST_SOLUTION_START:-0},
+  "guest_solution_end_epoch": ${GUEST_SOLUTION_END:-0},
+  "guest_tests_start_epoch": ${GUEST_TESTS_START:-0},
+  "guest_tests_end_epoch": ${GUEST_TESTS_END:-0},
+  "guest_shutdown_start_epoch": ${GUEST_SHUTDOWN_START:-0},
+  "boot_time_s": ${BOOT_TIME},
+  "solution_time_s": ${SOLUTION_TIME},
+  "test_time_s": ${TEST_TIME},
+  "task_total_time_s": ${TASK_TOTAL_TIME},
+  "shutdown_time_s": ${SHUTDOWN_TIME},
+  "total_vm_lifecycle_s": ${TOTAL_LIFECYCLE}
+}
+EOF
+sync
+
 # Show log excerpt
 if [[ -f "${LOG_FILE}" ]]; then
   echo ""
@@ -297,6 +362,18 @@ echo "========================================"
 echo "  Status:       ${STATUS}"
 echo "  Tests Passed: ${PASSED}"
 echo "  Tests Failed: ${FAILED}"
+echo "========================================"
+echo ""
+echo "========================================"
+echo "TIMING BREAKDOWN"
+echo "========================================"
+echo "  Boot time:      ${BOOT_TIME}s  (host launch -> guest autorun start)"
+echo "  Solution time:  ${SOLUTION_TIME}s  (solution.sh execution)"
+echo "  Test time:      ${TEST_TIME}s  (pytest execution)"
+echo "  Task total:     ${TASK_TOTAL_TIME}s  (boot-done -> pre-shutdown)"
+echo "  Shutdown time:  ${SHUTDOWN_TIME}s  (reboot -f -> process exit)"
+echo "  ────────────────────────"
+echo "  Total lifecycle: ${TOTAL_LIFECYCLE}s (host launch -> process exit)"
 echo "========================================"
 
 # Exit with appropriate code

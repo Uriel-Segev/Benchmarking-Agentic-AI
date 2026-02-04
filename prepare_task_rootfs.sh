@@ -219,33 +219,36 @@ cat > "${MOUNT_POINT}/app/autorun.sh" <<'AUTORUN_SCRIPT'
 
 set -e
 
+# TIMING: Record boot completion (first thing)
+T_BOOT_DONE=$(date +%s.%N 2>/dev/null || date +%s)
+
 RESULTS_FILE="/app/results.json"
 LOG_FILE="/app/run.log"
+TIMING_FILE="/app/timing.json"
 
 exec > >(tee -a "${LOG_FILE}") 2>&1
 
 echo "========================================"
 echo "Terminal-Bench Task Runner"
-echo "Started at: $(date -Iseconds)"
+echo "Boot completed at: $(date -Iseconds)"
 echo "========================================"
 
 cd /app
 
 # Initialize results
-echo '{"status": "running", "tests_passed": 0, "tests_failed": 0, "output": ""}' > "${RESULTS_FILE}"
+echo '{"status":"running","tests_passed":0,"tests_failed":0}' > "${RESULTS_FILE}"
 
-# Run the solution (if exists)
+# TIMING: Solution phase
+T_SOLUTION_START=$(date +%s.%N 2>/dev/null || date +%s)
 if [[ -f /app/solution.sh ]]; then
   echo ""
   echo "[SOLUTION] Running solution.sh..."
-  if bash /app/solution.sh; then
-    echo "[SOLUTION] Completed successfully"
-  else
-    echo "[SOLUTION] Failed with exit code $?"
-  fi
+  bash /app/solution.sh && echo "[SOLUTION] Completed" || echo "[SOLUTION] Failed ($?)"
 fi
+T_SOLUTION_END=$(date +%s.%N 2>/dev/null || date +%s)
 
-# Run the tests
+# TIMING: Test phase
+T_TESTS_START=$(date +%s.%N 2>/dev/null || date +%s)
 echo ""
 echo "[TESTS] Running pytest..."
 
@@ -255,6 +258,7 @@ TEST_EXIT_CODE=$?
 set -e
 
 echo "${TEST_OUTPUT}"
+T_TESTS_END=$(date +%s.%N 2>/dev/null || date +%s)
 
 # Parse pytest output for pass/fail counts
 PASSED=$(echo "${TEST_OUTPUT}" | grep -oP '\d+(?= passed)' | head -1 || echo "0")
@@ -281,20 +285,27 @@ cat > "${RESULTS_FILE}" <<EOF
 }
 EOF
 
-echo ""
-echo "========================================"
-echo "Results: ${STATUS}"
-echo "  Passed: ${PASSED}"
-echo "  Failed: ${FAILED}"
-echo "========================================"
-
 # Signal completion by creating marker file
 touch /app/TASK_COMPLETE
 
-# Give time for output to flush, then shutdown
+echo ""
+echo "========================================"
+echo "Results: ${STATUS} (Passed: ${PASSED}, Failed: ${FAILED})"
+echo "========================================"
+
+# TIMING: Write timing.json as very last thing before shutdown
+T_SHUTDOWN_START=$(date +%s.%N 2>/dev/null || date +%s)
+cat > "${TIMING_FILE}" <<EOF
+{
+  "guest_boot_done_epoch": ${T_BOOT_DONE},
+  "guest_solution_start_epoch": ${T_SOLUTION_START},
+  "guest_solution_end_epoch": ${T_SOLUTION_END},
+  "guest_tests_start_epoch": ${T_TESTS_START},
+  "guest_tests_end_epoch": ${T_TESTS_END},
+  "guest_shutdown_start_epoch": ${T_SHUTDOWN_START}
+}
+EOF
 sync
-sleep 2
-echo "Shutting down VM..."
 reboot -f
 AUTORUN_SCRIPT
 

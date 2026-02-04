@@ -34,3 +34,49 @@ sudo Benchmarking-Agentic-AI/run_task.sh /opt/firecracker/rootfs-task.ext4
 
 
 
+
+
+
+The general workflow is:
+
+  # 1. One-time setup (already done if you ran it before)
+  sudo ./install_firecracker.sh
+  sudo ./setup_base_rootfs.sh
+
+  # 2. Single VM run
+  sudo ./prepare_task_rootfs.sh /path/to/task-dir
+  sudo ./run_task.sh /opt/firecracker/rootfs-task.ext4
+
+  # 3. Parallel run (N VMs)
+  #    From a pre-built rootfs:
+  sudo ./run_parallel.sh /opt/firecracker/rootfs-task.ext4 4
+
+  #    Or directly from a task directory (it calls prepare_task_rootfs.sh for you):
+  sudo ./run_parallel.sh terminal-bench/original-tasks/hello-world 4
+
+  #    With custom output path:
+  sudo ./run_parallel.sh /opt/firecracker/rootfs-task.ext4 8 /tmp/results.json
+
+  The arguments are:
+  1. Source — either a .ext4 rootfs file or a task directory
+  2. Instance count — how many VMs to run in parallel
+  3. Results path (optional) — defaults to parallel_results.json in the current directory
+
+  Results end up in parallel_results.json and per-instance logs are in a temp directory printed at the end.
+
+
+# Timing benchmark (parallel)
+sudo ./run_parallel.sh terminal-bench/original-tasks/hello-world 4
+
+# Results include per-instance timing breakdown in parallel_results.json
+# Instance logs with full console output in temp directory (printed at end)
+#
+# Timing metrics reported per instance:
+#   boot_time_s        - host launch to guest autorun start
+#   solution_time_s    - solution.sh execution
+#   test_time_s        - pytest execution
+#   task_total_time_s  - boot-done to pre-shutdown
+#   shutdown_time_s    - reboot -f to process exit
+#   total_vm_lifecycle_s - host launch to process exit
+#
+# Aggregate stats (min/max/avg) are computed across all instances.
