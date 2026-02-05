@@ -4,7 +4,7 @@ uname -r
 ls -l /dev/kvm
 
 
-chmod +x install_firecracker.sh prepare_task_rootfs.sh run_task.sh after_install_commands.sh setup_base_rootfs.sh
+chmod +x install_firecracker.sh prepare_task_rootfs.sh run_task.sh setup_base_rootfs.sh
 
 
 sudo DRY_RUN=1 Benchmarking-Agentic-AI/install_firecracker.sh

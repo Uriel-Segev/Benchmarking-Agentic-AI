@@ -16,8 +16,6 @@ This repo runs terminal-bench tasks inside Firecracker microVMs and measures how
 
 - **commands_to_run.txt** — Notes and example commands.
 
-- **after_install_commands.sh** — Unused. Superseded by setup_base_rootfs.sh.
-
 ## Commands
 
 ```bash
