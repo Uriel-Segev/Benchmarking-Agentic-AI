@@ -282,8 +282,9 @@ SCALING_WALL=$((SCALING_END - SCALING_START))
 log "Assembling results into ${OUTPUT}"
 
 if command -v jq >/dev/null 2>&1; then
-  # Build the runs array from collected JSON lines
-  RUNS_ARRAY=$(jq -s '.' "${ALL_RUNS_FILE}" 2>/dev/null || echo "[]")
+  # Build the runs array from collected JSON lines into a temp file
+  RUNS_TMP=$(mktemp /tmp/scaling-runs-XXXXXX.json)
+  jq -s '.' "${ALL_RUNS_FILE}" > "${RUNS_TMP}" 2>/dev/null || echo "[]" > "${RUNS_TMP}"
 
   jq -n \
     --arg task "${INPUT}" \
@@ -295,7 +296,7 @@ if command -v jq >/dev/null 2>&1; then
     --argjson failed "${FAILED_RUNS}" \
     --argjson wall_clock "${SCALING_WALL}" \
     --arg vm_counts "${VM_COUNTS[*]}" \
-    --argjson runs "${RUNS_ARRAY}" \
+    --slurpfile runs "${RUNS_TMP}" \
     '{
       task: $task,
       max_vms: $max_vms,
@@ -306,8 +307,10 @@ if command -v jq >/dev/null 2>&1; then
       skipped_runs: $skipped,
       failed_runs: $failed,
       total_wall_clock_seconds: $wall_clock,
-      runs: $runs
+      runs: $runs[0]
     }' > "${OUTPUT}"
+
+  rm -f "${RUNS_TMP}"
 else
   # Fallback: build JSON without jq (best effort)
   log "WARNING: jq not found — output may not be perfectly formatted"
