@@ -1,0 +1,166 @@
+================================================================================
+CLOUD HYPERVISOR BENCHMARKING - COMMANDS & WORKFLOW
+================================================================================
+
+All scripts are in Benchmarking-Agentic-AI/cloud-hypervisor/scripts/
+
+
+--------------------------------------------------------------------------------
+SCRIPT OVERVIEW
+--------------------------------------------------------------------------------
+
+One-time setup (run once per machine):
+  install_cloud_hypervisor.sh - Installs cloud-hypervisor binary, TAP networking, iptables
+  setup_base_rootfs.sh        - Creates base Ubuntu 22.04 ext4 rootfs disk image
+
+Building blocks (called automatically, you don't run these directly):
+  prepare_task_rootfs.sh    - Installs python/deps into rootfs for a task
+                              (called by run_parallel.sh when given a task directory)
+  run_task.sh               - Launches a single Cloud Hypervisor VM
+                              (called by run_parallel.sh for each instance)
+  run_parallel.sh           - Launches N VMs in parallel, collects results
+                              (called by both scaling scripts)
+
+What you actually run for benchmarks:
+  run_scaling.sh            - Powers of 2 (1, 2, 4, 8, 16, 32, ...)
+  run_scaling_linear.sh     - Linear increments (10, 20, 30, 40, ...)
+
+
+--------------------------------------------------------------------------------
+STEP 1: MACHINE VERIFICATION
+--------------------------------------------------------------------------------
+
+hostname
+lsb_release -a || cat /etc/os-release
+uname -r
+ls -l /dev/kvm
+
+
+--------------------------------------------------------------------------------
+STEP 2: ONE-TIME SETUP
+--------------------------------------------------------------------------------
+
+# Make all scripts executable
+chmod +x Benchmarking-Agentic-AI/cloud-hypervisor/scripts/*.sh
+
+# Dry run to verify setup
+sudo DRY_RUN=1 Benchmarking-Agentic-AI/cloud-hypervisor/scripts/install_cloud_hypervisor.sh
+
+# Install cloud-hypervisor and networking
+sudo Benchmarking-Agentic-AI/cloud-hypervisor/scripts/install_cloud_hypervisor.sh
+
+# Verify networking
+ip a | grep -E "tap0|192\.168\.100\.1" -n
+ip route | head
+
+# Create base rootfs
+sudo Benchmarking-Agentic-AI/cloud-hypervisor/scripts/setup_base_rootfs.sh
+
+# Clone the task repo (if not already cloned)
+sudo apt-get update
+sudo apt-get install -y git
+git clone https://github.com/laude-institute/terminal-bench.git
+
+
+--------------------------------------------------------------------------------
+STEP 3: PREPARE TASK ROOTFS (once per task)
+--------------------------------------------------------------------------------
+
+# Build the rootfs for a task (only needed once, reuse the .ext4 file after)
+sudo Benchmarking-Agentic-AI/cloud-hypervisor/scripts/prepare_task_rootfs.sh terminal-bench/original-tasks/hello-world
+
+# This creates /opt/cloud-hypervisor/rootfs-task.ext4
+# Pass the .ext4 file to scaling scripts to avoid re-downloading packages every run
+
+
+--------------------------------------------------------------------------------
+STEP 4: RUN BENCHMARKS
+--------------------------------------------------------------------------------
+
+# Exponential scaling (powers of 2): 1, 2, 4, 8, 16, 32, 64
+sudo Benchmarking-Agentic-AI/cloud-hypervisor/scripts/run_scaling.sh \
+  /opt/cloud-hypervisor/rootfs-task.ext4 64 \
+  --output scaling_ch_64.json \
+  --cooldown 10
+
+# Linear scaling (increments of 10): 10, 20, 30, 40, ..., 100
+sudo Benchmarking-Agentic-AI/cloud-hypervisor/scripts/run_scaling_linear.sh \
+  /opt/cloud-hypervisor/rootfs-task.ext4 100 \
+  --output scaling_ch_linear_100.json \
+  --cooldown 10
+
+# Custom step size (increments of 5): 5, 10, 15, 20, ..., 50
+sudo Benchmarking-Agentic-AI/cloud-hypervisor/scripts/run_scaling_linear.sh \
+  /opt/cloud-hypervisor/rootfs-task.ext4 50 \
+  --output scaling_ch_linear_50.json \
+  --cooldown 10 \
+  --step 5
+
+# Resume a failed/interrupted run (skips completed VM counts)
+sudo Benchmarking-Agentic-AI/cloud-hypervisor/scripts/run_scaling.sh \
+  /opt/cloud-hypervisor/rootfs-task.ext4 64 \
+  --output scaling_ch_64.json \
+  --cooldown 10 \
+  --resume
+
+
+--------------------------------------------------------------------------------
+STEP 5: COPY RESULTS TO LOCAL MACHINE
+--------------------------------------------------------------------------------
+
+# Run from your local machine (PowerShell), not from node0
+scp -i ~/.ssh/id_ed25519 Uriel@128.210.219.161:~/scaling_ch_64.json .
+scp -i ~/.ssh/id_ed25519 Uriel@128.210.219.161:~/scaling_ch_linear_100.json .
+
+
+--------------------------------------------------------------------------------
+STEP 6: DISPLAY RESULTS
+--------------------------------------------------------------------------------
+
+# Run from local machine, generates bar charts with completion rate overlay
+python display_json_time.py scaling_ch_64.json
+python display_json_time.py scaling_ch_linear_100.json
+
+# Same display_json_time.py works for both Firecracker and Cloud Hypervisor results
+# (identical JSON format)
+
+
+--------------------------------------------------------------------------------
+TIMING METRICS
+--------------------------------------------------------------------------------
+
+Per-instance timing breakdown:
+  boot_time_s           - Host launch to guest autorun start
+  solution_time_s       - solution.sh execution
+  test_time_s           - pytest execution
+  task_total_time_s     - Boot-done to pre-shutdown
+  shutdown_time_s       - poweroff to process exit
+  total_vm_lifecycle_s  - Host launch to process exit
+
+Aggregate stats (min/max/avg) are computed across all completed instances.
+
+
+--------------------------------------------------------------------------------
+KEY DIFFERENCES FROM FIRECRACKER
+--------------------------------------------------------------------------------
+
+- VMM binary: cloud-hypervisor (not firecracker)
+- Config: CLI flags (not JSON config file)
+- Shutdown: guest uses "poweroff" (not "reboot -f")
+- Kernel: host bzImage + initramfs (not custom vmlinux)
+- WORKDIR: /opt/cloud-hypervisor (not /opt/firecracker)
+- iptables chains: CH_NAT, CH_FWD (not FC_NAT, FC_FWD)
+- Console: --serial tty + console=ttyS0 (same serial as Firecracker)
+- JSON output format: IDENTICAL (same display_json_time.py works)
+
+
+--------------------------------------------------------------------------------
+NOTES
+--------------------------------------------------------------------------------
+
+- Each VM uses 2 vCPUs and 1024 MiB RAM by default
+- Override with: sudo MEM_SIZE_MIB=512 VCPU_COUNT=1 ./scripts/run_scaling.sh ...
+- With 48 cores, expect slowdown around 24+ VMs (48 vCPUs saturated)
+- The "pip as root" warning during prepare is harmless (runs inside disposable rootfs)
+- Pass the .ext4 rootfs file (not task directory) to avoid re-installing deps every run
+- Cloud Hypervisor can run alongside Firecracker (different TAP chains, same subnets)

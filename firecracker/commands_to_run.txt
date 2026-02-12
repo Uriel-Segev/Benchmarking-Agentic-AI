@@ -2,7 +2,7 @@
 FIRECRACKER BENCHMARKING - COMMANDS & WORKFLOW
 ================================================================================
 
-All scripts are in Benchmarking-Agentic-AI/scripts/
+All scripts are in Benchmarking-Agentic-AI/firecracker/scripts/
 
 
 --------------------------------------------------------------------------------
@@ -41,22 +41,22 @@ STEP 2: ONE-TIME SETUP
 --------------------------------------------------------------------------------
 
 # Make all scripts executable
-chmod +x Benchmarking-Agentic-AI/scripts/*.sh
+chmod +x Benchmarking-Agentic-AI/firecracker/scripts/*.sh
 
 # Dry run to verify setup
-sudo DRY_RUN=1 Benchmarking-Agentic-AI/scripts/install_firecracker.sh
+sudo DRY_RUN=1 Benchmarking-Agentic-AI/firecracker/scripts/install_firecracker.sh
 
 # Install firecracker and networking
 sudo ROOTFS_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/ubuntu-22.04.ext4" \
      KERNEL_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/vmlinux-5.10.225" \
-     Benchmarking-Agentic-AI/scripts/install_firecracker.sh
+     Benchmarking-Agentic-AI/firecracker/scripts/install_firecracker.sh
 
 # Verify networking
 ip a | grep -E "tap0|192\.168\.100\.1" -n
 ip route | head
 
 # Create base rootfs
-sudo Benchmarking-Agentic-AI/scripts/setup_base_rootfs.sh
+sudo Benchmarking-Agentic-AI/firecracker/scripts/setup_base_rootfs.sh
 
 # Clone the task repo
 sudo apt-get update
@@ -69,7 +69,7 @@ STEP 3: PREPARE TASK ROOTFS (once per task)
 --------------------------------------------------------------------------------
 
 # Build the rootfs for a task (only needed once, reuse the .ext4 file after)
-sudo Benchmarking-Agentic-AI/scripts/prepare_task_rootfs.sh terminal-bench/original-tasks/hello-world
+sudo Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh terminal-bench/original-tasks/hello-world
 
 # This creates /opt/firecracker/rootfs-task.ext4
 # Pass the .ext4 file to scaling scripts to avoid re-downloading packages every run
@@ -80,26 +80,26 @@ STEP 4: RUN BENCHMARKS
 --------------------------------------------------------------------------------
 
 # Exponential scaling (powers of 2): 1, 2, 4, 8, 16, 32, 64
-sudo Benchmarking-Agentic-AI/scripts/run_scaling.sh \
+sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling.sh \
   /opt/firecracker/rootfs-task.ext4 64 \
   --output scaling_64.json \
   --cooldown 10
 
 # Linear scaling (increments of 10): 10, 20, 30, 40, ..., 100
-sudo Benchmarking-Agentic-AI/scripts/run_scaling_linear.sh \
+sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling_linear.sh \
   /opt/firecracker/rootfs-task.ext4 100 \
   --output scaling_linear_100.json \
   --cooldown 10
 
 # Custom step size (increments of 5): 5, 10, 15, 20, ..., 50
-sudo Benchmarking-Agentic-AI/scripts/run_scaling_linear.sh \
+sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling_linear.sh \
   /opt/firecracker/rootfs-task.ext4 50 \
   --output scaling_linear_50.json \
   --cooldown 10 \
   --step 5
 
 # Resume a failed/interrupted run (skips completed VM counts)
-sudo Benchmarking-Agentic-AI/scripts/run_scaling.sh \
+sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling.sh \
   /opt/firecracker/rootfs-task.ext4 64 \
   --output scaling_64.json \
   --cooldown 10 \
