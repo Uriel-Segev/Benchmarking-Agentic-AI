@@ -37,7 +37,7 @@ ARCH="$(uname -m)"
 
 # Download URLs
 CH_RELEASE_URL="https://github.com/cloud-hypervisor/cloud-hypervisor/releases/download/${CH_VERSION}/cloud-hypervisor-static"
-ROOTFS_URL="${ROOTFS_URL:-https://s3.amazonaws.com/spec.ccfc.min/ci-artifacts/disks/${ARCH}/ubuntu-22.04.ext4}"
+ROOTFS_URL="${ROOTFS_URL:-https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/${ARCH}/ubuntu-22.04.ext4}"
 
 # iptables chain names we own (so we can remove cleanly)
 CH_NAT_CHAIN="CH_NAT"
