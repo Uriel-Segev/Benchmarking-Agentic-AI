@@ -22,39 +22,59 @@ def main():
             avg_boot_time = [] #declare avg boot time array
             avg_solution_time = [] #declare avg solution time array
             avg_shutdown_time = [] #declare avg shutdown time array
+            instance_count = [] #declare instance count for each run (collection of data)
+            completion_rate = [] #declare array for amount of VMs that completed the task
 
             #loop through each run
             for i in range(len(data["runs"])):
-                #fill in values (averages)
-                avg_boot_time.append(data["runs"][i]["timing_summary"]["boot_time_s"]["avg"])
-                avg_solution_time.append(data["runs"][i]["timing_summary"]["solution_time_s"]["avg"])
-                avg_shutdown_time.append(data["runs"][i]["timing_summary"]["shutdown_time_s"]["avg"])
-            
-            #get array of # of firecracker instances (as string so it doesn't fill all mumerical positions)
-            instance_count = [str(x) for x in data[("vm_counts")]] 
+                #if data wasn't collected (likely crashed) then ignore it
+                if "timing_summary" in data["runs"][i]:
+                    #fill in values (averages)
+                    avg_boot_time.append(data["runs"][i]["timing_summary"]["boot_time_s"]["avg"])
+                    avg_solution_time.append(data["runs"][i]["timing_summary"]["solution_time_s"]["avg"])
+                    avg_shutdown_time.append(data["runs"][i]["timing_summary"]["shutdown_time_s"]["avg"])
+                    instance_count.append(str(data["runs"][i]["vm_count"]))
+                    completion_rate.append((data["runs"][i]["completed"] / (data["runs"][i]["total_instances"])) * 100)            
 
             #average boot time plot:
-            plt.bar(instance_count, avg_boot_time)
-            plt.xlabel('# of instances')
-            plt.ylabel('avg boot time')
+            fig, ax1 = plt.subplots()
+            ax1.bar(instance_count, avg_boot_time)
+            ax1.set_xlabel('# of instances')
+            ax1.set_ylabel('avg boot time')
+            
+            ax2 = ax1.twinx()
+            ax2.plot(instance_count, completion_rate, color='red', marker='o')
+            ax2.set_ylabel('completion rate %')
+            
             plt.title('Boot Time vs. # Instances')
             plt.show()
 
             #average solution time plot:
-            plt.bar(instance_count, avg_solution_time)
-            plt.xlabel('# of instances')
-            plt.ylabel('avg solution time')
+            fig, ax1 = plt.subplots()
+            ax1.bar(instance_count, avg_solution_time)
+            ax1.set_xlabel('# of instances')
+            ax1.set_ylabel('avg solution time')
+
+            ax2 = ax1.twinx()
+            ax2.plot(instance_count, completion_rate, color='red', marker='o')
+            ax2.set_ylabel('completion rate %')
+
             plt.title('Solution Time vs. Instances')
             plt.show()
 
 
             #average shutdown time plot:
-            plt.bar(instance_count, avg_shutdown_time)
-            plt.xlabel('# of instances')
-            plt.ylabel('avg shutdown time')
+            fig, ax1 = plt.subplots()           
+            ax1.bar(instance_count, avg_shutdown_time)
+            ax1.set_xlabel('# of instances')
+            ax1.set_ylabel('avg shutdown time')
+
+            ax2 = ax1.twinx()
+            ax2.plot(instance_count, completion_rate, color='red', marker='o')
+            ax2.set_ylabel('completion rate %')
+
             plt.title('Shutdown Time vs. Instances')
             plt.show()
-
 
                 
     #file not found error
