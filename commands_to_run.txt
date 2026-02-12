@@ -1,87 +1,150 @@
+================================================================================
+FIRECRACKER BENCHMARKING - COMMANDS & WORKFLOW
+================================================================================
+
+All scripts are in Benchmarking-Agentic-AI/scripts/
+
+
+--------------------------------------------------------------------------------
+SCRIPT OVERVIEW
+--------------------------------------------------------------------------------
+
+One-time setup (run once per machine):
+  install_firecracker.sh    - Installs firecracker binary, TAP networking, iptables
+  setup_base_rootfs.sh      - Creates base Ubuntu 22.04 ext4 rootfs disk image
+
+Building blocks (called automatically, you don't run these directly):
+  prepare_task_rootfs.sh    - Installs python/deps into rootfs for a task
+                              (called by run_parallel.sh when given a task directory)
+  run_task.sh               - Launches a single Firecracker VM
+                              (called by run_parallel.sh for each instance)
+  run_parallel.sh           - Launches N VMs in parallel, collects results
+                              (called by both scaling scripts)
+
+What you actually run for benchmarks:
+  run_scaling.sh            - Powers of 2 (1, 2, 4, 8, 16, 32, ...)
+  run_scaling_linear.sh     - Linear increments (10, 20, 30, 40, ...)
+
+
+--------------------------------------------------------------------------------
+STEP 1: MACHINE VERIFICATION
+--------------------------------------------------------------------------------
+
 hostname
 lsb_release -a || cat /etc/os-release
 uname -r
 ls -l /dev/kvm
 
 
-chmod +x install_firecracker.sh prepare_task_rootfs.sh run_task.sh setup_base_rootfs.sh run_parallel.sh run_scaling.sh run_scaling_linear.sh
+--------------------------------------------------------------------------------
+STEP 2: ONE-TIME SETUP
+--------------------------------------------------------------------------------
 
+# Make all scripts executable
+chmod +x Benchmarking-Agentic-AI/scripts/*.sh
 
-sudo DRY_RUN=1 Benchmarking-Agentic-AI/install_firecracker.sh
+# Dry run to verify setup
+sudo DRY_RUN=1 Benchmarking-Agentic-AI/scripts/install_firecracker.sh
 
-
+# Install firecracker and networking
 sudo ROOTFS_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/ubuntu-22.04.ext4" \
      KERNEL_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/vmlinux-5.10.225" \
-     Benchmarking-Agentic-AI/install_firecracker.sh
+     Benchmarking-Agentic-AI/scripts/install_firecracker.sh
 
-  ip a | grep -E "tap0|192\.168\.100\.1" -n
+# Verify networking
+ip a | grep -E "tap0|192\.168\.100\.1" -n
 ip route | head
 
+# Create base rootfs
+sudo Benchmarking-Agentic-AI/scripts/setup_base_rootfs.sh
 
+# Clone the task repo
 sudo apt-get update
 sudo apt-get install -y git
 git clone https://github.com/laude-institute/terminal-bench.git
 
 
-sudo ./Benchmarking-Agentic-AI/setup_base_rootfs.sh
+--------------------------------------------------------------------------------
+STEP 3: PREPARE TASK ROOTFS (once per task)
+--------------------------------------------------------------------------------
+
+# Build the rootfs for a task (only needed once, reuse the .ext4 file after)
+sudo Benchmarking-Agentic-AI/scripts/prepare_task_rootfs.sh terminal-bench/original-tasks/hello-world
+
+# This creates /opt/firecracker/rootfs-task.ext4
+# Pass the .ext4 file to scaling scripts to avoid re-downloading packages every run
 
 
-sudo Benchmarking-Agentic-AI/prepare_task_rootfs.sh terminal-bench/original-tasks/hello-world
+--------------------------------------------------------------------------------
+STEP 4: RUN BENCHMARKS
+--------------------------------------------------------------------------------
+
+# Exponential scaling (powers of 2): 1, 2, 4, 8, 16, 32, 64
+sudo Benchmarking-Agentic-AI/scripts/run_scaling.sh \
+  /opt/firecracker/rootfs-task.ext4 64 \
+  --output scaling_64.json \
+  --cooldown 10
+
+# Linear scaling (increments of 10): 10, 20, 30, 40, ..., 100
+sudo Benchmarking-Agentic-AI/scripts/run_scaling_linear.sh \
+  /opt/firecracker/rootfs-task.ext4 100 \
+  --output scaling_linear_100.json \
+  --cooldown 10
+
+# Custom step size (increments of 5): 5, 10, 15, 20, ..., 50
+sudo Benchmarking-Agentic-AI/scripts/run_scaling_linear.sh \
+  /opt/firecracker/rootfs-task.ext4 50 \
+  --output scaling_linear_50.json \
+  --cooldown 10 \
+  --step 5
+
+# Resume a failed/interrupted run (skips completed VM counts)
+sudo Benchmarking-Agentic-AI/scripts/run_scaling.sh \
+  /opt/firecracker/rootfs-task.ext4 64 \
+  --output scaling_64.json \
+  --cooldown 10 \
+  --resume
 
 
-sudo Benchmarking-Agentic-AI/run_task.sh /opt/firecracker/rootfs-task.ext4
+--------------------------------------------------------------------------------
+STEP 5: COPY RESULTS TO LOCAL MACHINE
+--------------------------------------------------------------------------------
 
-sudo Benchmarking-Agentic-AI/run_scaling.sh /opt/firecracker/rootfs-task.ext4 32 --output scaling_32.json --cooldown 10
-
-sudo Benchmarking-Agentic-AI/run_scaling_linear.sh /opt/firecracker/rootfs-task.ext4 100 --output scaling_linear_100.json
-   --cooldown 10
-
-
-note: WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
-
+# Run from your local machine (PowerShell), not from node0
+scp -i ~/.ssh/id_ed25519 Uriel@128.110.219.161:~/scaling_64.json .
 scp -i ~/.ssh/id_ed25519 Uriel@128.110.219.161:~/scaling_linear_100.json .
 
 
-The general workflow is:
+--------------------------------------------------------------------------------
+STEP 6: DISPLAY RESULTS
+--------------------------------------------------------------------------------
 
-  # 1. One-time setup (already done if you ran it before)
-  sudo ./install_firecracker.sh
-  sudo ./setup_base_rootfs.sh
-
-  # 2. Single VM run
-  sudo ./prepare_task_rootfs.sh /path/to/task-dir
-  sudo ./run_task.sh /opt/firecracker/rootfs-task.ext4
-
-  # 3. Parallel run (N VMs)
-  #    From a pre-built rootfs:
-  sudo ./run_parallel.sh /opt/firecracker/rootfs-task.ext4 4
-
-  #    Or directly from a task directory (it calls prepare_task_rootfs.sh for you):
-  sudo ./run_parallel.sh terminal-bench/original-tasks/hello-world 4
-
-  #    With custom output path:
-  sudo ./run_parallel.sh /opt/firecracker/rootfs-task.ext4 8 /tmp/results.json
-
-  The arguments are:
-  1. Source — either a .ext4 rootfs file or a task directory
-  2. Instance count — how many VMs to run in parallel
-  3. Results path (optional) — defaults to parallel_results.json in the current directory
-
-  Results end up in parallel_results.json and per-instance logs are in a temp directory printed at the end.
+# Run from local machine, generates bar charts with completion rate overlay
+python display_json_time.py scaling_64.json
+python display_json_time.py scaling_linear_100.json
 
 
-# Timing benchmark (parallel)
-sudo ./run_parallel.sh terminal-bench/original-tasks/hello-world 4
+--------------------------------------------------------------------------------
+TIMING METRICS
+--------------------------------------------------------------------------------
 
-# Results include per-instance timing breakdown in parallel_results.json
-# Instance logs with full console output in temp directory (printed at end)
-#
-# Timing metrics reported per instance:
-#   boot_time_s        - host launch to guest autorun start
-#   solution_time_s    - solution.sh execution
-#   test_time_s        - pytest execution
-#   task_total_time_s  - boot-done to pre-shutdown
-#   shutdown_time_s    - reboot -f to process exit
-#   total_vm_lifecycle_s - host launch to process exit
-#
-# Aggregate stats (min/max/avg) are computed across all instances.
+Per-instance timing breakdown:
+  boot_time_s           - Host launch to guest autorun start
+  solution_time_s       - solution.sh execution
+  test_time_s           - pytest execution
+  task_total_time_s     - Boot-done to pre-shutdown
+  shutdown_time_s       - reboot -f to process exit
+  total_vm_lifecycle_s  - Host launch to process exit
+
+Aggregate stats (min/max/avg) are computed across all completed instances.
+
+
+--------------------------------------------------------------------------------
+NOTES
+--------------------------------------------------------------------------------
+
+- Each VM uses 2 vCPUs and 1024 MiB RAM by default
+- Override with: sudo MEM_SIZE_MIB=512 VCPU_COUNT=1 ./scripts/run_scaling.sh ...
+- With 48 cores, expect slowdown around 24+ VMs (48 vCPUs saturated)
+- The "pip as root" warning during prepare is harmless (runs inside disposable rootfs)
+- Pass the .ext4 rootfs file (not task directory) to avoid re-installing deps every run
