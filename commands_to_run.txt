@@ -4,7 +4,7 @@ uname -r
 ls -l /dev/kvm
 
 
-chmod +x install_firecracker.sh prepare_task_rootfs.sh run_task.sh setup_base_rootfs.sh
+chmod +x install_firecracker.sh prepare_task_rootfs.sh run_task.sh setup_base_rootfs.sh run_parallel.sh run_scaling.sh run_scaling_linear.sh
 
 
 sudo DRY_RUN=1 Benchmarking-Agentic-AI/install_firecracker.sh
@@ -14,7 +14,7 @@ sudo ROOTFS_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(un
      KERNEL_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/vmlinux-5.10.225" \
      Benchmarking-Agentic-AI/install_firecracker.sh
 
-ip a | grep -E "tap0|192\.168\.100\.1" -n
+  ip a | grep -E "tap0|192\.168\.100\.1" -n
 ip route | head
 
 
@@ -31,10 +31,15 @@ sudo Benchmarking-Agentic-AI/prepare_task_rootfs.sh terminal-bench/original-task
 
 sudo Benchmarking-Agentic-AI/run_task.sh /opt/firecracker/rootfs-task.ext4
 
+sudo Benchmarking-Agentic-AI/run_scaling.sh /opt/firecracker/rootfs-task.ext4 32 --output scaling_32.json --cooldown 10
+
+sudo Benchmarking-Agentic-AI/run_scaling_linear.sh /opt/firecracker/rootfs-task.ext4 100 --output scaling_linear_100.json
+   --cooldown 10
 
 
+note: WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
 
-
+scp -i ~/.ssh/id_ed25519 Uriel@128.110.219.161:~/scaling_linear_100.json .
 
 
 The general workflow is:
