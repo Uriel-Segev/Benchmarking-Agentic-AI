@@ -112,6 +112,8 @@ STEP 5: COPY RESULTS TO LOCAL MACHINE
 scp -i ~/.ssh/id_ed25519 NAME@IP:~/scaling_ch_64.json .
 scp -i ~/.ssh/id_ed25519 NAME@IP:~/scaling_ch_linear_100.json .
 
+# to get ip: hostname -I
+
 
 --------------------------------------------------------------------------------
 STEP 6: DISPLAY RESULTS
@@ -164,3 +166,15 @@ NOTES
 - The "pip as root" warning during prepare is harmless (runs inside disposable rootfs)
 - Pass the .ext4 rootfs file (not task directory) to avoid re-installing deps every run
 - Cloud Hypervisor can run alongside Firecracker (different TAP chains, same subnets)
+
+
+--------------------------------------------------------------------------------
+OBSERVED PERFORMANCE (48-core CloudLab machine, hello-world task)
+--------------------------------------------------------------------------------
+
+- Baseline boot time: ~7.6s (vs Firecracker ~2-3s)
+  This is due to full host kernel (bzImage + initramfs) vs Firecracker's stripped vmlinux
+- 100% completion up to 16 VMs, drops to ~65% at 32 VMs, ~64% at 64 VMs
+- Failed VMs exit with code 141 (SIGPIPE) — they timeout during boot under contention
+- Increasing TASK_TIMEOUT would likely recover many failures (the actual task only takes ~1s)
+- Total lifecycle: ~9s at low counts, ~13s at 64 VMs

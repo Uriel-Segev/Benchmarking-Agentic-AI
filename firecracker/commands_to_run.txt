@@ -82,26 +82,26 @@ STEP 4: RUN BENCHMARKS
 # Exponential scaling (powers of 2): 1, 2, 4, 8, 16, 32, 64
 sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling.sh \
   /opt/firecracker/rootfs-task.ext4 64 \
-  --output scaling_64.json \
+  --output scaling_fr_64.json \
   --cooldown 10
 
 # Linear scaling (increments of 10): 10, 20, 30, 40, ..., 100
 sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling_linear.sh \
   /opt/firecracker/rootfs-task.ext4 100 \
-  --output scaling_linear_100.json \
+  --output scaling_fr_linear_100.json \
   --cooldown 10
 
 # Custom step size (increments of 5): 5, 10, 15, 20, ..., 50
 sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling_linear.sh \
   /opt/firecracker/rootfs-task.ext4 50 \
-  --output scaling_linear_50.json \
+  --output scaling_fr_linear_50.json \
   --cooldown 10 \
   --step 5
 
 # Resume a failed/interrupted run (skips completed VM counts)
 sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling.sh \
   /opt/firecracker/rootfs-task.ext4 64 \
-  --output scaling_64.json \
+  --output scaling_fr_64.json \
   --cooldown 10 \
   --resume
 
@@ -111,17 +111,18 @@ STEP 5: COPY RESULTS TO LOCAL MACHINE
 --------------------------------------------------------------------------------
 
 # Run from your local machine (PowerShell), not from node0
-scp -i ~/.ssh/id_ed25519 Uriel@128.110.219.161:~/scaling_64.json .
-scp -i ~/.ssh/id_ed25519 Uriel@128.110.219.161:~/scaling_linear_100.json .
+scp -i ~/.ssh/id_ed25519 NAME@IP:~/scaling_fr_64.json .
+scp -i ~/.ssh/id_ed25519 NAME@IP:~/scaling_fr_linear_100.json .
 
+# to get ip: hostname -I
 
 --------------------------------------------------------------------------------
 STEP 6: DISPLAY RESULTS
 --------------------------------------------------------------------------------
 
 # Run from local machine, generates bar charts with completion rate overlay
-python display_json_time.py scaling_64.json
-python display_json_time.py scaling_linear_100.json
+python display_json_time.py scaling_fr_64.json
+python display_json_time.py scaling_fr_linear_100.json
 
 
 --------------------------------------------------------------------------------

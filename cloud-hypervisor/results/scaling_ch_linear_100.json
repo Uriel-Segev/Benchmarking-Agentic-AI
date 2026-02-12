@@ -1,0 +1,7012 @@
+{
+  "task": "/opt/cloud-hypervisor/rootfs-task.ext4",
+  "max_vms": 100,
+  "vm_counts": [
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100
+  ],
+  "repeats_per_count": 1,
+  "total_runs": 10,
+  "completed_runs": 10,
+  "skipped_runs": 0,
+  "failed_runs": 8,
+  "total_wall_clock_seconds": 1047,
+  "runs": [
+    {
+      "total_instances": 10,
+      "completed": 10,
+      "total_tests_passed": 20,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 9,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 7.659,
+          "max": 7.915,
+          "avg": 7.805
+        },
+        "solution_time_s": {
+          "min": 0.003,
+          "max": 0.016,
+          "avg": 0.01
+        },
+        "test_time_s": {
+          "min": 0.302,
+          "max": 0.428,
+          "avg": 0.367
+        },
+        "task_total_time_s": {
+          "min": 0.338,
+          "max": 0.476,
+          "avg": 0.402
+        },
+        "shutdown_time_s": {
+          "min": 0.73,
+          "max": 0.977,
+          "avg": 0.826
+        },
+        "total_vm_lifecycle_s": {
+          "min": 9.03,
+          "max": 9.036,
+          "avg": 9.033
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.82,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.302,
+            "task_total_time_s": 0.338,
+            "shutdown_time_s": 0.878,
+            "total_vm_lifecycle_s": 9.035
+          }
+        },
+        {
+          "id": 1,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.825,
+            "solution_time_s": 0.012,
+            "test_time_s": 0.341,
+            "task_total_time_s": 0.382,
+            "shutdown_time_s": 0.827,
+            "total_vm_lifecycle_s": 9.034
+          }
+        },
+        {
+          "id": 2,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.768,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.373,
+            "task_total_time_s": 0.412,
+            "shutdown_time_s": 0.855,
+            "total_vm_lifecycle_s": 9.035
+          }
+        },
+        {
+          "id": 3,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.915,
+            "solution_time_s": 0.005,
+            "test_time_s": 0.359,
+            "task_total_time_s": 0.391,
+            "shutdown_time_s": 0.73,
+            "total_vm_lifecycle_s": 9.036
+          }
+        },
+        {
+          "id": 4,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.659,
+            "solution_time_s": 0.003,
+            "test_time_s": 0.373,
+            "task_total_time_s": 0.395,
+            "shutdown_time_s": 0.977,
+            "total_vm_lifecycle_s": 9.031
+          }
+        },
+        {
+          "id": 5,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.762,
+            "solution_time_s": 0.014,
+            "test_time_s": 0.372,
+            "task_total_time_s": 0.407,
+            "shutdown_time_s": 0.86,
+            "total_vm_lifecycle_s": 9.03
+          }
+        },
+        {
+          "id": 6,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.791,
+            "solution_time_s": 0.016,
+            "test_time_s": 0.428,
+            "task_total_time_s": 0.476,
+            "shutdown_time_s": 0.764,
+            "total_vm_lifecycle_s": 9.032
+          }
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.871,
+            "solution_time_s": 0.014,
+            "test_time_s": 0.348,
+            "task_total_time_s": 0.385,
+            "shutdown_time_s": 0.775,
+            "total_vm_lifecycle_s": 9.031
+          }
+        },
+        {
+          "id": 8,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.817,
+            "solution_time_s": 0.009,
+            "test_time_s": 0.387,
+            "task_total_time_s": 0.427,
+            "shutdown_time_s": 0.79,
+            "total_vm_lifecycle_s": 9.035
+          }
+        },
+        {
+          "id": 9,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.818,
+            "solution_time_s": 0.006,
+            "test_time_s": 0.386,
+            "task_total_time_s": 0.41,
+            "shutdown_time_s": 0.807,
+            "total_vm_lifecycle_s": 9.035
+          }
+        }
+      ],
+      "vm_count": 10,
+      "repeat": 1,
+      "exit_code": 0,
+      "timestamp": "2026-02-12T12:22:29-07:00"
+    },
+    {
+      "total_instances": 20,
+      "completed": 20,
+      "total_tests_passed": 40,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 11,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 7.867,
+          "max": 8.792,
+          "avg": 8.313
+        },
+        "solution_time_s": {
+          "min": 0.008,
+          "max": 0.033,
+          "avg": 0.017
+        },
+        "test_time_s": {
+          "min": 0.377,
+          "max": 0.649,
+          "avg": 0.508
+        },
+        "task_total_time_s": {
+          "min": 0.418,
+          "max": 0.715,
+          "avg": 0.564
+        },
+        "shutdown_time_s": {
+          "min": 0.85,
+          "max": 1.578,
+          "avg": 1.175
+        },
+        "total_vm_lifecycle_s": {
+          "min": 10.038,
+          "max": 10.077,
+          "avg": 10.052
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.075,
+            "solution_time_s": 0.012,
+            "test_time_s": 0.569,
+            "task_total_time_s": 0.61,
+            "shutdown_time_s": 1.367,
+            "total_vm_lifecycle_s": 10.052
+          }
+        },
+        {
+          "id": 1,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.867,
+            "solution_time_s": 0.023,
+            "test_time_s": 0.532,
+            "task_total_time_s": 0.611,
+            "shutdown_time_s": 1.578,
+            "total_vm_lifecycle_s": 10.056
+          }
+        },
+        {
+          "id": 2,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.444,
+            "solution_time_s": 0.026,
+            "test_time_s": 0.454,
+            "task_total_time_s": 0.501,
+            "shutdown_time_s": 1.1,
+            "total_vm_lifecycle_s": 10.045
+          }
+        },
+        {
+          "id": 3,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.343,
+            "solution_time_s": 0.026,
+            "test_time_s": 0.481,
+            "task_total_time_s": 0.541,
+            "shutdown_time_s": 1.165,
+            "total_vm_lifecycle_s": 10.049
+          }
+        },
+        {
+          "id": 4,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.595,
+            "solution_time_s": 0.013,
+            "test_time_s": 0.406,
+            "task_total_time_s": 0.456,
+            "shutdown_time_s": 1.003,
+            "total_vm_lifecycle_s": 10.054
+          }
+        },
+        {
+          "id": 5,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.199,
+            "solution_time_s": 0.021,
+            "test_time_s": 0.566,
+            "task_total_time_s": 0.625,
+            "shutdown_time_s": 1.219,
+            "total_vm_lifecycle_s": 10.042
+          }
+        },
+        {
+          "id": 6,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.536,
+            "solution_time_s": 0.033,
+            "test_time_s": 0.454,
+            "task_total_time_s": 0.519,
+            "shutdown_time_s": 0.997,
+            "total_vm_lifecycle_s": 10.052
+          }
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.382,
+            "solution_time_s": 0.008,
+            "test_time_s": 0.478,
+            "task_total_time_s": 0.511,
+            "shutdown_time_s": 1.155,
+            "total_vm_lifecycle_s": 10.048
+          }
+        },
+        {
+          "id": 8,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.484,
+            "solution_time_s": 0.008,
+            "test_time_s": 0.488,
+            "task_total_time_s": 0.519,
+            "shutdown_time_s": 1.046,
+            "total_vm_lifecycle_s": 10.049
+          }
+        },
+        {
+          "id": 9,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.01,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.564,
+            "task_total_time_s": 0.604,
+            "shutdown_time_s": 1.463,
+            "total_vm_lifecycle_s": 10.077
+          }
+        },
+        {
+          "id": 10,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.056,
+            "solution_time_s": 0.014,
+            "test_time_s": 0.561,
+            "task_total_time_s": 0.625,
+            "shutdown_time_s": 1.383,
+            "total_vm_lifecycle_s": 10.064
+          }
+        },
+        {
+          "id": 11,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.887,
+            "solution_time_s": 0.021,
+            "test_time_s": 0.554,
+            "task_total_time_s": 0.632,
+            "shutdown_time_s": 1.538,
+            "total_vm_lifecycle_s": 10.056
+          }
+        },
+        {
+          "id": 12,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.792,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.377,
+            "task_total_time_s": 0.418,
+            "shutdown_time_s": 0.85,
+            "total_vm_lifecycle_s": 10.06
+          }
+        },
+        {
+          "id": 13,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.314,
+            "solution_time_s": 0.011,
+            "test_time_s": 0.549,
+            "task_total_time_s": 0.6,
+            "shutdown_time_s": 1.131,
+            "total_vm_lifecycle_s": 10.045
+          }
+        },
+        {
+          "id": 14,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.259,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.568,
+            "task_total_time_s": 0.603,
+            "shutdown_time_s": 1.183,
+            "total_vm_lifecycle_s": 10.044
+          }
+        },
+        {
+          "id": 15,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.619,
+            "solution_time_s": 0.018,
+            "test_time_s": 0.477,
+            "task_total_time_s": 0.57,
+            "shutdown_time_s": 0.85,
+            "total_vm_lifecycle_s": 10.038
+          }
+        },
+        {
+          "id": 16,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.656,
+            "solution_time_s": 0.023,
+            "test_time_s": 0.445,
+            "task_total_time_s": 0.518,
+            "shutdown_time_s": 0.873,
+            "total_vm_lifecycle_s": 10.046
+          }
+        },
+        {
+          "id": 17,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.965,
+            "solution_time_s": 0.022,
+            "test_time_s": 0.546,
+            "task_total_time_s": 0.608,
+            "shutdown_time_s": 1.476,
+            "total_vm_lifecycle_s": 10.049
+          }
+        },
+        {
+          "id": 18,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.198,
+            "solution_time_s": 0.024,
+            "test_time_s": 0.649,
+            "task_total_time_s": 0.715,
+            "shutdown_time_s": 1.134,
+            "total_vm_lifecycle_s": 10.047
+          }
+        },
+        {
+          "id": 19,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.573,
+            "solution_time_s": 0.009,
+            "test_time_s": 0.45,
+            "task_total_time_s": 0.5,
+            "shutdown_time_s": 0.996,
+            "total_vm_lifecycle_s": 10.069
+          }
+        }
+      ],
+      "vm_count": 20,
+      "repeat": 1,
+      "exit_code": 0,
+      "timestamp": "2026-02-12T12:23:26-07:00"
+    },
+    {
+      "total_instances": 30,
+      "completed": 18,
+      "total_tests_passed": 36,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 11,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 7.868,
+          "max": 8.552,
+          "avg": 8.148
+        },
+        "solution_time_s": {
+          "min": 0.004,
+          "max": 0.047,
+          "avg": 0.02
+        },
+        "test_time_s": {
+          "min": 0.388,
+          "max": 0.571,
+          "avg": 0.498
+        },
+        "task_total_time_s": {
+          "min": 0.434,
+          "max": 0.633,
+          "avg": 0.548
+        },
+        "shutdown_time_s": {
+          "min": 0.527,
+          "max": 1.55,
+          "avg": 1.25
+        },
+        "total_vm_lifecycle_s": {
+          "min": 9.052,
+          "max": 10.076,
+          "avg": 9.947
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.094,
+            "solution_time_s": 0.019,
+            "test_time_s": 0.522,
+            "task_total_time_s": 0.573,
+            "shutdown_time_s": 1.397,
+            "total_vm_lifecycle_s": 10.064
+          }
+        },
+        {
+          "id": 1,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.126,
+            "solution_time_s": 0.019,
+            "test_time_s": 0.422,
+            "task_total_time_s": 0.465,
+            "shutdown_time_s": 1.466,
+            "total_vm_lifecycle_s": 10.057
+          }
+        },
+        {
+          "id": 2,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 3,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 4,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.903,
+            "solution_time_s": 0.031,
+            "test_time_s": 0.571,
+            "task_total_time_s": 0.633,
+            "shutdown_time_s": 0.527,
+            "total_vm_lifecycle_s": 9.064
+          }
+        },
+        {
+          "id": 5,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.437,
+            "solution_time_s": 0.025,
+            "test_time_s": 0.406,
+            "task_total_time_s": 0.472,
+            "shutdown_time_s": 1.16,
+            "total_vm_lifecycle_s": 10.069
+          }
+        },
+        {
+          "id": 6,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.111,
+            "solution_time_s": 0.011,
+            "test_time_s": 0.558,
+            "task_total_time_s": 0.593,
+            "shutdown_time_s": 1.373,
+            "total_vm_lifecycle_s": 10.076
+          }
+        },
+        {
+          "id": 8,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 9,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.552,
+            "solution_time_s": 0.012,
+            "test_time_s": 0.388,
+            "task_total_time_s": 0.434,
+            "shutdown_time_s": 1.062,
+            "total_vm_lifecycle_s": 10.049
+          }
+        },
+        {
+          "id": 10,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.272,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.427,
+            "task_total_time_s": 0.479,
+            "shutdown_time_s": 1.285,
+            "total_vm_lifecycle_s": 10.036
+          }
+        },
+        {
+          "id": 11,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.109,
+            "solution_time_s": 0.03,
+            "test_time_s": 0.516,
+            "task_total_time_s": 0.571,
+            "shutdown_time_s": 1.391,
+            "total_vm_lifecycle_s": 10.072
+          }
+        },
+        {
+          "id": 12,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.052,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.523,
+            "task_total_time_s": 0.558,
+            "shutdown_time_s": 1.442,
+            "total_vm_lifecycle_s": 10.051
+          }
+        },
+        {
+          "id": 13,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.868,
+            "solution_time_s": 0.017,
+            "test_time_s": 0.557,
+            "task_total_time_s": 0.597,
+            "shutdown_time_s": 0.587,
+            "total_vm_lifecycle_s": 9.052
+          }
+        },
+        {
+          "id": 14,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 15,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 16,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 7.898,
+            "solution_time_s": 0.024,
+            "test_time_s": 0.545,
+            "task_total_time_s": 0.609,
+            "shutdown_time_s": 1.55,
+            "total_vm_lifecycle_s": 10.057
+          }
+        },
+        {
+          "id": 17,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 18,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.408,
+            "solution_time_s": 0.004,
+            "test_time_s": 0.48,
+            "task_total_time_s": 0.503,
+            "shutdown_time_s": 1.149,
+            "total_vm_lifecycle_s": 10.06
+          }
+        },
+        {
+          "id": 19,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.073,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.569,
+            "task_total_time_s": 0.606,
+            "shutdown_time_s": 1.376,
+            "total_vm_lifecycle_s": 10.055
+          }
+        },
+        {
+          "id": 20,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 21,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.275,
+            "solution_time_s": 0.019,
+            "test_time_s": 0.498,
+            "task_total_time_s": 0.541,
+            "shutdown_time_s": 1.249,
+            "total_vm_lifecycle_s": 10.065
+          }
+        },
+        {
+          "id": 22,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 23,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 24,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 25,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.047,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.536,
+            "task_total_time_s": 0.585,
+            "shutdown_time_s": 1.434,
+            "total_vm_lifecycle_s": 10.066
+          }
+        },
+        {
+          "id": 26,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 27,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.092,
+            "solution_time_s": 0.027,
+            "test_time_s": 0.522,
+            "task_total_time_s": 0.588,
+            "shutdown_time_s": 1.368,
+            "total_vm_lifecycle_s": 10.048
+          }
+        },
+        {
+          "id": 28,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.089,
+            "solution_time_s": 0.047,
+            "test_time_s": 0.451,
+            "task_total_time_s": 0.542,
+            "shutdown_time_s": 1.429,
+            "total_vm_lifecycle_s": 10.06
+          }
+        },
+        {
+          "id": 29,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.267,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.474,
+            "task_total_time_s": 0.523,
+            "shutdown_time_s": 1.264,
+            "total_vm_lifecycle_s": 10.054
+          }
+        }
+      ],
+      "vm_count": 30,
+      "repeat": 1,
+      "exit_code": 1,
+      "timestamp": "2026-02-12T12:24:36-07:00"
+    },
+    {
+      "total_instances": 40,
+      "completed": 28,
+      "total_tests_passed": 56,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 13,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 8.274,
+          "max": 9.615,
+          "avg": 9.004
+        },
+        "solution_time_s": {
+          "min": 0.004,
+          "max": 0.092,
+          "avg": 0.029
+        },
+        "test_time_s": {
+          "min": 0.469,
+          "max": 1.092,
+          "avg": 0.729
+        },
+        "task_total_time_s": {
+          "min": 0.51,
+          "max": 1.15,
+          "avg": 0.812
+        },
+        "shutdown_time_s": {
+          "min": 0.835,
+          "max": 1.558,
+          "avg": 1.196
+        },
+        "total_vm_lifecycle_s": {
+          "min": 10.083,
+          "max": 11.111,
+          "avg": 11.012
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.069,
+            "solution_time_s": 0.092,
+            "test_time_s": 0.852,
+            "task_total_time_s": 0.988,
+            "shutdown_time_s": 1.027,
+            "total_vm_lifecycle_s": 11.084
+          }
+        },
+        {
+          "id": 1,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.441,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.512,
+            "task_total_time_s": 0.556,
+            "shutdown_time_s": 1.084,
+            "total_vm_lifecycle_s": 11.08
+          }
+        },
+        {
+          "id": 2,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.277,
+            "solution_time_s": 0.039,
+            "test_time_s": 0.726,
+            "task_total_time_s": 0.802,
+            "shutdown_time_s": 0.991,
+            "total_vm_lifecycle_s": 11.07
+          }
+        },
+        {
+          "id": 3,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 4,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 5,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.044,
+            "solution_time_s": 0.004,
+            "test_time_s": 0.927,
+            "task_total_time_s": 1.017,
+            "shutdown_time_s": 1.031,
+            "total_vm_lifecycle_s": 11.093
+          }
+        },
+        {
+          "id": 6,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.556,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.998,
+            "task_total_time_s": 1.062,
+            "shutdown_time_s": 1.449,
+            "total_vm_lifecycle_s": 11.067
+          }
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.259,
+            "solution_time_s": 0.046,
+            "test_time_s": 0.78,
+            "task_total_time_s": 0.887,
+            "shutdown_time_s": 0.937,
+            "total_vm_lifecycle_s": 11.084
+          }
+        },
+        {
+          "id": 8,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 9,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.379,
+            "solution_time_s": 0.047,
+            "test_time_s": 0.655,
+            "task_total_time_s": 0.727,
+            "shutdown_time_s": 0.97,
+            "total_vm_lifecycle_s": 11.076
+          }
+        },
+        {
+          "id": 10,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.956,
+            "solution_time_s": 0.049,
+            "test_time_s": 0.856,
+            "task_total_time_s": 0.947,
+            "shutdown_time_s": 1.192,
+            "total_vm_lifecycle_s": 11.095
+          }
+        },
+        {
+          "id": 11,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.012,
+            "solution_time_s": 0.013,
+            "test_time_s": 0.646,
+            "task_total_time_s": 0.685,
+            "shutdown_time_s": 1.411,
+            "total_vm_lifecycle_s": 11.107
+          }
+        },
+        {
+          "id": 12,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.718,
+            "solution_time_s": 0.018,
+            "test_time_s": 0.66,
+            "task_total_time_s": 0.823,
+            "shutdown_time_s": 1.512,
+            "total_vm_lifecycle_s": 11.053
+          }
+        },
+        {
+          "id": 13,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 14,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.423,
+            "solution_time_s": 0.074,
+            "test_time_s": 0.585,
+            "task_total_time_s": 0.745,
+            "shutdown_time_s": 0.911,
+            "total_vm_lifecycle_s": 11.078
+          }
+        },
+        {
+          "id": 15,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.283,
+            "solution_time_s": 0.008,
+            "test_time_s": 0.593,
+            "task_total_time_s": 0.661,
+            "shutdown_time_s": 1.147,
+            "total_vm_lifecycle_s": 10.091
+          }
+        },
+        {
+          "id": 16,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.146,
+            "solution_time_s": 0.012,
+            "test_time_s": 0.829,
+            "task_total_time_s": 0.865,
+            "shutdown_time_s": 1.05,
+            "total_vm_lifecycle_s": 11.062
+          }
+        },
+        {
+          "id": 17,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.134,
+            "solution_time_s": 0.032,
+            "test_time_s": 0.601,
+            "task_total_time_s": 0.664,
+            "shutdown_time_s": 1.27,
+            "total_vm_lifecycle_s": 11.068
+          }
+        },
+        {
+          "id": 18,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.208,
+            "solution_time_s": 0.056,
+            "test_time_s": 0.673,
+            "task_total_time_s": 0.769,
+            "shutdown_time_s": 1.133,
+            "total_vm_lifecycle_s": 11.111
+          }
+        },
+        {
+          "id": 19,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.611,
+            "solution_time_s": 0.018,
+            "test_time_s": 1.092,
+            "task_total_time_s": 1.15,
+            "shutdown_time_s": 1.325,
+            "total_vm_lifecycle_s": 11.086
+          }
+        },
+        {
+          "id": 20,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 21,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 22,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.66,
+            "solution_time_s": 0.014,
+            "test_time_s": 0.886,
+            "task_total_time_s": 0.952,
+            "shutdown_time_s": 1.489,
+            "total_vm_lifecycle_s": 11.101
+          }
+        },
+        {
+          "id": 23,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.869,
+            "solution_time_s": 0.019,
+            "test_time_s": 0.712,
+            "task_total_time_s": 0.78,
+            "shutdown_time_s": 1.437,
+            "total_vm_lifecycle_s": 11.086
+          }
+        },
+        {
+          "id": 24,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 25,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.101,
+            "solution_time_s": 0.023,
+            "test_time_s": 0.799,
+            "task_total_time_s": 0.862,
+            "shutdown_time_s": 1.129,
+            "total_vm_lifecycle_s": 11.092
+          }
+        },
+        {
+          "id": 26,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.411,
+            "solution_time_s": 0.061,
+            "test_time_s": 0.924,
+            "task_total_time_s": 1.111,
+            "shutdown_time_s": 1.558,
+            "total_vm_lifecycle_s": 11.08
+          }
+        },
+        {
+          "id": 27,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 28,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.274,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.665,
+            "task_total_time_s": 0.738,
+            "shutdown_time_s": 1.071,
+            "total_vm_lifecycle_s": 10.083
+          }
+        },
+        {
+          "id": 29,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.496,
+            "solution_time_s": 0.038,
+            "test_time_s": 0.634,
+            "task_total_time_s": 0.758,
+            "shutdown_time_s": 0.835,
+            "total_vm_lifecycle_s": 11.089
+          }
+        },
+        {
+          "id": 30,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.728,
+            "solution_time_s": 0.022,
+            "test_time_s": 0.688,
+            "task_total_time_s": 0.808,
+            "shutdown_time_s": 1.537,
+            "total_vm_lifecycle_s": 11.073
+          }
+        },
+        {
+          "id": 31,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 32,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.027,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.643,
+            "task_total_time_s": 0.725,
+            "shutdown_time_s": 1.327,
+            "total_vm_lifecycle_s": 11.079
+          }
+        },
+        {
+          "id": 33,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.496,
+            "solution_time_s": 0.006,
+            "test_time_s": 0.593,
+            "task_total_time_s": 0.641,
+            "shutdown_time_s": 0.959,
+            "total_vm_lifecycle_s": 11.096
+          }
+        },
+        {
+          "id": 34,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.019,
+            "solution_time_s": 0.017,
+            "test_time_s": 0.667,
+            "task_total_time_s": 0.709,
+            "shutdown_time_s": 1.36,
+            "total_vm_lifecycle_s": 11.088
+          }
+        },
+        {
+          "id": 35,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 36,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.615,
+            "solution_time_s": 0.019,
+            "test_time_s": 0.469,
+            "task_total_time_s": 0.51,
+            "shutdown_time_s": 0.961,
+            "total_vm_lifecycle_s": 11.086
+          }
+        },
+        {
+          "id": 37,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 38,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 39,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.907,
+            "solution_time_s": 0.009,
+            "test_time_s": 0.74,
+            "task_total_time_s": 0.782,
+            "shutdown_time_s": 1.387,
+            "total_vm_lifecycle_s": 11.076
+          }
+        }
+      ],
+      "vm_count": 40,
+      "repeat": 1,
+      "exit_code": 1,
+      "timestamp": "2026-02-12T12:26:02-07:00"
+    },
+    {
+      "total_instances": 50,
+      "completed": 45,
+      "total_tests_passed": 90,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 17,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 8.967,
+          "max": 12.12,
+          "avg": 10.799
+        },
+        "solution_time_s": {
+          "min": 0.003,
+          "max": 0.202,
+          "avg": 0.037
+        },
+        "test_time_s": {
+          "min": 0.412,
+          "max": 1.687,
+          "avg": 1
+        },
+        "task_total_time_s": {
+          "min": 0.509,
+          "max": 1.795,
+          "avg": 1.107
+        },
+        "shutdown_time_s": {
+          "min": 0.788,
+          "max": 2.546,
+          "avg": 1.507
+        },
+        "total_vm_lifecycle_s": {
+          "min": 11.173,
+          "max": 14.306,
+          "avg": 13.413
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.763,
+            "solution_time_s": 0.044,
+            "test_time_s": 1.372,
+            "task_total_time_s": 1.612,
+            "shutdown_time_s": 1.829,
+            "total_vm_lifecycle_s": 14.204
+          }
+        },
+        {
+          "id": 1,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.372,
+            "solution_time_s": 0.018,
+            "test_time_s": 1.108,
+            "task_total_time_s": 1.184,
+            "shutdown_time_s": 1.652,
+            "total_vm_lifecycle_s": 14.207
+          }
+        },
+        {
+          "id": 2,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.41,
+            "solution_time_s": 0.04,
+            "test_time_s": 1.107,
+            "task_total_time_s": 1.208,
+            "shutdown_time_s": 1.634,
+            "total_vm_lifecycle_s": 14.252
+          }
+        },
+        {
+          "id": 3,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.219,
+            "solution_time_s": 0.056,
+            "test_time_s": 0.788,
+            "task_total_time_s": 0.895,
+            "shutdown_time_s": 1.082,
+            "total_vm_lifecycle_s": 11.195
+          }
+        },
+        {
+          "id": 4,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.937,
+            "solution_time_s": 0.007,
+            "test_time_s": 1.43,
+            "task_total_time_s": 1.474,
+            "shutdown_time_s": 0.788,
+            "total_vm_lifecycle_s": 13.199
+          }
+        },
+        {
+          "id": 5,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.12,
+            "solution_time_s": 0.032,
+            "test_time_s": 0.412,
+            "task_total_time_s": 0.509,
+            "shutdown_time_s": 1.579,
+            "total_vm_lifecycle_s": 14.208
+          }
+        },
+        {
+          "id": 6,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.825,
+            "solution_time_s": 0.032,
+            "test_time_s": 1.435,
+            "task_total_time_s": 1.57,
+            "shutdown_time_s": 1.839,
+            "total_vm_lifecycle_s": 14.234
+          }
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.655,
+            "solution_time_s": 0.121,
+            "test_time_s": 1.065,
+            "task_total_time_s": 1.226,
+            "shutdown_time_s": 1.416,
+            "total_vm_lifecycle_s": 13.297
+          }
+        },
+        {
+          "id": 8,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.356,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.57,
+            "task_total_time_s": 0.612,
+            "shutdown_time_s": 1.256,
+            "total_vm_lifecycle_s": 13.224
+          }
+        },
+        {
+          "id": 9,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.926,
+            "solution_time_s": 0.089,
+            "test_time_s": 1.272,
+            "task_total_time_s": 1.497,
+            "shutdown_time_s": 1.825,
+            "total_vm_lifecycle_s": 14.248
+          }
+        },
+        {
+          "id": 10,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.566,
+            "solution_time_s": 0.02,
+            "test_time_s": 1.5,
+            "task_total_time_s": 1.586,
+            "shutdown_time_s": 1.115,
+            "total_vm_lifecycle_s": 13.268
+          }
+        },
+        {
+          "id": 11,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 12,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.764,
+            "solution_time_s": 0.054,
+            "test_time_s": 1.164,
+            "task_total_time_s": 1.265,
+            "shutdown_time_s": 1.185,
+            "total_vm_lifecycle_s": 13.215
+          }
+        },
+        {
+          "id": 13,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.829,
+            "solution_time_s": 0.014,
+            "test_time_s": 0.597,
+            "task_total_time_s": 0.672,
+            "shutdown_time_s": 1.697,
+            "total_vm_lifecycle_s": 14.199
+          }
+        },
+        {
+          "id": 14,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.48,
+            "solution_time_s": 0.011,
+            "test_time_s": 1.018,
+            "task_total_time_s": 1.093,
+            "shutdown_time_s": 1.704,
+            "total_vm_lifecycle_s": 14.277
+          }
+        },
+        {
+          "id": 15,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.452,
+            "solution_time_s": 0.037,
+            "test_time_s": 0.996,
+            "task_total_time_s": 1.091,
+            "shutdown_time_s": 1.683,
+            "total_vm_lifecycle_s": 14.226
+          }
+        },
+        {
+          "id": 16,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.74,
+            "solution_time_s": 0.017,
+            "test_time_s": 0.994,
+            "task_total_time_s": 1.076,
+            "shutdown_time_s": 1.506,
+            "total_vm_lifecycle_s": 13.323
+          }
+        },
+        {
+          "id": 17,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.163,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.625,
+            "task_total_time_s": 0.714,
+            "shutdown_time_s": 1.287,
+            "total_vm_lifecycle_s": 13.163
+          }
+        },
+        {
+          "id": 18,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.987,
+            "solution_time_s": 0.019,
+            "test_time_s": 0.784,
+            "task_total_time_s": 0.87,
+            "shutdown_time_s": 1.315,
+            "total_vm_lifecycle_s": 11.173
+          }
+        },
+        {
+          "id": 19,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.447,
+            "solution_time_s": 0.038,
+            "test_time_s": 0.97,
+            "task_total_time_s": 1.067,
+            "shutdown_time_s": 1.792,
+            "total_vm_lifecycle_s": 14.306
+          }
+        },
+        {
+          "id": 20,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.636,
+            "solution_time_s": 0.006,
+            "test_time_s": 1.687,
+            "task_total_time_s": 1.795,
+            "shutdown_time_s": 1.767,
+            "total_vm_lifecycle_s": 13.198
+          }
+        },
+        {
+          "id": 21,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.045,
+            "solution_time_s": 0.014,
+            "test_time_s": 1.079,
+            "task_total_time_s": 1.153,
+            "shutdown_time_s": 1.112,
+            "total_vm_lifecycle_s": 12.31
+          }
+        },
+        {
+          "id": 22,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 23,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.15,
+            "solution_time_s": 0.053,
+            "test_time_s": 1.077,
+            "task_total_time_s": 1.188,
+            "shutdown_time_s": 1.929,
+            "total_vm_lifecycle_s": 14.268
+          }
+        },
+        {
+          "id": 24,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.867,
+            "solution_time_s": 0.027,
+            "test_time_s": 0.943,
+            "task_total_time_s": 1.027,
+            "shutdown_time_s": 1.372,
+            "total_vm_lifecycle_s": 13.266
+          }
+        },
+        {
+          "id": 25,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.627,
+            "solution_time_s": 0.202,
+            "test_time_s": 1.046,
+            "task_total_time_s": 1.324,
+            "shutdown_time_s": 1.327,
+            "total_vm_lifecycle_s": 13.278
+          }
+        },
+        {
+          "id": 26,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 27,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.967,
+            "solution_time_s": 0.012,
+            "test_time_s": 0.771,
+            "task_total_time_s": 0.868,
+            "shutdown_time_s": 1.34,
+            "total_vm_lifecycle_s": 11.175
+          }
+        },
+        {
+          "id": 28,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 29,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.625,
+            "solution_time_s": 0.071,
+            "test_time_s": 0.796,
+            "task_total_time_s": 0.912,
+            "shutdown_time_s": 1.624,
+            "total_vm_lifecycle_s": 14.161
+          }
+        },
+        {
+          "id": 30,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.794,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.636,
+            "task_total_time_s": 0.689,
+            "shutdown_time_s": 1.774,
+            "total_vm_lifecycle_s": 14.258
+          }
+        },
+        {
+          "id": 31,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.783,
+            "solution_time_s": 0.017,
+            "test_time_s": 0.706,
+            "task_total_time_s": 0.766,
+            "shutdown_time_s": 1.65,
+            "total_vm_lifecycle_s": 14.199
+          }
+        },
+        {
+          "id": 32,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 33,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.353,
+            "solution_time_s": 0.016,
+            "test_time_s": 1.432,
+            "task_total_time_s": 1.543,
+            "shutdown_time_s": 1.353,
+            "total_vm_lifecycle_s": 13.249
+          }
+        },
+        {
+          "id": 34,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.857,
+            "solution_time_s": 0.013,
+            "test_time_s": 0.73,
+            "task_total_time_s": 0.811,
+            "shutdown_time_s": 1.529,
+            "total_vm_lifecycle_s": 14.198
+          }
+        },
+        {
+          "id": 35,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.995,
+            "solution_time_s": 0.033,
+            "test_time_s": 0.627,
+            "task_total_time_s": 0.687,
+            "shutdown_time_s": 1.494,
+            "total_vm_lifecycle_s": 14.176
+          }
+        },
+        {
+          "id": 36,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.722,
+            "solution_time_s": 0.036,
+            "test_time_s": 1.094,
+            "task_total_time_s": 1.197,
+            "shutdown_time_s": 1.373,
+            "total_vm_lifecycle_s": 14.292
+          }
+        },
+        {
+          "id": 37,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.277,
+            "solution_time_s": 0.023,
+            "test_time_s": 1.287,
+            "task_total_time_s": 1.374,
+            "shutdown_time_s": 2.546,
+            "total_vm_lifecycle_s": 13.196
+          }
+        },
+        {
+          "id": 38,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.482,
+            "solution_time_s": 0.05,
+            "test_time_s": 0.666,
+            "task_total_time_s": 0.776,
+            "shutdown_time_s": 1.908,
+            "total_vm_lifecycle_s": 13.166
+          }
+        },
+        {
+          "id": 39,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.298,
+            "solution_time_s": 0.011,
+            "test_time_s": 1.375,
+            "task_total_time_s": 1.444,
+            "shutdown_time_s": 1.483,
+            "total_vm_lifecycle_s": 12.225
+          }
+        },
+        {
+          "id": 40,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.603,
+            "solution_time_s": 0.022,
+            "test_time_s": 1.436,
+            "task_total_time_s": 1.507,
+            "shutdown_time_s": 1.175,
+            "total_vm_lifecycle_s": 13.285
+          }
+        },
+        {
+          "id": 41,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.448,
+            "solution_time_s": 0.061,
+            "test_time_s": 1.438,
+            "task_total_time_s": 1.625,
+            "shutdown_time_s": 1.217,
+            "total_vm_lifecycle_s": 12.29
+          }
+        },
+        {
+          "id": 42,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.381,
+            "solution_time_s": 0.017,
+            "test_time_s": 0.932,
+            "task_total_time_s": 0.994,
+            "shutdown_time_s": 1.879,
+            "total_vm_lifecycle_s": 14.254
+          }
+        },
+        {
+          "id": 43,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.18,
+            "solution_time_s": 0.011,
+            "test_time_s": 1.001,
+            "task_total_time_s": 1.086,
+            "shutdown_time_s": 1.071,
+            "total_vm_lifecycle_s": 11.336
+          }
+        },
+        {
+          "id": 44,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.062,
+            "solution_time_s": 0.138,
+            "test_time_s": 1.084,
+            "task_total_time_s": 1.332,
+            "shutdown_time_s": 0.898,
+            "total_vm_lifecycle_s": 13.292
+          }
+        },
+        {
+          "id": 45,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.229,
+            "solution_time_s": 0.025,
+            "test_time_s": 0.684,
+            "task_total_time_s": 0.792,
+            "shutdown_time_s": 2.206,
+            "total_vm_lifecycle_s": 12.227
+          }
+        },
+        {
+          "id": 46,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.31,
+            "solution_time_s": 0.013,
+            "test_time_s": 0.661,
+            "task_total_time_s": 0.711,
+            "shutdown_time_s": 1.217,
+            "total_vm_lifecycle_s": 13.238
+          }
+        },
+        {
+          "id": 47,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.314,
+            "solution_time_s": 0.003,
+            "test_time_s": 1.123,
+            "task_total_time_s": 1.186,
+            "shutdown_time_s": 1.753,
+            "total_vm_lifecycle_s": 14.254
+          }
+        },
+        {
+          "id": 48,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.673,
+            "solution_time_s": 0.065,
+            "test_time_s": 0.645,
+            "task_total_time_s": 0.837,
+            "shutdown_time_s": 1.663,
+            "total_vm_lifecycle_s": 14.173
+          }
+        },
+        {
+          "id": 49,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.286,
+            "solution_time_s": 0.044,
+            "test_time_s": 0.843,
+            "task_total_time_s": 0.949,
+            "shutdown_time_s": 0.987,
+            "total_vm_lifecycle_s": 13.222
+          }
+        }
+      ],
+      "vm_count": 50,
+      "repeat": 1,
+      "exit_code": 1,
+      "timestamp": "2026-02-12T12:27:46-07:00"
+    },
+    {
+      "total_instances": 60,
+      "completed": 49,
+      "total_tests_passed": 98,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 19,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 9.18,
+          "max": 12.616,
+          "avg": 11.184
+        },
+        "solution_time_s": {
+          "min": 0.004,
+          "max": 0.172,
+          "avg": 0.037
+        },
+        "test_time_s": {
+          "min": 0.387,
+          "max": 2.614,
+          "avg": 1.166
+        },
+        "task_total_time_s": {
+          "min": 0.415,
+          "max": 2.85,
+          "avg": 1.279
+        },
+        "shutdown_time_s": {
+          "min": 0.756,
+          "max": 2.099,
+          "avg": 1.408
+        },
+        "total_vm_lifecycle_s": {
+          "min": 11.193,
+          "max": 15.222,
+          "avg": 13.871
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 1,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.876,
+            "solution_time_s": 0.049,
+            "test_time_s": 1.811,
+            "task_total_time_s": 1.972,
+            "shutdown_time_s": 1.367,
+            "total_vm_lifecycle_s": 13.215
+          }
+        },
+        {
+          "id": 2,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 3,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.192,
+            "solution_time_s": 0.033,
+            "test_time_s": 1.919,
+            "task_total_time_s": 2.074,
+            "shutdown_time_s": 0.95,
+            "total_vm_lifecycle_s": 14.215
+          }
+        },
+        {
+          "id": 4,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.117,
+            "solution_time_s": 0.007,
+            "test_time_s": 0.719,
+            "task_total_time_s": 0.759,
+            "shutdown_time_s": 1.419,
+            "total_vm_lifecycle_s": 14.295
+          }
+        },
+        {
+          "id": 5,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.972,
+            "solution_time_s": 0.053,
+            "test_time_s": 0.803,
+            "task_total_time_s": 1.024,
+            "shutdown_time_s": 1.25,
+            "total_vm_lifecycle_s": 14.246
+          }
+        },
+        {
+          "id": 6,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.311,
+            "solution_time_s": 0.048,
+            "test_time_s": 1.115,
+            "task_total_time_s": 1.262,
+            "shutdown_time_s": 1.658,
+            "total_vm_lifecycle_s": 13.231
+          }
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.998,
+            "solution_time_s": 0.021,
+            "test_time_s": 0.897,
+            "task_total_time_s": 1.156,
+            "shutdown_time_s": 1.14,
+            "total_vm_lifecycle_s": 14.295
+          }
+        },
+        {
+          "id": 8,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.639,
+            "solution_time_s": 0.014,
+            "test_time_s": 1.553,
+            "task_total_time_s": 1.627,
+            "shutdown_time_s": 0.994,
+            "total_vm_lifecycle_s": 14.26
+          }
+        },
+        {
+          "id": 9,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.131,
+            "solution_time_s": 0.016,
+            "test_time_s": 0.839,
+            "task_total_time_s": 0.909,
+            "shutdown_time_s": 1.24,
+            "total_vm_lifecycle_s": 14.28
+          }
+        },
+        {
+          "id": 10,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.541,
+            "solution_time_s": 0.073,
+            "test_time_s": 0.994,
+            "task_total_time_s": 1.13,
+            "shutdown_time_s": 1.55,
+            "total_vm_lifecycle_s": 14.22
+          }
+        },
+        {
+          "id": 11,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.921,
+            "solution_time_s": 0.017,
+            "test_time_s": 0.829,
+            "task_total_time_s": 0.917,
+            "shutdown_time_s": 1.386,
+            "total_vm_lifecycle_s": 13.224
+          }
+        },
+        {
+          "id": 12,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.931,
+            "solution_time_s": 0.068,
+            "test_time_s": 1.57,
+            "task_total_time_s": 1.759,
+            "shutdown_time_s": 1.583,
+            "total_vm_lifecycle_s": 14.273
+          }
+        },
+        {
+          "id": 13,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.601,
+            "solution_time_s": 0.026,
+            "test_time_s": 0.892,
+            "task_total_time_s": 0.998,
+            "shutdown_time_s": 1.661,
+            "total_vm_lifecycle_s": 12.26
+          }
+        },
+        {
+          "id": 14,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.327,
+            "solution_time_s": 0.019,
+            "test_time_s": 1.05,
+            "task_total_time_s": 1.101,
+            "shutdown_time_s": 0.9,
+            "total_vm_lifecycle_s": 13.328
+          }
+        },
+        {
+          "id": 15,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 16,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.284,
+            "solution_time_s": 0.01,
+            "test_time_s": 1.84,
+            "task_total_time_s": 1.89,
+            "shutdown_time_s": 2.048,
+            "total_vm_lifecycle_s": 15.222
+          }
+        },
+        {
+          "id": 17,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.802,
+            "solution_time_s": 0.084,
+            "test_time_s": 1.319,
+            "task_total_time_s": 1.475,
+            "shutdown_time_s": 1.052,
+            "total_vm_lifecycle_s": 14.329
+          }
+        },
+        {
+          "id": 18,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.616,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.566,
+            "task_total_time_s": 0.63,
+            "shutdown_time_s": 0.992,
+            "total_vm_lifecycle_s": 14.238
+          }
+        },
+        {
+          "id": 19,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 20,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 21,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.407,
+            "solution_time_s": 0.022,
+            "test_time_s": 0.648,
+            "task_total_time_s": 0.7,
+            "shutdown_time_s": 1.216,
+            "total_vm_lifecycle_s": 14.323
+          }
+        },
+        {
+          "id": 22,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.94,
+            "solution_time_s": 0.018,
+            "test_time_s": 0.69,
+            "task_total_time_s": 0.782,
+            "shutdown_time_s": 1.523,
+            "total_vm_lifecycle_s": 13.245
+          }
+        },
+        {
+          "id": 23,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.193,
+            "solution_time_s": 0.008,
+            "test_time_s": 0.807,
+            "task_total_time_s": 0.872,
+            "shutdown_time_s": 1.23,
+            "total_vm_lifecycle_s": 14.295
+          }
+        },
+        {
+          "id": 24,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.318,
+            "solution_time_s": 0.022,
+            "test_time_s": 0.578,
+            "task_total_time_s": 0.626,
+            "shutdown_time_s": 1.323,
+            "total_vm_lifecycle_s": 14.268
+          }
+        },
+        {
+          "id": 25,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.376,
+            "solution_time_s": 0.025,
+            "test_time_s": 1.657,
+            "task_total_time_s": 1.825,
+            "shutdown_time_s": 2.071,
+            "total_vm_lifecycle_s": 14.272
+          }
+        },
+        {
+          "id": 26,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.003,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.824,
+            "task_total_time_s": 0.881,
+            "shutdown_time_s": 1.379,
+            "total_vm_lifecycle_s": 14.263
+          }
+        },
+        {
+          "id": 27,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.53,
+            "solution_time_s": 0.021,
+            "test_time_s": 0.638,
+            "task_total_time_s": 0.688,
+            "shutdown_time_s": 1.095,
+            "total_vm_lifecycle_s": 14.313
+          }
+        },
+        {
+          "id": 28,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.318,
+            "solution_time_s": 0.039,
+            "test_time_s": 0.917,
+            "task_total_time_s": 1.046,
+            "shutdown_time_s": 1.893,
+            "total_vm_lifecycle_s": 14.258
+          }
+        },
+        {
+          "id": 29,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.706,
+            "solution_time_s": 0.011,
+            "test_time_s": 1.343,
+            "task_total_time_s": 1.442,
+            "shutdown_time_s": 2.099,
+            "total_vm_lifecycle_s": 13.247
+          }
+        },
+        {
+          "id": 30,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.583,
+            "solution_time_s": 0.008,
+            "test_time_s": 1.527,
+            "task_total_time_s": 1.682,
+            "shutdown_time_s": 1.008,
+            "total_vm_lifecycle_s": 14.274
+          }
+        },
+        {
+          "id": 31,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.485,
+            "solution_time_s": 0.082,
+            "test_time_s": 1.093,
+            "task_total_time_s": 1.227,
+            "shutdown_time_s": 1.525,
+            "total_vm_lifecycle_s": 14.237
+          }
+        },
+        {
+          "id": 32,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.18,
+            "solution_time_s": 0.004,
+            "test_time_s": 0.387,
+            "task_total_time_s": 0.415,
+            "shutdown_time_s": 1.598,
+            "total_vm_lifecycle_s": 11.193
+          }
+        },
+        {
+          "id": 33,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.264,
+            "solution_time_s": 0.054,
+            "test_time_s": 1.369,
+            "task_total_time_s": 1.541,
+            "shutdown_time_s": 1.518,
+            "total_vm_lifecycle_s": 13.323
+          }
+        },
+        {
+          "id": 34,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.442,
+            "solution_time_s": 0.097,
+            "test_time_s": 0.696,
+            "task_total_time_s": 0.829,
+            "shutdown_time_s": 0.977,
+            "total_vm_lifecycle_s": 14.247
+          }
+        },
+        {
+          "id": 35,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.022,
+            "solution_time_s": 0.038,
+            "test_time_s": 0.934,
+            "task_total_time_s": 1.045,
+            "shutdown_time_s": 1.193,
+            "total_vm_lifecycle_s": 14.259
+          }
+        },
+        {
+          "id": 36,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.246,
+            "solution_time_s": 0.071,
+            "test_time_s": 0.789,
+            "task_total_time_s": 0.952,
+            "shutdown_time_s": 2.031,
+            "total_vm_lifecycle_s": 14.229
+          }
+        },
+        {
+          "id": 37,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.163,
+            "solution_time_s": 0.032,
+            "test_time_s": 1.178,
+            "task_total_time_s": 1.267,
+            "shutdown_time_s": 1.865,
+            "total_vm_lifecycle_s": 14.295
+          }
+        },
+        {
+          "id": 38,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.245,
+            "solution_time_s": 0.006,
+            "test_time_s": 1.536,
+            "task_total_time_s": 1.585,
+            "shutdown_time_s": 1.416,
+            "total_vm_lifecycle_s": 12.246
+          }
+        },
+        {
+          "id": 39,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.619,
+            "solution_time_s": 0.036,
+            "test_time_s": 1.771,
+            "task_total_time_s": 1.832,
+            "shutdown_time_s": 0.756,
+            "total_vm_lifecycle_s": 14.207
+          }
+        },
+        {
+          "id": 40,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 41,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.217,
+            "solution_time_s": 0.04,
+            "test_time_s": 1.896,
+            "task_total_time_s": 1.99,
+            "shutdown_time_s": 1.003,
+            "total_vm_lifecycle_s": 13.21
+          }
+        },
+        {
+          "id": 42,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.858,
+            "solution_time_s": 0.026,
+            "test_time_s": 1.899,
+            "task_total_time_s": 1.999,
+            "shutdown_time_s": 1.398,
+            "total_vm_lifecycle_s": 14.254
+          }
+        },
+        {
+          "id": 43,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.45,
+            "solution_time_s": 0.024,
+            "test_time_s": 1.257,
+            "task_total_time_s": 1.324,
+            "shutdown_time_s": 1.532,
+            "total_vm_lifecycle_s": 12.306
+          }
+        },
+        {
+          "id": 44,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.526,
+            "solution_time_s": 0.027,
+            "test_time_s": 0.908,
+            "task_total_time_s": 0.985,
+            "shutdown_time_s": 1.84,
+            "total_vm_lifecycle_s": 14.351
+          }
+        },
+        {
+          "id": 45,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 46,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 47,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 48,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.498,
+            "solution_time_s": 0.04,
+            "test_time_s": 2.151,
+            "task_total_time_s": 2.327,
+            "shutdown_time_s": 1.431,
+            "total_vm_lifecycle_s": 14.256
+          }
+        },
+        {
+          "id": 49,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.18,
+            "solution_time_s": 0.056,
+            "test_time_s": 1.011,
+            "task_total_time_s": 1.119,
+            "shutdown_time_s": 1.001,
+            "total_vm_lifecycle_s": 14.301
+          }
+        },
+        {
+          "id": 50,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.86,
+            "solution_time_s": 0.018,
+            "test_time_s": 1.03,
+            "task_total_time_s": 1.166,
+            "shutdown_time_s": 1.221,
+            "total_vm_lifecycle_s": 14.247
+          }
+        },
+        {
+          "id": 51,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 52,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.144,
+            "solution_time_s": 0.09,
+            "test_time_s": 1.33,
+            "task_total_time_s": 1.522,
+            "shutdown_time_s": 1.57,
+            "total_vm_lifecycle_s": 14.236
+          }
+        },
+        {
+          "id": 53,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.273,
+            "solution_time_s": 0.012,
+            "test_time_s": 0.557,
+            "task_total_time_s": 0.602,
+            "shutdown_time_s": 1.325,
+            "total_vm_lifecycle_s": 11.2
+          }
+        },
+        {
+          "id": 54,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 55,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.81,
+            "solution_time_s": 0.014,
+            "test_time_s": 1.014,
+            "task_total_time_s": 1.11,
+            "shutdown_time_s": 1.311,
+            "total_vm_lifecycle_s": 14.231
+          }
+        },
+        {
+          "id": 56,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.875,
+            "solution_time_s": 0.172,
+            "test_time_s": 2.614,
+            "task_total_time_s": 2.85,
+            "shutdown_time_s": 1.533,
+            "total_vm_lifecycle_s": 14.258
+          }
+        },
+        {
+          "id": 57,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.14,
+            "solution_time_s": 0.018,
+            "test_time_s": 1.379,
+            "task_total_time_s": 1.588,
+            "shutdown_time_s": 1.557,
+            "total_vm_lifecycle_s": 13.285
+          }
+        },
+        {
+          "id": 58,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.43,
+            "solution_time_s": 0.034,
+            "test_time_s": 1.18,
+            "task_total_time_s": 1.268,
+            "shutdown_time_s": 1.535,
+            "total_vm_lifecycle_s": 14.233
+          }
+        },
+        {
+          "id": 59,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.45,
+            "solution_time_s": 0.078,
+            "test_time_s": 0.809,
+            "task_total_time_s": 0.924,
+            "shutdown_time_s": 1.831,
+            "total_vm_lifecycle_s": 15.204
+          }
+        }
+      ],
+      "vm_count": 60,
+      "repeat": 1,
+      "exit_code": 1,
+      "timestamp": "2026-02-12T12:29:45-07:00"
+    },
+    {
+      "total_instances": 70,
+      "completed": 39,
+      "total_tests_passed": 78,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 20,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 8.825,
+          "max": 11.457,
+          "avg": 10.29
+        },
+        "solution_time_s": {
+          "min": 0.004,
+          "max": 0.115,
+          "avg": 0.037
+        },
+        "test_time_s": {
+          "min": 0.472,
+          "max": 1.298,
+          "avg": 0.889
+        },
+        "task_total_time_s": {
+          "min": 0.544,
+          "max": 1.405,
+          "avg": 0.998
+        },
+        "shutdown_time_s": {
+          "min": 1.134,
+          "max": 1.874,
+          "avg": 1.491
+        },
+        "total_vm_lifecycle_s": {
+          "min": 11.198,
+          "max": 13.211,
+          "avg": 12.779
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 1,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 2,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 3,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 4,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.195,
+            "solution_time_s": 0.011,
+            "test_time_s": 1.298,
+            "task_total_time_s": 1.348,
+            "shutdown_time_s": 1.656,
+            "total_vm_lifecycle_s": 13.199
+          }
+        },
+        {
+          "id": 5,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.272,
+            "solution_time_s": 0.042,
+            "test_time_s": 0.643,
+            "task_total_time_s": 0.72,
+            "shutdown_time_s": 1.204,
+            "total_vm_lifecycle_s": 13.195
+          }
+        },
+        {
+          "id": 6,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.926,
+            "solution_time_s": 0.049,
+            "test_time_s": 0.643,
+            "task_total_time_s": 0.889,
+            "shutdown_time_s": 1.342,
+            "total_vm_lifecycle_s": 13.157
+          }
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.645,
+            "solution_time_s": 0.023,
+            "test_time_s": 0.985,
+            "task_total_time_s": 1.09,
+            "shutdown_time_s": 1.49,
+            "total_vm_lifecycle_s": 12.225
+          }
+        },
+        {
+          "id": 8,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.701,
+            "solution_time_s": 0.036,
+            "test_time_s": 0.553,
+            "task_total_time_s": 0.704,
+            "shutdown_time_s": 1.803,
+            "total_vm_lifecycle_s": 13.208
+          }
+        },
+        {
+          "id": 9,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.825,
+            "solution_time_s": 0.007,
+            "test_time_s": 0.688,
+            "task_total_time_s": 0.726,
+            "shutdown_time_s": 1.673,
+            "total_vm_lifecycle_s": 11.225
+          }
+        },
+        {
+          "id": 10,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 11,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 12,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 13,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 14,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 15,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 16,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 17,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 18,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 19,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 20,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.139,
+            "solution_time_s": 0.071,
+            "test_time_s": 1.186,
+            "task_total_time_s": 1.341,
+            "shutdown_time_s": 1.695,
+            "total_vm_lifecycle_s": 13.175
+          }
+        },
+        {
+          "id": 21,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 22,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.785,
+            "solution_time_s": 0.049,
+            "test_time_s": 0.734,
+            "task_total_time_s": 0.832,
+            "shutdown_time_s": 1.58,
+            "total_vm_lifecycle_s": 13.197
+          }
+        },
+        {
+          "id": 23,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.294,
+            "solution_time_s": 0.064,
+            "test_time_s": 0.906,
+            "task_total_time_s": 1.003,
+            "shutdown_time_s": 1.874,
+            "total_vm_lifecycle_s": 13.17
+          }
+        },
+        {
+          "id": 24,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.865,
+            "solution_time_s": 0.079,
+            "test_time_s": 1.023,
+            "task_total_time_s": 1.158,
+            "shutdown_time_s": 1.197,
+            "total_vm_lifecycle_s": 12.219
+          }
+        },
+        {
+          "id": 25,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.018,
+            "solution_time_s": 0.115,
+            "test_time_s": 0.655,
+            "task_total_time_s": 0.803,
+            "shutdown_time_s": 1.381,
+            "total_vm_lifecycle_s": 13.202
+          }
+        },
+        {
+          "id": 26,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.139,
+            "solution_time_s": 0.008,
+            "test_time_s": 0.754,
+            "task_total_time_s": 0.814,
+            "shutdown_time_s": 1.208,
+            "total_vm_lifecycle_s": 13.162
+          }
+        },
+        {
+          "id": 27,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 28,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.73,
+            "solution_time_s": 0.014,
+            "test_time_s": 0.857,
+            "task_total_time_s": 0.895,
+            "shutdown_time_s": 1.548,
+            "total_vm_lifecycle_s": 13.173
+          }
+        },
+        {
+          "id": 29,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 30,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.806,
+            "solution_time_s": 0.089,
+            "test_time_s": 0.61,
+            "task_total_time_s": 0.825,
+            "shutdown_time_s": 1.57,
+            "total_vm_lifecycle_s": 13.202
+          }
+        },
+        {
+          "id": 31,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.041,
+            "solution_time_s": 0.033,
+            "test_time_s": 1.178,
+            "task_total_time_s": 1.355,
+            "shutdown_time_s": 1.843,
+            "total_vm_lifecycle_s": 12.239
+          }
+        },
+        {
+          "id": 32,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.575,
+            "solution_time_s": 0.039,
+            "test_time_s": 1.015,
+            "task_total_time_s": 1.129,
+            "shutdown_time_s": 1.473,
+            "total_vm_lifecycle_s": 13.177
+          }
+        },
+        {
+          "id": 33,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.361,
+            "solution_time_s": 0.04,
+            "test_time_s": 1.142,
+            "task_total_time_s": 1.257,
+            "shutdown_time_s": 1.575,
+            "total_vm_lifecycle_s": 13.192
+          }
+        },
+        {
+          "id": 34,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.389,
+            "solution_time_s": 0.021,
+            "test_time_s": 0.993,
+            "task_total_time_s": 1.049,
+            "shutdown_time_s": 1.742,
+            "total_vm_lifecycle_s": 13.18
+          }
+        },
+        {
+          "id": 35,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.474,
+            "solution_time_s": 0.022,
+            "test_time_s": 0.974,
+            "task_total_time_s": 1.053,
+            "shutdown_time_s": 1.646,
+            "total_vm_lifecycle_s": 13.173
+          }
+        },
+        {
+          "id": 36,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.338,
+            "solution_time_s": 0.032,
+            "test_time_s": 0.915,
+            "task_total_time_s": 1.008,
+            "shutdown_time_s": 1.83,
+            "total_vm_lifecycle_s": 12.175
+          }
+        },
+        {
+          "id": 37,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 38,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 39,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 40,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 41,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.636,
+            "solution_time_s": 0.004,
+            "test_time_s": 1.186,
+            "task_total_time_s": 1.29,
+            "shutdown_time_s": 1.284,
+            "total_vm_lifecycle_s": 12.21
+          }
+        },
+        {
+          "id": 42,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.336,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.635,
+            "task_total_time_s": 0.68,
+            "shutdown_time_s": 1.181,
+            "total_vm_lifecycle_s": 13.198
+          }
+        },
+        {
+          "id": 43,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.165,
+            "solution_time_s": 0.062,
+            "test_time_s": 1.277,
+            "task_total_time_s": 1.405,
+            "shutdown_time_s": 1.581,
+            "total_vm_lifecycle_s": 12.15
+          }
+        },
+        {
+          "id": 44,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.793,
+            "solution_time_s": 0.015,
+            "test_time_s": 1.141,
+            "task_total_time_s": 1.249,
+            "shutdown_time_s": 1.134,
+            "total_vm_lifecycle_s": 12.176
+          }
+        },
+        {
+          "id": 45,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.721,
+            "solution_time_s": 0.027,
+            "test_time_s": 0.76,
+            "task_total_time_s": 0.887,
+            "shutdown_time_s": 1.507,
+            "total_vm_lifecycle_s": 12.115
+          }
+        },
+        {
+          "id": 46,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 47,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.566,
+            "solution_time_s": 0.108,
+            "test_time_s": 1.053,
+            "task_total_time_s": 1.216,
+            "shutdown_time_s": 1.392,
+            "total_vm_lifecycle_s": 13.175
+          }
+        },
+        {
+          "id": 48,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.171,
+            "solution_time_s": 0.02,
+            "test_time_s": 0.705,
+            "task_total_time_s": 0.766,
+            "shutdown_time_s": 1.209,
+            "total_vm_lifecycle_s": 12.146
+          }
+        },
+        {
+          "id": 49,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.132,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.72,
+            "task_total_time_s": 0.905,
+            "shutdown_time_s": 1.175,
+            "total_vm_lifecycle_s": 12.212
+          }
+        },
+        {
+          "id": 50,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.874,
+            "solution_time_s": 0.013,
+            "test_time_s": 0.83,
+            "task_total_time_s": 0.867,
+            "shutdown_time_s": 1.413,
+            "total_vm_lifecycle_s": 13.154
+          }
+        },
+        {
+          "id": 51,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.516,
+            "solution_time_s": 0.023,
+            "test_time_s": 0.819,
+            "task_total_time_s": 0.931,
+            "shutdown_time_s": 1.733,
+            "total_vm_lifecycle_s": 13.18
+          }
+        },
+        {
+          "id": 52,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.363,
+            "solution_time_s": 0.065,
+            "test_time_s": 1.044,
+            "task_total_time_s": 1.193,
+            "shutdown_time_s": 1.621,
+            "total_vm_lifecycle_s": 13.177
+          }
+        },
+        {
+          "id": 53,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 54,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.663,
+            "solution_time_s": 0.019,
+            "test_time_s": 1.224,
+            "task_total_time_s": 1.363,
+            "shutdown_time_s": 1.251,
+            "total_vm_lifecycle_s": 12.277
+          }
+        },
+        {
+          "id": 55,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.294,
+            "solution_time_s": 0.056,
+            "test_time_s": 1.055,
+            "task_total_time_s": 1.197,
+            "shutdown_time_s": 1.712,
+            "total_vm_lifecycle_s": 12.204
+          }
+        },
+        {
+          "id": 56,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.457,
+            "solution_time_s": 0.037,
+            "test_time_s": 0.472,
+            "task_total_time_s": 0.544,
+            "shutdown_time_s": 1.198,
+            "total_vm_lifecycle_s": 13.199
+          }
+        },
+        {
+          "id": 57,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.85,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.628,
+            "task_total_time_s": 0.68,
+            "shutdown_time_s": 1.681,
+            "total_vm_lifecycle_s": 13.211
+          }
+        },
+        {
+          "id": 58,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.232,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.58,
+            "task_total_time_s": 0.665,
+            "shutdown_time_s": 1.297,
+            "total_vm_lifecycle_s": 13.194
+          }
+        },
+        {
+          "id": 59,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.666,
+            "solution_time_s": 0.063,
+            "test_time_s": 0.882,
+            "task_total_time_s": 1.025,
+            "shutdown_time_s": 1.47,
+            "total_vm_lifecycle_s": 13.161
+          }
+        },
+        {
+          "id": 60,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 61,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 62,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 63,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 64,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.925,
+            "solution_time_s": 0.025,
+            "test_time_s": 0.628,
+            "task_total_time_s": 0.726,
+            "shutdown_time_s": 1.547,
+            "total_vm_lifecycle_s": 11.198
+          }
+        },
+        {
+          "id": 65,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 66,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 67,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 68,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 69,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.426,
+            "solution_time_s": 0.009,
+            "test_time_s": 1.266,
+            "task_total_time_s": 1.343,
+            "shutdown_time_s": 1.417,
+            "total_vm_lifecycle_s": 13.185
+          }
+        }
+      ],
+      "vm_count": 70,
+      "repeat": 1,
+      "exit_code": 1,
+      "timestamp": "2026-02-12T12:31:47-07:00"
+    },
+    {
+      "total_instances": 80,
+      "completed": 31,
+      "total_tests_passed": 62,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 22,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 8.657,
+          "max": 9.967,
+          "avg": 9.376
+        },
+        "solution_time_s": {
+          "min": 0.005,
+          "max": 0.112,
+          "avg": 0.033
+        },
+        "test_time_s": {
+          "min": 0.502,
+          "max": 1.207,
+          "avg": 0.766
+        },
+        "task_total_time_s": {
+          "min": 0.589,
+          "max": 1.299,
+          "avg": 0.85
+        },
+        "shutdown_time_s": {
+          "min": 0.629,
+          "max": 1.796,
+          "avg": 1.185
+        },
+        "total_vm_lifecycle_s": {
+          "min": 11.078,
+          "max": 12.162,
+          "avg": 11.411
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 1,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 2,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 3,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 4,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 5,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 6,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.963,
+            "solution_time_s": 0.006,
+            "test_time_s": 0.578,
+            "task_total_time_s": 0.625,
+            "shutdown_time_s": 1.499,
+            "total_vm_lifecycle_s": 12.088
+          }
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.274,
+            "solution_time_s": 0.037,
+            "test_time_s": 1.054,
+            "task_total_time_s": 1.127,
+            "shutdown_time_s": 0.734,
+            "total_vm_lifecycle_s": 11.135
+          }
+        },
+        {
+          "id": 8,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 9,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.75,
+            "solution_time_s": 0.112,
+            "test_time_s": 0.619,
+            "task_total_time_s": 0.794,
+            "shutdown_time_s": 1.574,
+            "total_vm_lifecycle_s": 12.118
+          }
+        },
+        {
+          "id": 10,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 11,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 12,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.365,
+            "solution_time_s": 0.005,
+            "test_time_s": 0.777,
+            "task_total_time_s": 0.837,
+            "shutdown_time_s": 0.951,
+            "total_vm_lifecycle_s": 11.153
+          }
+        },
+        {
+          "id": 13,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 14,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 15,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.857,
+            "solution_time_s": 0.029,
+            "test_time_s": 0.591,
+            "task_total_time_s": 0.662,
+            "shutdown_time_s": 1.643,
+            "total_vm_lifecycle_s": 12.162
+          }
+        },
+        {
+          "id": 16,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 17,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 18,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.223,
+            "solution_time_s": 0.032,
+            "test_time_s": 0.897,
+            "task_total_time_s": 0.971,
+            "shutdown_time_s": 0.967,
+            "total_vm_lifecycle_s": 11.16
+          }
+        },
+        {
+          "id": 19,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 20,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.657,
+            "solution_time_s": 0.024,
+            "test_time_s": 0.575,
+            "task_total_time_s": 0.646,
+            "shutdown_time_s": 1.796,
+            "total_vm_lifecycle_s": 11.099
+          }
+        },
+        {
+          "id": 21,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 22,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.736,
+            "solution_time_s": 0.022,
+            "test_time_s": 1.207,
+            "task_total_time_s": 1.299,
+            "shutdown_time_s": 1.054,
+            "total_vm_lifecycle_s": 11.089
+          }
+        },
+        {
+          "id": 23,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 24,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 25,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 26,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 27,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.563,
+            "solution_time_s": 0.044,
+            "test_time_s": 0.653,
+            "task_total_time_s": 0.717,
+            "shutdown_time_s": 0.842,
+            "total_vm_lifecycle_s": 11.123
+          }
+        },
+        {
+          "id": 28,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 29,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 30,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 31,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 32,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 33,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 34,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 35,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 36,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 37,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 38,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.704,
+            "solution_time_s": 0.041,
+            "test_time_s": 0.752,
+            "task_total_time_s": 0.825,
+            "shutdown_time_s": 1.597,
+            "total_vm_lifecycle_s": 12.126
+          }
+        },
+        {
+          "id": 39,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.888,
+            "solution_time_s": 0.055,
+            "test_time_s": 0.61,
+            "task_total_time_s": 0.696,
+            "shutdown_time_s": 1.525,
+            "total_vm_lifecycle_s": 12.109
+          }
+        },
+        {
+          "id": 40,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.661,
+            "solution_time_s": 0.063,
+            "test_time_s": 0.776,
+            "task_total_time_s": 0.917,
+            "shutdown_time_s": 1.529,
+            "total_vm_lifecycle_s": 12.107
+          }
+        },
+        {
+          "id": 41,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 42,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.967,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.502,
+            "task_total_time_s": 0.589,
+            "shutdown_time_s": 1.589,
+            "total_vm_lifecycle_s": 12.146
+          }
+        },
+        {
+          "id": 43,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 44,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.388,
+            "solution_time_s": 0.011,
+            "test_time_s": 0.641,
+            "task_total_time_s": 0.678,
+            "shutdown_time_s": 1.025,
+            "total_vm_lifecycle_s": 11.091
+          }
+        },
+        {
+          "id": 45,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.471,
+            "solution_time_s": 0.076,
+            "test_time_s": 0.726,
+            "task_total_time_s": 0.833,
+            "shutdown_time_s": 0.799,
+            "total_vm_lifecycle_s": 11.103
+          }
+        },
+        {
+          "id": 46,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.906,
+            "solution_time_s": 0.039,
+            "test_time_s": 1.178,
+            "task_total_time_s": 1.26,
+            "shutdown_time_s": 0.97,
+            "total_vm_lifecycle_s": 11.135
+          }
+        },
+        {
+          "id": 47,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 48,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.881,
+            "solution_time_s": 0.024,
+            "test_time_s": 0.544,
+            "task_total_time_s": 0.617,
+            "shutdown_time_s": 1.628,
+            "total_vm_lifecycle_s": 11.126
+          }
+        },
+        {
+          "id": 49,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 50,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 51,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.275,
+            "solution_time_s": 0.025,
+            "test_time_s": 0.64,
+            "task_total_time_s": 0.732,
+            "shutdown_time_s": 1.094,
+            "total_vm_lifecycle_s": 11.101
+          }
+        },
+        {
+          "id": 52,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 53,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 54,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 55,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.496,
+            "solution_time_s": 0.027,
+            "test_time_s": 0.542,
+            "task_total_time_s": 0.613,
+            "shutdown_time_s": 0.969,
+            "total_vm_lifecycle_s": 11.078
+          }
+        },
+        {
+          "id": 56,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 57,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.681,
+            "solution_time_s": 0.062,
+            "test_time_s": 0.851,
+            "task_total_time_s": 1,
+            "shutdown_time_s": 1.453,
+            "total_vm_lifecycle_s": 11.133
+          }
+        },
+        {
+          "id": 58,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.085,
+            "solution_time_s": 0.021,
+            "test_time_s": 0.921,
+            "task_total_time_s": 0.985,
+            "shutdown_time_s": 1.04,
+            "total_vm_lifecycle_s": 11.11
+          }
+        },
+        {
+          "id": 59,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 60,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 61,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 62,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 63,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.53,
+            "solution_time_s": 0.04,
+            "test_time_s": 0.832,
+            "task_total_time_s": 0.924,
+            "shutdown_time_s": 0.691,
+            "total_vm_lifecycle_s": 11.145
+          }
+        },
+        {
+          "id": 64,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.321,
+            "solution_time_s": 0.034,
+            "test_time_s": 0.783,
+            "task_total_time_s": 0.879,
+            "shutdown_time_s": 0.912,
+            "total_vm_lifecycle_s": 11.112
+          }
+        },
+        {
+          "id": 65,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 66,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.888,
+            "solution_time_s": 0.018,
+            "test_time_s": 0.879,
+            "task_total_time_s": 0.941,
+            "shutdown_time_s": 1.295,
+            "total_vm_lifecycle_s": 11.124
+          }
+        },
+        {
+          "id": 67,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 68,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 69,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.244,
+            "solution_time_s": 0.011,
+            "test_time_s": 0.855,
+            "task_total_time_s": 0.896,
+            "shutdown_time_s": 0.982,
+            "total_vm_lifecycle_s": 11.123
+          }
+        },
+        {
+          "id": 70,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 71,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.43,
+            "solution_time_s": 0.027,
+            "test_time_s": 0.966,
+            "task_total_time_s": 1.065,
+            "shutdown_time_s": 1.615,
+            "total_vm_lifecycle_s": 12.11
+          }
+        },
+        {
+          "id": 72,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 73,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 74,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.699,
+            "solution_time_s": 0.022,
+            "test_time_s": 0.732,
+            "task_total_time_s": 0.81,
+            "shutdown_time_s": 0.629,
+            "total_vm_lifecycle_s": 11.138
+          }
+        },
+        {
+          "id": 75,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.716,
+            "solution_time_s": 0.027,
+            "test_time_s": 0.637,
+            "task_total_time_s": 0.772,
+            "shutdown_time_s": 0.677,
+            "total_vm_lifecycle_s": 11.165
+          }
+        },
+        {
+          "id": 76,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.338,
+            "solution_time_s": 0.046,
+            "test_time_s": 0.802,
+            "task_total_time_s": 0.902,
+            "shutdown_time_s": 0.863,
+            "total_vm_lifecycle_s": 11.103
+          }
+        },
+        {
+          "id": 77,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 78,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.936,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.543,
+            "task_total_time_s": 0.616,
+            "shutdown_time_s": 1.537,
+            "total_vm_lifecycle_s": 12.09
+          }
+        },
+        {
+          "id": 79,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.754,
+            "solution_time_s": 0.026,
+            "test_time_s": 1.072,
+            "task_total_time_s": 1.129,
+            "shutdown_time_s": 1.245,
+            "total_vm_lifecycle_s": 11.128
+          }
+        }
+      ],
+      "vm_count": 80,
+      "repeat": 1,
+      "exit_code": 1,
+      "timestamp": "2026-02-12T12:34:03-07:00"
+    },
+    {
+      "total_instances": 90,
+      "completed": 49,
+      "total_tests_passed": 98,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 25,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 9.184,
+          "max": 12.709,
+          "avg": 11.281
+        },
+        "solution_time_s": {
+          "min": 0.005,
+          "max": 0.095,
+          "avg": 0.034
+        },
+        "test_time_s": {
+          "min": 0.459,
+          "max": 1.934,
+          "avg": 1.132
+        },
+        "task_total_time_s": {
+          "min": 0.515,
+          "max": 2.074,
+          "avg": 1.247
+        },
+        "shutdown_time_s": {
+          "min": 0.869,
+          "max": 2.055,
+          "avg": 1.416
+        },
+        "total_vm_lifecycle_s": {
+          "min": 11.154,
+          "max": 15.286,
+          "avg": 13.944
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 1,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 2,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.692,
+            "solution_time_s": 0.078,
+            "test_time_s": 1.088,
+            "task_total_time_s": 1.212,
+            "shutdown_time_s": 1.362,
+            "total_vm_lifecycle_s": 14.265
+          }
+        },
+        {
+          "id": 3,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 4,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.301,
+            "solution_time_s": 0.009,
+            "test_time_s": 1.131,
+            "task_total_time_s": 1.266,
+            "shutdown_time_s": 1.689,
+            "total_vm_lifecycle_s": 13.255
+          }
+        },
+        {
+          "id": 5,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.666,
+            "solution_time_s": 0.04,
+            "test_time_s": 1.462,
+            "task_total_time_s": 1.594,
+            "shutdown_time_s": 1.013,
+            "total_vm_lifecycle_s": 14.274
+          }
+        },
+        {
+          "id": 6,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 7,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 8,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 9,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 10,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.537,
+            "solution_time_s": 0.013,
+            "test_time_s": 0.709,
+            "task_total_time_s": 0.752,
+            "shutdown_time_s": 1.002,
+            "total_vm_lifecycle_s": 14.291
+          }
+        },
+        {
+          "id": 11,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 12,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.493,
+            "solution_time_s": 0.035,
+            "test_time_s": 1.266,
+            "task_total_time_s": 1.343,
+            "shutdown_time_s": 1.438,
+            "total_vm_lifecycle_s": 14.273
+          }
+        },
+        {
+          "id": 13,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 14,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.314,
+            "solution_time_s": 0.01,
+            "test_time_s": 1.398,
+            "task_total_time_s": 1.453,
+            "shutdown_time_s": 1.427,
+            "total_vm_lifecycle_s": 14.194
+          }
+        },
+        {
+          "id": 15,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 16,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.044,
+            "solution_time_s": 0.017,
+            "test_time_s": 1.372,
+            "task_total_time_s": 1.449,
+            "shutdown_time_s": 1.769,
+            "total_vm_lifecycle_s": 13.262
+          }
+        },
+        {
+          "id": 17,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 18,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 19,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 20,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 21,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 22,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.088,
+            "solution_time_s": 0.054,
+            "test_time_s": 1.526,
+            "task_total_time_s": 1.824,
+            "shutdown_time_s": 1.478,
+            "total_vm_lifecycle_s": 13.39
+          }
+        },
+        {
+          "id": 23,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 24,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.315,
+            "solution_time_s": 0.012,
+            "test_time_s": 1.407,
+            "task_total_time_s": 1.474,
+            "shutdown_time_s": 1.471,
+            "total_vm_lifecycle_s": 14.261
+          }
+        },
+        {
+          "id": 25,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.362,
+            "solution_time_s": 0.032,
+            "test_time_s": 1.115,
+            "task_total_time_s": 1.223,
+            "shutdown_time_s": 1.653,
+            "total_vm_lifecycle_s": 13.238
+          }
+        },
+        {
+          "id": 26,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.868,
+            "solution_time_s": 0.057,
+            "test_time_s": 1.019,
+            "task_total_time_s": 1.124,
+            "shutdown_time_s": 1.307,
+            "total_vm_lifecycle_s": 14.3
+          }
+        },
+        {
+          "id": 27,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 28,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 29,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 30,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 31,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.519,
+            "solution_time_s": 0.019,
+            "test_time_s": 0.648,
+            "task_total_time_s": 0.71,
+            "shutdown_time_s": 2.055,
+            "total_vm_lifecycle_s": 14.285
+          }
+        },
+        {
+          "id": 32,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.791,
+            "solution_time_s": 0.015,
+            "test_time_s": 1.762,
+            "task_total_time_s": 1.909,
+            "shutdown_time_s": 1.634,
+            "total_vm_lifecycle_s": 14.333
+          }
+        },
+        {
+          "id": 33,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.878,
+            "solution_time_s": 0.068,
+            "test_time_s": 0.924,
+            "task_total_time_s": 1.171,
+            "shutdown_time_s": 1.201,
+            "total_vm_lifecycle_s": 14.249
+          }
+        },
+        {
+          "id": 34,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.324,
+            "solution_time_s": 0.027,
+            "test_time_s": 0.944,
+            "task_total_time_s": 1.041,
+            "shutdown_time_s": 1.921,
+            "total_vm_lifecycle_s": 15.286
+          }
+        },
+        {
+          "id": 35,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.709,
+            "solution_time_s": 0.006,
+            "test_time_s": 0.589,
+            "task_total_time_s": 0.624,
+            "shutdown_time_s": 0.951,
+            "total_vm_lifecycle_s": 14.284
+          }
+        },
+        {
+          "id": 36,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 37,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.413,
+            "solution_time_s": 0.017,
+            "test_time_s": 0.993,
+            "task_total_time_s": 1.056,
+            "shutdown_time_s": 1.869,
+            "total_vm_lifecycle_s": 12.338
+          }
+        },
+        {
+          "id": 38,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.765,
+            "solution_time_s": 0.089,
+            "test_time_s": 1.115,
+            "task_total_time_s": 1.326,
+            "shutdown_time_s": 1.177,
+            "total_vm_lifecycle_s": 14.269
+          }
+        },
+        {
+          "id": 39,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.772,
+            "solution_time_s": 0.029,
+            "test_time_s": 1.072,
+            "task_total_time_s": 1.19,
+            "shutdown_time_s": 1.279,
+            "total_vm_lifecycle_s": 14.242
+          }
+        },
+        {
+          "id": 40,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 41,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 42,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 43,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.411,
+            "solution_time_s": 0.048,
+            "test_time_s": 1.538,
+            "task_total_time_s": 1.646,
+            "shutdown_time_s": 1.14,
+            "total_vm_lifecycle_s": 14.197
+          }
+        },
+        {
+          "id": 44,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 45,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 46,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 47,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 48,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 49,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 50,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 51,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.184,
+            "solution_time_s": 0.014,
+            "test_time_s": 0.459,
+            "task_total_time_s": 0.515,
+            "shutdown_time_s": 1.558,
+            "total_vm_lifecycle_s": 11.257
+          }
+        },
+        {
+          "id": 52,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.622,
+            "solution_time_s": 0.029,
+            "test_time_s": 1.934,
+            "task_total_time_s": 2.021,
+            "shutdown_time_s": 1.679,
+            "total_vm_lifecycle_s": 14.322
+          }
+        },
+        {
+          "id": 53,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 54,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.442,
+            "solution_time_s": 0.04,
+            "test_time_s": 1.337,
+            "task_total_time_s": 1.454,
+            "shutdown_time_s": 1.349,
+            "total_vm_lifecycle_s": 14.244
+          }
+        },
+        {
+          "id": 55,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.819,
+            "solution_time_s": 0.014,
+            "test_time_s": 1.104,
+            "task_total_time_s": 1.18,
+            "shutdown_time_s": 1.216,
+            "total_vm_lifecycle_s": 14.214
+          }
+        },
+        {
+          "id": 56,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.455,
+            "solution_time_s": 0.006,
+            "test_time_s": 0.912,
+            "task_total_time_s": 1.004,
+            "shutdown_time_s": 1.816,
+            "total_vm_lifecycle_s": 15.275
+          }
+        },
+        {
+          "id": 57,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 58,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.961,
+            "solution_time_s": 0.048,
+            "test_time_s": 1.639,
+            "task_total_time_s": 1.755,
+            "shutdown_time_s": 1.511,
+            "total_vm_lifecycle_s": 14.227
+          }
+        },
+        {
+          "id": 59,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.472,
+            "solution_time_s": 0.018,
+            "test_time_s": 1.129,
+            "task_total_time_s": 1.248,
+            "shutdown_time_s": 1.516,
+            "total_vm_lifecycle_s": 12.236
+          }
+        },
+        {
+          "id": 60,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.694,
+            "solution_time_s": 0.064,
+            "test_time_s": 1.218,
+            "task_total_time_s": 1.412,
+            "shutdown_time_s": 1.127,
+            "total_vm_lifecycle_s": 14.233
+          }
+        },
+        {
+          "id": 61,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.061,
+            "solution_time_s": 0.005,
+            "test_time_s": 1.011,
+            "task_total_time_s": 1.058,
+            "shutdown_time_s": 1.169,
+            "total_vm_lifecycle_s": 14.288
+          }
+        },
+        {
+          "id": 62,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.359,
+            "solution_time_s": 0.012,
+            "test_time_s": 0.563,
+            "task_total_time_s": 0.607,
+            "shutdown_time_s": 1.257,
+            "total_vm_lifecycle_s": 14.223
+          }
+        },
+        {
+          "id": 63,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.883,
+            "solution_time_s": 0.095,
+            "test_time_s": 1.361,
+            "task_total_time_s": 1.518,
+            "shutdown_time_s": 1.856,
+            "total_vm_lifecycle_s": 14.256
+          }
+        },
+        {
+          "id": 64,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 65,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 66,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.738,
+            "solution_time_s": 0.05,
+            "test_time_s": 0.748,
+            "task_total_time_s": 1.059,
+            "shutdown_time_s": 1.47,
+            "total_vm_lifecycle_s": 14.267
+          }
+        },
+        {
+          "id": 67,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.947,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.905,
+            "task_total_time_s": 0.95,
+            "shutdown_time_s": 1.39,
+            "total_vm_lifecycle_s": 14.287
+          }
+        },
+        {
+          "id": 68,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 69,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.144,
+            "solution_time_s": 0.019,
+            "test_time_s": 0.865,
+            "task_total_time_s": 0.918,
+            "shutdown_time_s": 1.248,
+            "total_vm_lifecycle_s": 14.31
+          }
+        },
+        {
+          "id": 70,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.314,
+            "solution_time_s": 0.045,
+            "test_time_s": 0.819,
+            "task_total_time_s": 0.939,
+            "shutdown_time_s": 1.028,
+            "total_vm_lifecycle_s": 14.282
+          }
+        },
+        {
+          "id": 71,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 72,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.59,
+            "solution_time_s": 0.026,
+            "test_time_s": 1.089,
+            "task_total_time_s": 1.182,
+            "shutdown_time_s": 1.596,
+            "total_vm_lifecycle_s": 14.368
+          }
+        },
+        {
+          "id": 73,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.036,
+            "solution_time_s": 0.032,
+            "test_time_s": 0.959,
+            "task_total_time_s": 1.052,
+            "shutdown_time_s": 1.254,
+            "total_vm_lifecycle_s": 12.342
+          }
+        },
+        {
+          "id": 74,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 75,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.951,
+            "solution_time_s": 0.09,
+            "test_time_s": 1.55,
+            "task_total_time_s": 1.818,
+            "shutdown_time_s": 1.489,
+            "total_vm_lifecycle_s": 14.258
+          }
+        },
+        {
+          "id": 76,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.697,
+            "solution_time_s": 0.085,
+            "test_time_s": 1.142,
+            "task_total_time_s": 1.315,
+            "shutdown_time_s": 1.291,
+            "total_vm_lifecycle_s": 14.302
+          }
+        },
+        {
+          "id": 77,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.582,
+            "solution_time_s": 0.033,
+            "test_time_s": 1.522,
+            "task_total_time_s": 1.611,
+            "shutdown_time_s": 2.053,
+            "total_vm_lifecycle_s": 13.246
+          }
+        },
+        {
+          "id": 78,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.259,
+            "solution_time_s": 0.008,
+            "test_time_s": 1.113,
+            "task_total_time_s": 1.175,
+            "shutdown_time_s": 1.884,
+            "total_vm_lifecycle_s": 14.319
+          }
+        },
+        {
+          "id": 79,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.7,
+            "solution_time_s": 0.014,
+            "test_time_s": 1.41,
+            "task_total_time_s": 1.469,
+            "shutdown_time_s": 1.068,
+            "total_vm_lifecycle_s": 14.236
+          }
+        },
+        {
+          "id": 80,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 81,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.027,
+            "solution_time_s": 0.04,
+            "test_time_s": 1.268,
+            "task_total_time_s": 1.439,
+            "shutdown_time_s": 1.781,
+            "total_vm_lifecycle_s": 14.246
+          }
+        },
+        {
+          "id": 82,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.949,
+            "solution_time_s": 0.016,
+            "test_time_s": 0.791,
+            "task_total_time_s": 0.9,
+            "shutdown_time_s": 1.376,
+            "total_vm_lifecycle_s": 14.224
+          }
+        },
+        {
+          "id": 83,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 84,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.85,
+            "solution_time_s": 0.062,
+            "test_time_s": 1.859,
+            "task_total_time_s": 2.074,
+            "shutdown_time_s": 1.406,
+            "total_vm_lifecycle_s": 13.329
+          }
+        },
+        {
+          "id": 85,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.374,
+            "solution_time_s": 0.066,
+            "test_time_s": 0.894,
+            "task_total_time_s": 1.055,
+            "shutdown_time_s": 0.869,
+            "total_vm_lifecycle_s": 14.298
+          }
+        },
+        {
+          "id": 86,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.231,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.899,
+            "task_total_time_s": 0.948,
+            "shutdown_time_s": 1.065,
+            "total_vm_lifecycle_s": 14.244
+          }
+        },
+        {
+          "id": 87,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.457,
+            "solution_time_s": 0.016,
+            "test_time_s": 0.696,
+            "task_total_time_s": 0.757,
+            "shutdown_time_s": 0.94,
+            "total_vm_lifecycle_s": 11.154
+          }
+        },
+        {
+          "id": 88,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 89,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.7,
+            "solution_time_s": 0.024,
+            "test_time_s": 1.196,
+            "task_total_time_s": 1.29,
+            "shutdown_time_s": 1.29,
+            "total_vm_lifecycle_s": 14.28
+          }
+        }
+      ],
+      "vm_count": 90,
+      "repeat": 1,
+      "exit_code": 1,
+      "timestamp": "2026-02-12T12:36:36-07:00"
+    },
+    {
+      "total_instances": 100,
+      "completed": 47,
+      "total_tests_passed": 94,
+      "total_tests_failed": 0,
+      "wall_clock_seconds": 24,
+      "timing_summary": {
+        "boot_time_s": {
+          "min": 8.776,
+          "max": 12.469,
+          "avg": 10.776
+        },
+        "solution_time_s": {
+          "min": 0.004,
+          "max": 0.106,
+          "avg": 0.033
+        },
+        "test_time_s": {
+          "min": 0.451,
+          "max": 1.652,
+          "avg": 0.957
+        },
+        "task_total_time_s": {
+          "min": 0.529,
+          "max": 1.753,
+          "avg": 1.061
+        },
+        "shutdown_time_s": {
+          "min": 0.905,
+          "max": 2.185,
+          "avg": 1.604
+        },
+        "total_vm_lifecycle_s": {
+          "min": 11.162,
+          "max": 14.333,
+          "avg": 13.44
+        }
+      },
+      "instances": [
+        {
+          "id": 0,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.112,
+            "solution_time_s": 0.022,
+            "test_time_s": 0.594,
+            "task_total_time_s": 0.641,
+            "shutdown_time_s": 1.493,
+            "total_vm_lifecycle_s": 14.246
+          }
+        },
+        {
+          "id": 1,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.304,
+            "solution_time_s": 0.06,
+            "test_time_s": 1.132,
+            "task_total_time_s": 1.242,
+            "shutdown_time_s": 1.668,
+            "total_vm_lifecycle_s": 14.214
+          }
+        },
+        {
+          "id": 2,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.301,
+            "solution_time_s": 0.048,
+            "test_time_s": 1.188,
+            "task_total_time_s": 1.33,
+            "shutdown_time_s": 1.592,
+            "total_vm_lifecycle_s": 14.223
+          }
+        },
+        {
+          "id": 3,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.213,
+            "solution_time_s": 0.019,
+            "test_time_s": 1.252,
+            "task_total_time_s": 1.328,
+            "shutdown_time_s": 1.676,
+            "total_vm_lifecycle_s": 14.218
+          }
+        },
+        {
+          "id": 4,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 5,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 6,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 7,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.413,
+            "solution_time_s": 0.037,
+            "test_time_s": 0.981,
+            "task_total_time_s": 1.086,
+            "shutdown_time_s": 1.77,
+            "total_vm_lifecycle_s": 14.268
+          }
+        },
+        {
+          "id": 8,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 9,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 10,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 11,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 12,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 13,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 14,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 15,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.212,
+            "solution_time_s": 0.064,
+            "test_time_s": 1.556,
+            "task_total_time_s": 1.665,
+            "shutdown_time_s": 1.389,
+            "total_vm_lifecycle_s": 13.266
+          }
+        },
+        {
+          "id": 16,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 17,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.555,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.592,
+            "task_total_time_s": 0.651,
+            "shutdown_time_s": 0.978,
+            "total_vm_lifecycle_s": 11.184
+          }
+        },
+        {
+          "id": 18,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.829,
+            "solution_time_s": 0.091,
+            "test_time_s": 1.526,
+            "task_total_time_s": 1.695,
+            "shutdown_time_s": 1.644,
+            "total_vm_lifecycle_s": 14.168
+          }
+        },
+        {
+          "id": 19,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.037,
+            "solution_time_s": 0.027,
+            "test_time_s": 1.195,
+            "task_total_time_s": 1.256,
+            "shutdown_time_s": 1.943,
+            "total_vm_lifecycle_s": 14.236
+          }
+        },
+        {
+          "id": 20,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 21,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.264,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.712,
+            "task_total_time_s": 0.804,
+            "shutdown_time_s": 2.161,
+            "total_vm_lifecycle_s": 12.229
+          }
+        },
+        {
+          "id": 22,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 23,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 24,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 25,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.612,
+            "solution_time_s": 0.065,
+            "test_time_s": 0.982,
+            "task_total_time_s": 1.229,
+            "shutdown_time_s": 1.359,
+            "total_vm_lifecycle_s": 12.2
+          }
+        },
+        {
+          "id": 26,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 27,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 28,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 29,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.682,
+            "solution_time_s": 0.008,
+            "test_time_s": 0.639,
+            "task_total_time_s": 0.686,
+            "shutdown_time_s": 1.873,
+            "total_vm_lifecycle_s": 14.24
+          }
+        },
+        {
+          "id": 30,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 31,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.37,
+            "solution_time_s": 0.019,
+            "test_time_s": 1.212,
+            "task_total_time_s": 1.283,
+            "shutdown_time_s": 1.574,
+            "total_vm_lifecycle_s": 13.228
+          }
+        },
+        {
+          "id": 32,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 33,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.741,
+            "solution_time_s": 0.007,
+            "test_time_s": 0.85,
+            "task_total_time_s": 0.969,
+            "shutdown_time_s": 1.596,
+            "total_vm_lifecycle_s": 14.306
+          }
+        },
+        {
+          "id": 34,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 35,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.264,
+            "solution_time_s": 0.009,
+            "test_time_s": 0.882,
+            "task_total_time_s": 0.999,
+            "shutdown_time_s": 2.03,
+            "total_vm_lifecycle_s": 12.292
+          }
+        },
+        {
+          "id": 36,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 37,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 38,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 39,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.825,
+            "solution_time_s": 0.049,
+            "test_time_s": 1,
+            "task_total_time_s": 1.131,
+            "shutdown_time_s": 1.255,
+            "total_vm_lifecycle_s": 13.21
+          }
+        },
+        {
+          "id": 40,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 41,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 8.776,
+            "solution_time_s": 0.025,
+            "test_time_s": 0.451,
+            "task_total_time_s": 0.529,
+            "shutdown_time_s": 1.922,
+            "total_vm_lifecycle_s": 11.227
+          }
+        },
+        {
+          "id": 42,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.259,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.651,
+            "task_total_time_s": 0.72,
+            "shutdown_time_s": 1.222,
+            "total_vm_lifecycle_s": 11.202
+          }
+        },
+        {
+          "id": 43,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.442,
+            "solution_time_s": 0.019,
+            "test_time_s": 1.017,
+            "task_total_time_s": 1.102,
+            "shutdown_time_s": 1.689,
+            "total_vm_lifecycle_s": 12.233
+          }
+        },
+        {
+          "id": 44,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 45,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 46,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.571,
+            "solution_time_s": 0.05,
+            "test_time_s": 0.961,
+            "task_total_time_s": 1.112,
+            "shutdown_time_s": 1.547,
+            "total_vm_lifecycle_s": 14.23
+          }
+        },
+        {
+          "id": 47,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.275,
+            "solution_time_s": 0.052,
+            "test_time_s": 1.588,
+            "task_total_time_s": 1.715,
+            "shutdown_time_s": 1.243,
+            "total_vm_lifecycle_s": 13.233
+          }
+        },
+        {
+          "id": 48,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 49,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.934,
+            "solution_time_s": 0.015,
+            "test_time_s": 0.711,
+            "task_total_time_s": 0.752,
+            "shutdown_time_s": 1.538,
+            "total_vm_lifecycle_s": 14.223
+          }
+        },
+        {
+          "id": 50,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 51,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.686,
+            "solution_time_s": 0.01,
+            "test_time_s": 0.992,
+            "task_total_time_s": 1.028,
+            "shutdown_time_s": 1.527,
+            "total_vm_lifecycle_s": 14.241
+          }
+        },
+        {
+          "id": 52,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 53,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 54,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.719,
+            "solution_time_s": 0.013,
+            "test_time_s": 1.249,
+            "task_total_time_s": 1.379,
+            "shutdown_time_s": 1.118,
+            "total_vm_lifecycle_s": 12.216
+          }
+        },
+        {
+          "id": 55,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 56,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 57,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.245,
+            "solution_time_s": 0.016,
+            "test_time_s": 0.948,
+            "task_total_time_s": 1.047,
+            "shutdown_time_s": 1.919,
+            "total_vm_lifecycle_s": 12.211
+          }
+        },
+        {
+          "id": 58,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 59,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.396,
+            "solution_time_s": 0.038,
+            "test_time_s": 0.93,
+            "task_total_time_s": 1.048,
+            "shutdown_time_s": 1.778,
+            "total_vm_lifecycle_s": 14.222
+          }
+        },
+        {
+          "id": 60,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.194,
+            "solution_time_s": 0.025,
+            "test_time_s": 1.035,
+            "task_total_time_s": 1.095,
+            "shutdown_time_s": 1.888,
+            "total_vm_lifecycle_s": 14.177
+          }
+        },
+        {
+          "id": 61,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.981,
+            "solution_time_s": 0.083,
+            "test_time_s": 1.354,
+            "task_total_time_s": 1.525,
+            "shutdown_time_s": 1.738,
+            "total_vm_lifecycle_s": 14.244
+          }
+        },
+        {
+          "id": 62,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.629,
+            "solution_time_s": 0.059,
+            "test_time_s": 0.809,
+            "task_total_time_s": 0.945,
+            "shutdown_time_s": 1.759,
+            "total_vm_lifecycle_s": 14.333
+          }
+        },
+        {
+          "id": 63,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.515,
+            "solution_time_s": 0.008,
+            "test_time_s": 0.572,
+            "task_total_time_s": 0.633,
+            "shutdown_time_s": 1.063,
+            "total_vm_lifecycle_s": 13.21
+          }
+        },
+        {
+          "id": 64,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 65,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.494,
+            "solution_time_s": 0.031,
+            "test_time_s": 0.617,
+            "task_total_time_s": 0.696,
+            "shutdown_time_s": 2.072,
+            "total_vm_lifecycle_s": 14.262
+          }
+        },
+        {
+          "id": 66,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.965,
+            "solution_time_s": 0.05,
+            "test_time_s": 0.987,
+            "task_total_time_s": 1.119,
+            "shutdown_time_s": 2.185,
+            "total_vm_lifecycle_s": 13.268
+          }
+        },
+        {
+          "id": 67,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.627,
+            "solution_time_s": 0.022,
+            "test_time_s": 1.264,
+            "task_total_time_s": 1.374,
+            "shutdown_time_s": 1.201,
+            "total_vm_lifecycle_s": 13.202
+          }
+        },
+        {
+          "id": 68,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.574,
+            "solution_time_s": 0.025,
+            "test_time_s": 0.529,
+            "task_total_time_s": 0.575,
+            "shutdown_time_s": 1.112,
+            "total_vm_lifecycle_s": 13.261
+          }
+        },
+        {
+          "id": 69,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.171,
+            "solution_time_s": 0.081,
+            "test_time_s": 0.963,
+            "task_total_time_s": 1.11,
+            "shutdown_time_s": 0.905,
+            "total_vm_lifecycle_s": 13.186
+          }
+        },
+        {
+          "id": 70,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.356,
+            "solution_time_s": 0.017,
+            "test_time_s": 0.665,
+            "task_total_time_s": 0.761,
+            "shutdown_time_s": 2.133,
+            "total_vm_lifecycle_s": 13.25
+          }
+        },
+        {
+          "id": 71,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.486,
+            "solution_time_s": 0.03,
+            "test_time_s": 0.737,
+            "task_total_time_s": 0.822,
+            "shutdown_time_s": 1.919,
+            "total_vm_lifecycle_s": 14.227
+          }
+        },
+        {
+          "id": 72,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 73,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.063,
+            "solution_time_s": 0.009,
+            "test_time_s": 0.544,
+            "task_total_time_s": 0.575,
+            "shutdown_time_s": 1.524,
+            "total_vm_lifecycle_s": 11.162
+          }
+        },
+        {
+          "id": 74,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 75,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.203,
+            "solution_time_s": 0.035,
+            "test_time_s": 1.31,
+            "task_total_time_s": 1.425,
+            "shutdown_time_s": 1.627,
+            "total_vm_lifecycle_s": 13.255
+          }
+        },
+        {
+          "id": 76,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.058,
+            "solution_time_s": 0.106,
+            "test_time_s": 1.254,
+            "task_total_time_s": 1.488,
+            "shutdown_time_s": 1.641,
+            "total_vm_lifecycle_s": 14.187
+          }
+        },
+        {
+          "id": 77,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 78,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 9.666,
+            "solution_time_s": 0.019,
+            "test_time_s": 1.246,
+            "task_total_time_s": 1.372,
+            "shutdown_time_s": 2.155,
+            "total_vm_lifecycle_s": 13.193
+          }
+        },
+        {
+          "id": 79,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 80,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 81,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 82,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.162,
+            "solution_time_s": 0.004,
+            "test_time_s": 1.051,
+            "task_total_time_s": 1.173,
+            "shutdown_time_s": 1.87,
+            "total_vm_lifecycle_s": 14.204
+          }
+        },
+        {
+          "id": 83,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 84,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 85,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.401,
+            "solution_time_s": 0.018,
+            "test_time_s": 0.886,
+            "task_total_time_s": 0.974,
+            "shutdown_time_s": 1.849,
+            "total_vm_lifecycle_s": 14.224
+          }
+        },
+        {
+          "id": 86,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 87,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 88,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 89,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 10.488,
+            "solution_time_s": 0.013,
+            "test_time_s": 1.652,
+            "task_total_time_s": 1.753,
+            "shutdown_time_s": 0.99,
+            "total_vm_lifecycle_s": 13.23
+          }
+        },
+        {
+          "id": 90,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 91,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 92,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 93,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.058,
+            "solution_time_s": 0.047,
+            "test_time_s": 0.588,
+            "task_total_time_s": 0.716,
+            "shutdown_time_s": 1.439,
+            "total_vm_lifecycle_s": 14.212
+          }
+        },
+        {
+          "id": 94,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 95,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 96,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 97,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 12.469,
+            "solution_time_s": 0.037,
+            "test_time_s": 0.509,
+            "task_total_time_s": 0.574,
+            "shutdown_time_s": 1.223,
+            "total_vm_lifecycle_s": 14.266
+          }
+        },
+        {
+          "id": 98,
+          "status": "error",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "exit_code": 141
+        },
+        {
+          "id": 99,
+          "status": "passed",
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "exit_code": 0,
+          "timing": {
+            "boot_time_s": 11.893,
+            "solution_time_s": 0.049,
+            "test_time_s": 0.629,
+            "task_total_time_s": 0.716,
+            "shutdown_time_s": 1.572,
+            "total_vm_lifecycle_s": 14.181
+          }
+        }
+      ],
+      "vm_count": 100,
+      "repeat": 1,
+      "exit_code": 1,
+      "timestamp": "2026-02-12T12:39:23-07:00"
+    }
+  ]
+}
