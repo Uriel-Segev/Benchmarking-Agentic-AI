@@ -109,8 +109,8 @@ STEP 5: COPY RESULTS TO LOCAL MACHINE
 --------------------------------------------------------------------------------
 
 # Run from your local machine (PowerShell), not from node0
-scp -i ~/.ssh/id_ed25519 Uriel@128.210.219.161:~/scaling_ch_64.json .
-scp -i ~/.ssh/id_ed25519 Uriel@128.210.219.161:~/scaling_ch_linear_100.json .
+scp -i ~/.ssh/id_ed25519 NAME@IP:~/scaling_ch_64.json .
+scp -i ~/.ssh/id_ed25519 NAME@IP:~/scaling_ch_linear_100.json .
 
 
 --------------------------------------------------------------------------------

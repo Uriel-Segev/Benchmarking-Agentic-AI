@@ -294,7 +294,7 @@ exec /usr/local/bin/cloud-hypervisor \\
   --cmdline "console=ttyS0 root=/dev/vda rw ip=${FC_IP}::${TAP_IP}:${netmask_long}::eth0:off" \\
   --cpus boot=2 \\
   --memory size=1024M \\
-  --net "tap=${TAP_DEV},mac=AA:CH:00:00:00:01" \\
+  --net "tap=${TAP_DEV},mac=AA:C0:00:00:00:01" \\
   --serial tty \\
   --console off
 EOF
