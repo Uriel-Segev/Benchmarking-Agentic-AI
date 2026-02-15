@@ -256,11 +256,24 @@ EOFSKIP
       FAILED_RUNS=$((FAILED_RUNS + 1))
     fi
 
-    # Cooldown between runs (skip after the very last run)
-    REMAINING=$(( TOTAL_RUNS - COMPLETED_RUNS - SKIPPED_RUNS - FAILED_RUNS + COMPLETED_RUNS ))
-    if [[ ${COOLDOWN} -gt 0 ]] && [[ $(( COMPLETED_RUNS + SKIPPED_RUNS + FAILED_RUNS )) -lt ${TOTAL_RUNS} ]]; then
-      log "Cooldown: ${COOLDOWN}s"
-      sleep "${COOLDOWN}"
+    # Cleanup between runs: kill stragglers and verify memory is freed
+    if [[ $(( COMPLETED_RUNS + SKIPPED_RUNS + FAILED_RUNS )) -lt ${TOTAL_RUNS} ]]; then
+      pkill -9 firecracker 2>/dev/null || true
+      sleep 2
+
+      # Wait for memory to be reclaimed before next run
+      NEXT_NEED=$((vm_count * 1024))
+      for _attempt in $(seq 1 5); do
+        AVAIL_AFTER=$(awk '/MemAvailable/ {printf "%d", $2/1024}' /proc/meminfo 2>/dev/null || echo "0")
+        if [[ ${AVAIL_AFTER} -ge ${NEXT_NEED} ]]; then break; fi
+        log "Waiting for memory to be reclaimed (have ${AVAIL_AFTER}MB, need ${NEXT_NEED}MB)..."
+        sleep 3
+      done
+
+      if [[ ${COOLDOWN} -gt 0 ]]; then
+        log "Cooldown: ${COOLDOWN}s"
+        sleep "${COOLDOWN}"
+      fi
     fi
 
   done
