@@ -18,23 +18,41 @@ def main():
             #get json data
             data = json.load(file)
 
-            
+            repeats_per_count = data["repeats_per_count"] #amount of repeats of each # of instances run
+
             avg_boot_time = [] #declare avg boot time array
             avg_solution_time = [] #declare avg solution time array
             avg_shutdown_time = [] #declare avg shutdown time array
             instance_count = [] #declare instance count for each run (collection of data)
             completion_rate = [] #declare array for amount of VMs that completed the task
 
+            #declare temporary arrays so that i can average the repeats before adding to official arrays
+            temp_avg_boot_time = []
+            temp_avg_solution_time = []
+            temp_avg_shutdown_time = []
+            temp_completion_rate = []
+
             #loop through each run
-            for i in range(len(data["runs"])):
-                #if data wasn't collected (likely crashed) then ignore it
-                if "timing_summary" in data["runs"][i]:
-                    #fill in values (averages)
-                    avg_boot_time.append(data["runs"][i]["timing_summary"]["boot_time_s"]["avg"])
-                    avg_solution_time.append(data["runs"][i]["timing_summary"]["solution_time_s"]["avg"])
-                    avg_shutdown_time.append(data["runs"][i]["timing_summary"]["shutdown_time_s"]["avg"])
-                    instance_count.append(str(data["runs"][i]["vm_count"]))
-                    completion_rate.append((data["runs"][i]["completed"] / (data["runs"][i]["total_instances"])) * 100)            
+            for i in range(0, len(data["runs"]), repeats_per_count):
+                #clear temps
+                temp_avg_boot_time = []
+                temp_avg_solution_time = []
+                temp_avg_shutdown_time = []
+                temp_completion_rate = []
+
+                for j in range(repeats_per_count):
+                    #if data wasn't collected (likely crashed) then ignore it
+                    if "timing_summary" in data["runs"][i+j]:
+                        temp_avg_boot_time.append(data["runs"][i+j]["timing_summary"]["boot_time_s"]["avg"])
+                        temp_avg_solution_time.append(data["runs"][i+j]["timing_summary"]["solution_time_s"]["avg"])
+                        temp_avg_shutdown_time.append(data["runs"][i+j]["timing_summary"]["shutdown_time_s"]["avg"])
+                        temp_completion_rate.append((data["runs"][i+j]["completed"] / (data["runs"][i+j]["total_instances"])) * 100)
+                #fill in values (averages)
+                avg_boot_time.append(sum(temp_avg_boot_time) / len(temp_avg_boot_time))
+                avg_solution_time.append(sum(temp_avg_solution_time) / len(temp_avg_solution_time))
+                avg_shutdown_time.append(sum(temp_avg_shutdown_time) / len(temp_avg_shutdown_time))
+                instance_count.append(str(data["runs"][i]["vm_count"]))
+                completion_rate.append(sum(temp_completion_rate) / len(temp_completion_rate))            
 
             #average boot time plot:
             fig, ax1 = plt.subplots()
@@ -46,7 +64,7 @@ def main():
             ax2.plot(instance_count, completion_rate, color='red', marker='o')
             ax2.set_ylabel('completion rate %')
             
-            plt.title('Boot Time vs. # Instances')
+            plt.title(f'Boot Time vs. # Instances ({repeats_per_count} repeats)')
             plt.show()
 
             #average solution time plot:
@@ -59,7 +77,7 @@ def main():
             ax2.plot(instance_count, completion_rate, color='red', marker='o')
             ax2.set_ylabel('completion rate %')
 
-            plt.title('Solution Time vs. Instances')
+            plt.title(f'Solution Time vs. # Instances ({repeats_per_count} repeats)')
             plt.show()
 
 
@@ -73,7 +91,7 @@ def main():
             ax2.plot(instance_count, completion_rate, color='red', marker='o')
             ax2.set_ylabel('completion rate %')
 
-            plt.title('Shutdown Time vs. Instances')
+            plt.title(f'Shutdown Time vs. # Instances ({repeats_per_count} repeats)')
             plt.show()
 
                 
