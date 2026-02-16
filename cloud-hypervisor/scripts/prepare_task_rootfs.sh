@@ -181,30 +181,16 @@ log "Copying task files to /app"
 mkdir -p "${MOUNT_POINT}/app"
 mkdir -p "${MOUNT_POINT}/app/tests"
 
-# Copy task files
-if [[ -f "${TASK_DIR}/solution.sh" ]]; then
-  cp "${TASK_DIR}/solution.sh" "${MOUNT_POINT}/app/"
-  chmod +x "${MOUNT_POINT}/app/solution.sh"
-fi
+# Copy all task files (excluding Docker-specific files)
+cp -r "${TASK_DIR}/"* "${MOUNT_POINT}/app/" 2>/dev/null || true
+rm -f "${MOUNT_POINT}/app/Dockerfile" "${MOUNT_POINT}/app/docker-compose.yaml" 2>/dev/null || true
 
-if [[ -f "${TASK_DIR}/run-tests.sh" ]]; then
-  cp "${TASK_DIR}/run-tests.sh" "${MOUNT_POINT}/app/"
-  chmod +x "${MOUNT_POINT}/app/run-tests.sh"
-fi
+# Ensure scripts are executable
+chmod +x "${MOUNT_POINT}/app/solution.sh" 2>/dev/null || true
+chmod +x "${MOUNT_POINT}/app/run-tests.sh" 2>/dev/null || true
 
-if [[ -f "${TASK_DIR}/task.yaml" ]]; then
-  cp "${TASK_DIR}/task.yaml" "${MOUNT_POINT}/app/"
-fi
-
-# Copy test files
-if [[ -d "${TASK_DIR}/tests" ]]; then
-  cp -r "${TASK_DIR}/tests/"* "${MOUNT_POINT}/app/tests/" 2>/dev/null || true
-else
-  # Fallback: copy test_*.py files from task root (e.g., hello-world has test_outputs.py in root)
-  for f in "${TASK_DIR}"/test_*.py; do
-    [[ -f "$f" ]] && cp "$f" "${MOUNT_POINT}/app/tests/"
-  done
-fi
+# Ensure tests directory exists
+mkdir -p "${MOUNT_POINT}/app/tests"
 
 # ---------------------------
 # Create auto-run script
