@@ -42,6 +42,8 @@ NETMASK="${NETMASK:-255.255.255.252}"
 
 # Parallel execution support
 SKIP_ARP_CHECK="${SKIP_ARP_CHECK:-0}"
+SKIP_SAFETY_CHECKS="${SKIP_SAFETY_CHECKS:-0}"
+SKIP_ROOTFS_PREP="${SKIP_ROOTFS_PREP:-0}"
 INSTANCE_ID="${INSTANCE_ID:-0}"
 
 # ---------------------------
@@ -94,48 +96,58 @@ echo "  Timeout: ${TASK_TIMEOUT}s"
 rm -f "${SOCKET_PATH}"
 
 # Reset the TASK_COMPLETE marker in rootfs before running
-log "Preparing rootfs for fresh run"
-mkdir -p "${MOUNT_POINT}"
-mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}"
-rm -f "${MOUNT_POINT}/app/TASK_COMPLETE"
-rm -f "${MOUNT_POINT}/app/results.json"
-rm -f "${MOUNT_POINT}/app/run.log"
-rm -f "${MOUNT_POINT}/app/timing.json"
-rm -f "${MOUNT_POINT}/app/timing_combined.json"
-sync
-umount "${MOUNT_POINT}"
+# (skipped in parallel mode — caller already prepared each rootfs sequentially)
+if [[ "${SKIP_ROOTFS_PREP}" != "1" ]]; then
+  log "Preparing rootfs for fresh run"
+  mkdir -p "${MOUNT_POINT}"
+  mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}"
+  rm -f "${MOUNT_POINT}/app/TASK_COMPLETE"
+  rm -f "${MOUNT_POINT}/app/results.json"
+  rm -f "${MOUNT_POINT}/app/run.log"
+  rm -f "${MOUNT_POINT}/app/timing.json"
+  rm -f "${MOUNT_POINT}/app/timing_combined.json"
+  sync
+  umount "${MOUNT_POINT}"
+else
+  echo "  Rootfs prep skipped (SKIP_ROOTFS_PREP=1)"
+fi
 
 # ---------------------------
 # CloudLab safety checks before launching VM
+# (skipped in parallel mode — caller already verified everything)
 # ---------------------------
 
-log "Running CloudLab safety checks"
+if [[ "${SKIP_SAFETY_CHECKS}" != "1" ]]; then
+  log "Running CloudLab safety checks"
 
-# Detect DEFAULT_IFACE if not set
-if [[ -z "${DEFAULT_IFACE:-}" ]]; then
-  DEFAULT_IFACE="$(ip route list default | awk '{print $5; exit}' || true)"
-fi
-[[ -n "${DEFAULT_IFACE}" ]] || die "REFUSING TO RUN (CLOUDLAB SAFETY): Could not detect DEFAULT_IFACE"
-
-# Verify TAP_DEV exists
-ip link show "${TAP_DEV}" &>/dev/null || die "REFUSING TO RUN (CLOUDLAB SAFETY): TAP_DEV ${TAP_DEV} does not exist. Run setup_network.sh first."
-
-# Verify TAP_IP is ONLY on TAP_DEV
-_tap_ip_dev="$(ip -o addr show | awk -v ip="${TAP_IP}" '$0 ~ ip {print $2; exit}')"
-if [[ "${_tap_ip_dev}" != "${TAP_DEV}" ]]; then
-  die "REFUSING TO RUN (CLOUDLAB SAFETY): TAP_IP ${TAP_IP} appears on ${_tap_ip_dev} (expected ${TAP_DEV})"
-fi
-echo "  TAP_IP scope check passed (only on ${TAP_DEV})"
-
-# ARP safety check on DEFAULT_IFACE (skippable for parallel runs where wrapper already checked)
-if [[ "${SKIP_ARP_CHECK}" != "1" ]]; then
-  echo "  ARP safety check (10s) - checking for dangerous ARP on ${DEFAULT_IFACE}..."
-  if timeout 10 tcpdump -n -c 1 -i "${DEFAULT_IFACE}" "arp and host ${TAP_IP}" 2>/dev/null; then
-    die "REFUSING TO RUN (CLOUDLAB SAFETY): Saw ARP involving TAP_IP (${TAP_IP}) on ${DEFAULT_IFACE}. This is dangerous on CloudLab!"
+  # Detect DEFAULT_IFACE if not set
+  if [[ -z "${DEFAULT_IFACE:-}" ]]; then
+    DEFAULT_IFACE="$(ip route list default | awk '{print $5; exit}' || true)"
   fi
-  echo "  ARP check passed (no TAP_IP ARP seen on ${DEFAULT_IFACE})"
+  [[ -n "${DEFAULT_IFACE}" ]] || die "REFUSING TO RUN (CLOUDLAB SAFETY): Could not detect DEFAULT_IFACE"
+
+  # Verify TAP_DEV exists
+  ip link show "${TAP_DEV}" &>/dev/null || die "REFUSING TO RUN (CLOUDLAB SAFETY): TAP_DEV ${TAP_DEV} does not exist. Run setup_network.sh first."
+
+  # Verify TAP_IP is ONLY on TAP_DEV
+  _tap_ip_dev="$(ip -o addr show | awk -v ip="${TAP_IP}" '$0 ~ ip {print $2; exit}')"
+  if [[ "${_tap_ip_dev}" != "${TAP_DEV}" ]]; then
+    die "REFUSING TO RUN (CLOUDLAB SAFETY): TAP_IP ${TAP_IP} appears on ${_tap_ip_dev} (expected ${TAP_DEV})"
+  fi
+  echo "  TAP_IP scope check passed (only on ${TAP_DEV})"
+
+  # ARP safety check on DEFAULT_IFACE
+  if [[ "${SKIP_ARP_CHECK}" != "1" ]]; then
+    echo "  ARP safety check (10s) - checking for dangerous ARP on ${DEFAULT_IFACE}..."
+    if timeout 10 tcpdump -n -c 1 -i "${DEFAULT_IFACE}" "arp and host ${TAP_IP}" 2>/dev/null; then
+      die "REFUSING TO RUN (CLOUDLAB SAFETY): Saw ARP involving TAP_IP (${TAP_IP}) on ${DEFAULT_IFACE}. This is dangerous on CloudLab!"
+    fi
+    echo "  ARP check passed (no TAP_IP ARP seen on ${DEFAULT_IFACE})"
+  else
+    echo "  ARP safety check skipped (SKIP_ARP_CHECK=1)"
+  fi
 else
-  echo "  ARP safety check skipped (SKIP_ARP_CHECK=1)"
+  echo "  Safety checks skipped (SKIP_SAFETY_CHECKS=1)"
 fi
 
 # ---------------------------

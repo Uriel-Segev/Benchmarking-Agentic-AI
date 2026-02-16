@@ -147,12 +147,26 @@ log "Instance logs: ${INSTANCE_LOG_DIR}"
 # Copy rootfs for each instance
 # ---------------------------
 
-log "Creating ${NUM_INSTANCES} rootfs copies"
+log "Creating ${NUM_INSTANCES} rootfs copies and preparing each for fresh run"
 for i in $(seq 0 $((NUM_INSTANCES - 1))); do
   INST_ROOTFS="${WORKDIR}/rootfs-instance-${i}.ext4"
   cp "${SOURCE_ROOTFS}" "${INST_ROOTFS}"
   CREATED_ROOTFS+=("${INST_ROOTFS}")
-  echo "  Created rootfs-instance-${i}.ext4"
+
+  # Prepare rootfs sequentially here (clear old markers) so run_task.sh
+  # doesn't need to mount/umount 30+ rootfs images simultaneously
+  MNT="/mnt/fc-rootfs-${i}"
+  mkdir -p "${MNT}"
+  mount -o loop "${INST_ROOTFS}" "${MNT}"
+  rm -f "${MNT}/app/TASK_COMPLETE"
+  rm -f "${MNT}/app/results.json"
+  rm -f "${MNT}/app/run.log"
+  rm -f "${MNT}/app/timing.json"
+  rm -f "${MNT}/app/timing_combined.json"
+  sync
+  umount "${MNT}"
+
+  echo "  Created and prepared rootfs-instance-${i}.ext4"
 done
 
 # ---------------------------
@@ -226,6 +240,8 @@ for i in $(seq 0 $((NUM_INSTANCES - 1))); do
   SOCKET_PATH="/tmp/firecracker-task-${i}.socket" \
   MOUNT_POINT="/mnt/fc-rootfs-${i}" \
   SKIP_ARP_CHECK=1 \
+  SKIP_SAFETY_CHECKS=1 \
+  SKIP_ROOTFS_PREP=1 \
   INSTANCE_ID="${i}" \
     "${SCRIPT_DIR}/run_task.sh" "${INST_ROOTFS}" > "${INST_LOG}" 2>&1 &
 

@@ -37,8 +37,9 @@ REPEATS=5
 RESUME=false
 LOG_DIR="./bottleneck_logs"
 
-# Custom VM count sequence: fine-grained around the CPU saturation point
-VM_COUNTS=(1 4 8 12 14 15 16 17 18 20 24 28 32 40 48 64)
+# Comprehensive VM count sequence: fine-grained across both transition zones
+# Zone 1: ~16 VMs (vCPUs = physical cores), Zone 2: ~32 VMs (2x oversubscription)
+VM_COUNTS=(1 2 4 8 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40)
 
 # ---------------------------
 # Parse arguments
@@ -173,7 +174,47 @@ has_result() {
 # ---------------------------
 
 TMP_RESULT=$(mktemp /tmp/bottleneck-run-XXXXXX.json)
-trap "rm -f '${TMP_RESULT}'" EXIT
+TMP_RUN_OUTPUT=$(mktemp /tmp/bottleneck-run-output-XXXXXX.log)
+trap "rm -f '${TMP_RESULT}' '${TMP_RUN_OUTPUT}'" EXIT
+
+# ---------------------------
+# Helper: write current results to output JSON (for incremental saving)
+# ---------------------------
+
+save_results() {
+  local wall_clock="$1"
+  if ! command -v jq >/dev/null 2>&1; then return; fi
+
+  local runs_tmp
+  runs_tmp=$(mktemp /tmp/bottleneck-runs-XXXXXX.json)
+  jq -s '.' "${ALL_RUNS_FILE}" > "${runs_tmp}" 2>/dev/null || echo "[]" > "${runs_tmp}"
+
+  jq -n \
+    --arg task "${INPUT}" \
+    --argjson repeats "${REPEATS}" \
+    --argjson total_runs "${TOTAL_RUNS}" \
+    --argjson completed "${COMPLETED_RUNS}" \
+    --argjson skipped "${SKIPPED_RUNS}" \
+    --argjson failed "${FAILED_RUNS}" \
+    --argjson wall_clock "${wall_clock}" \
+    --arg vm_counts "${VM_COUNTS[*]}" \
+    --arg log_dir "${LOG_DIR}" \
+    --slurpfile runs "${runs_tmp}" \
+    '{
+      task: $task,
+      vm_counts: ($vm_counts | split(" ") | map(tonumber)),
+      repeats_per_count: $repeats,
+      total_runs: $total_runs,
+      completed_runs: $completed,
+      skipped_runs: $skipped,
+      failed_runs: $failed,
+      total_wall_clock_seconds: $wall_clock,
+      monitor_log_dir: $log_dir,
+      runs: $runs[0]
+    }' > "${OUTPUT}"
+
+  rm -f "${runs_tmp}"
+}
 
 # ---------------------------
 # Run the bottleneck sweep
@@ -239,10 +280,11 @@ EOFSKIP
     MPSTAT_PID=$!
 
     # ---------------------------
-    # Run the parallel benchmark
+    # Run the parallel benchmark (capture output to find instance log dir)
     # ---------------------------
     RUN_EXIT=0
-    "${SCRIPT_DIR}/run_parallel.sh" "${INPUT}" "${vm_count}" "${TMP_RESULT}" || RUN_EXIT=$?
+    "${SCRIPT_DIR}/run_parallel.sh" "${INPUT}" "${vm_count}" "${TMP_RESULT}" > "${TMP_RUN_OUTPUT}" 2>&1 || RUN_EXIT=$?
+    cat "${TMP_RUN_OUTPUT}"
 
     # ---------------------------
     # Stop host monitors
@@ -251,6 +293,16 @@ EOFSKIP
     wait ${VMSTAT_PID} 2>/dev/null || true
     wait ${IOSTAT_PID} 2>/dev/null || true
     wait ${MPSTAT_PID} 2>/dev/null || true
+
+    # ---------------------------
+    # Capture instance logs before they're lost
+    # ---------------------------
+    INST_LOG_SRC=$(grep -oP 'Instance logs: \K/tmp/fc-parallel-\S+' "${TMP_RUN_OUTPUT}" 2>/dev/null || true)
+    if [[ -n "${INST_LOG_SRC}" ]] && [[ -d "${INST_LOG_SRC}" ]]; then
+      INST_LOG_DST="${LOG_DIR}/vm${vm_count}_repeat${repeat}_instances"
+      cp -r "${INST_LOG_SRC}" "${INST_LOG_DST}" 2>/dev/null || true
+      log "Saved instance logs to ${INST_LOG_DST}"
+    fi
 
     RUN_TIMESTAMP=$(date -Iseconds)
 
@@ -282,6 +334,12 @@ EOFSKIP
       FAILED_RUNS=$((FAILED_RUNS + 1))
     fi
 
+    # ---------------------------
+    # Incremental save (crash-safe)
+    # ---------------------------
+    CURRENT_WALL=$(( $(date +%s) - SCALING_START ))
+    save_results "${CURRENT_WALL}"
+
     # Cleanup between runs: kill stragglers and verify memory is freed
     if [[ $(( COMPLETED_RUNS + SKIPPED_RUNS + FAILED_RUNS )) -lt ${TOTAL_RUNS} ]]; then
       pkill -9 firecracker 2>/dev/null || true
@@ -309,70 +367,14 @@ SCALING_END=$(date +%s)
 SCALING_WALL=$((SCALING_END - SCALING_START))
 
 # ---------------------------
-# Assemble final combined JSON
+# Final save
 # ---------------------------
 
-log "Assembling results into ${OUTPUT}"
-
-if command -v jq >/dev/null 2>&1; then
-  RUNS_TMP=$(mktemp /tmp/bottleneck-runs-XXXXXX.json)
-  jq -s '.' "${ALL_RUNS_FILE}" > "${RUNS_TMP}" 2>/dev/null || echo "[]" > "${RUNS_TMP}"
-
-  jq -n \
-    --arg task "${INPUT}" \
-    --argjson repeats "${REPEATS}" \
-    --argjson total_runs "${TOTAL_RUNS}" \
-    --argjson completed "${COMPLETED_RUNS}" \
-    --argjson skipped "${SKIPPED_RUNS}" \
-    --argjson failed "${FAILED_RUNS}" \
-    --argjson wall_clock "${SCALING_WALL}" \
-    --arg vm_counts "${VM_COUNTS[*]}" \
-    --arg log_dir "${LOG_DIR}" \
-    --slurpfile runs "${RUNS_TMP}" \
-    '{
-      task: $task,
-      vm_counts: ($vm_counts | split(" ") | map(tonumber)),
-      repeats_per_count: $repeats,
-      total_runs: $total_runs,
-      completed_runs: $completed,
-      skipped_runs: $skipped,
-      failed_runs: $failed,
-      total_wall_clock_seconds: $wall_clock,
-      monitor_log_dir: $log_dir,
-      runs: $runs[0]
-    }' > "${OUTPUT}"
-
-  rm -f "${RUNS_TMP}"
-else
-  log "WARNING: jq not found — output may not be perfectly formatted"
-  {
-    echo "{"
-    echo "  \"task\": \"${INPUT}\","
-    echo "  \"vm_counts\": [$(IFS=,; echo "${VM_COUNTS[*]}")],"
-    echo "  \"repeats_per_count\": ${REPEATS},"
-    echo "  \"total_runs\": ${TOTAL_RUNS},"
-    echo "  \"completed_runs\": ${COMPLETED_RUNS},"
-    echo "  \"skipped_runs\": ${SKIPPED_RUNS},"
-    echo "  \"failed_runs\": ${FAILED_RUNS},"
-    echo "  \"total_wall_clock_seconds\": ${SCALING_WALL},"
-    echo "  \"monitor_log_dir\": \"${LOG_DIR}\","
-    echo "  \"runs\": ["
-    first=true
-    while IFS= read -r line; do
-      if [[ "${first}" == "true" ]]; then
-        echo "    ${line}"
-        first=false
-      else
-        echo "    ,${line}"
-      fi
-    done < "${ALL_RUNS_FILE}"
-    echo "  ]"
-    echo "}"
-  } > "${OUTPUT}"
-fi
+log "Assembling final results into ${OUTPUT}"
+save_results "${SCALING_WALL}"
 
 # Cleanup temp files
-rm -f "${TMP_RESULT}" "${ALL_RUNS_FILE}"
+rm -f "${TMP_RESULT}" "${TMP_RUN_OUTPUT}" "${ALL_RUNS_FILE}"
 
 # ---------------------------
 # Final report
