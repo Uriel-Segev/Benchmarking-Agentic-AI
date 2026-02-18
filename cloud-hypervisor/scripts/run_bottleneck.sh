@@ -3,8 +3,8 @@
 # Run bottleneck analysis: benchmark with host-level monitoring (vmstat, iostat,
 # mpstat) at fine-grained VM counts around the CPU saturation point.
 #
-# Runs run_parallel.sh at each VM count in a custom non-uniform sequence with
-# concurrent host monitoring, saving per-run monitor logs alongside JSON results.
+# Runs run_parallel.sh at each VM count with concurrent host monitoring,
+# saving per-run monitor logs alongside JSON results.
 #
 # Usage:
 #   sudo ./run_bottleneck.sh <task-dir-or-rootfs> [options]
@@ -12,13 +12,13 @@
 # Options:
 #   --output <path>       Output JSON path (default: bottleneck_results.json)
 #   --cooldown <seconds>  Pause between runs (default: 10)
-#   --repeats <n>         Repeats per VM count (default: 5)
+#   --repeats <n>         Repeats per VM count (default: 3)
 #   --resume              Skip already-completed runs
 #   --log-dir <path>      Directory for monitor logs (default: ./bottleneck_logs/)
 #
 # Examples:
 #   sudo ./run_bottleneck.sh terminal-bench/original-tasks/hello-world
-#   sudo ./run_bottleneck.sh /opt/firecracker/rootfs-task.ext4 --repeats 3
+#   sudo ./run_bottleneck.sh /opt/cloud-hypervisor/rootfs-task.ext4 --repeats 3
 #   sudo ./run_bottleneck.sh terminal-bench/original-tasks/hello-world --resume
 # =============================================================================
 
@@ -57,7 +57,7 @@ while [[ $# -gt 0 ]]; do
       echo "Options:"
       echo "  --output <path>       Output JSON path (default: bottleneck_results.json)"
       echo "  --cooldown <seconds>  Pause between runs (default: 10)"
-      echo "  --repeats <n>         Repeats per VM count (default: 5)"
+      echo "  --repeats <n>         Repeats per VM count (default: 3)"
       echo "  --resume              Skip already-completed runs"
       echo "  --log-dir <path>      Directory for monitor logs (default: ./bottleneck_logs/)"
       exit 0
@@ -416,7 +416,7 @@ EOFSKIP
 
     # Cleanup between runs: kill stragglers and verify memory is freed
     if [[ $(( COMPLETED_RUNS + SKIPPED_RUNS + FAILED_RUNS )) -lt ${TOTAL_RUNS} ]]; then
-      pkill -9 firecracker 2>/dev/null || true
+      pkill -9 cloud-hypervisor 2>/dev/null || true
       sleep 2
 
       # Wait for memory to be reclaimed before next run
