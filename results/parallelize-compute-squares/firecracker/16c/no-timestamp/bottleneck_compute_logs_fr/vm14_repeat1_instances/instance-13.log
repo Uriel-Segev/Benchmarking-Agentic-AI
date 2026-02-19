@@ -1,0 +1,124 @@
+
+[run-task] Running task in Firecracker (instance 13)
+
+  Rootfs: /opt/firecracker/rootfs-instance-13.ext4
+  Kernel: /opt/firecracker/vmlinux.bin
+  Timeout: 300s
+  Rootfs prep skipped (SKIP_ROOTFS_PREP=1)
+  Safety checks skipped (SKIP_SAFETY_CHECKS=1)
+
+[run-task] Starting Firecracker VM
+
+  Firecracker PID: 73474
+  Console output: /tmp/tmp.Mvsgs1LDvH
+
+[run-task] Waiting for task completion (timeout: 300s)
+
+  Elapsed: 0s / 300s  Elapsed: 1s / 300s  Elapsed: 2s / 300s  Elapsed: 3s / 300s  Elapsed: 4s / 300s  VM has shut down after 5s
+
+
+[run-task] Extracting results from rootfs
+
+  Task completed successfully
+
+========================================
+RESULTS
+========================================
+{
+  "status": "failed",
+  "tests_passed": 0,
+  "tests_failed": 1,
+  "exit_code": 1,
+  "timestamp": "2026-02-18T01:12:52+00:00"
+}
+
+
+========================================
+RUN LOG (last 50 lines)
+========================================
+========================================
+Terminal-Bench Task Runner
+Boot completed at: 2026-02-18T01:12:48+00:00
+========================================
+
+[SOLUTION] Running solution.sh...
+[SOLUTION] Completed
+
+[TESTS] Running pytest...
+============================= test session starts ==============================
+platform linux -- Python 3.10.4, pytest-8.4.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /app
+collecting ... collected 1 item
+
+tests/test_outputs.py::test_parallel_pbkdf2_correct_and_faster FAILED    [100%]
+
+=================================== FAILURES ===================================
+___________________ test_parallel_pbkdf2_correct_and_faster ____________________
+tests/test_outputs.py:292: in test_parallel_pbkdf2_correct_and_faster
+    assert t_par <= SPEEDUP_FACTOR * t_seq, (
+E   AssertionError: Expected parallel to be faster (t_par=1.228s vs t_seq=1.642s, cpus=2). Submissions observed: 36 via PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit
+E   assert 1.2283965970000001 <= (0.7 * 1.6416694969999999)
+=========================== short test summary info ============================
+FAILED tests/test_outputs.py::test_parallel_pbkdf2_correct_and_faster - Asser...
+============================== 1 failed in 2.93s ===============================
+
+========================================
+Results: failed (Passed: 0, Failed: 1)
+========================================
+
+========================================
+CONSOLE OUTPUT (last 30 lines)
+========================================
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/getty[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mHost and Network Name Lookups[0m.
+[    0.912101] bash[862]: [TESTS] Running pytest...
+[[0;32m  OK  [0m] Started [0;1;39mGetty on tty1[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLogin Prompts[0m.
+[[0;32m  OK  [0m] Started [0;1;39mUser Login Management[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDispatcher daemon for systemd-networkd[0m.
+[    4.171175] bash[862]: ============================= test session starts ==============================
+[    4.172211] bash[862]: platform linux -- Python 3.10.4, pytest-8.4.1, pluggy-1.6.0 -- /usr/bin/python3
+[    4.173157] bash[862]: cachedir: .pytest_cache
+[    4.173727] bash[862]: rootdir: /app
+[    4.174219] bash[862]: collecting ... collected 1 item
+[    4.174866] bash[862]: tests/test_outputs.py::test_parallel_pbkdf2_correct_and_faster FAILED    [100%]
+[    4.175764] bash[862]: =================================== FAILURES ===================================
+[    4.176701] bash[862]: ___________________ test_parallel_pbkdf2_correct_and_faster ____________________
+[    4.177630] bash[862]: tests/test_outputs.py:292: in test_parallel_pbkdf2_correct_and_faster
+[    4.178578] bash[862]:     assert t_par <= SPEEDUP_FACTOR * t_seq, (
+[    4.179303] bash[862]: E   AssertionError: Expected parallel to be faster (t_par=1.228s vs t_seq=1.642s, cpus=2). Submissions observed: 36 via PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit, PPE.submit
+[    4.183776] bash[862]: E   assert 1.2283965970000001 <= (0.7 * 1.6416694969999999)
+[    4.184614] bash[862]: =========================== short test summary info ============================
+[    4.185600] bash[862]: FAILED tests/test_outputs.py::test_parallel_pbkdf2_correct_and_faster - Asser...
+[    4.186612] bash[862]: ============================== 1 failed in 2.93s ===============================
+[    4.188349] bash[862]: ========================================
+[    4.189197] bash[862]: Results: failed (Passed: 0, Failed: 1)
+[    4.189849] bash[862]: ========================================
+[    4.205232] bash[862]: Reboot[    4.283968] reboot: Restarting system
+ing.
+2026-02-17T18:12:52.398988879 [anonymous-instance:main] Vmm is stopping.
+2026-02-17T18:12:52.399278702 [anonymous-instance:main] Vmm is stopping.
+2026-02-17T18:12:52.473224094 [anonymous-instance:main] Firecracker exiting successfully. exit_code=0
+
+========================================
+SUMMARY
+========================================
+  Status:       failed
+  Tests Passed: 0
+  Tests Failed: 1
+========================================
+
+========================================
+TIMING BREAKDOWN
+========================================
+  Boot time:      0.869s  (host launch -> guest autorun start)
+  Solution time:  0.046s  (solution.sh execution)
+  Test time:      3.274s  (pytest execution)
+  Task total:     3.345s  (boot-done -> pre-shutdown)
+  Shutdown time:  0.812s  (reboot -f -> process exit)
+  ────────────────────────
+  Total lifecycle: 5.026s (host launch -> process exit)
+========================================
+
+Task FAILED

@@ -1,0 +1,116 @@
+
+[run-task] Running task in Cloud Hypervisor (instance 8)
+
+  Rootfs: /opt/cloud-hypervisor/rootfs-instance-8.ext4
+  Kernel: /opt/cloud-hypervisor/vmlinuz
+  Timeout: 300s
+  Rootfs prep skipped (SKIP_ROOTFS_PREP=1)
+  Safety checks skipped (SKIP_SAFETY_CHECKS=1)
+
+[run-task] Starting Cloud Hypervisor VM
+
+  Cloud Hypervisor PID: 219989
+  Console output: /tmp/tmp.wBRKb1OQZd
+
+[run-task] Waiting for task completion (timeout: 300s)
+
+  Elapsed: 0s / 300s  Elapsed: 1s / 300s  Elapsed: 2s / 300s  Elapsed: 3s / 300s  Elapsed: 4s / 300s  Elapsed: 5s / 300s  Elapsed: 6s / 300s  Elapsed: 7s / 300s  Elapsed: 8s / 300s  Elapsed: 9s / 300s  Elapsed: 10s / 300s  Elapsed: 11s / 300s  VM has shut down after 12s
+
+
+[run-task] Extracting results from rootfs
+
+  Task completed successfully
+
+========================================
+RESULTS
+========================================
+{
+  "status": "passed",
+  "tests_passed": 1,
+  "tests_failed": 0,
+  "exit_code": 0,
+  "timestamp": "2026-02-18T05:31:34+00:00"
+}
+
+
+========================================
+RUN LOG (last 50 lines)
+========================================
+========================================
+Terminal-Bench Task Runner
+Boot completed at: 2026-02-18T05:31:31+00:00
+========================================
+
+[SOLUTION] Running solution.sh...
+[SOLUTION] Completed
+
+[TESTS] Running pytest...
+============================= test session starts ==============================
+platform linux -- Python 3.10.4, pytest-8.4.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /app
+collecting ... collected 1 item
+
+tests/test_outputs.py::test_parallel_pbkdf2_correct_and_faster PASSED    [100%]
+
+============================== 1 passed in 2.57s ===============================
+
+========================================
+Results: passed (Passed: 1, Failed: 0)
+========================================
+
+========================================
+CONSOLE OUTPUT (last 30 lines)
+========================================
+[[0;32m  OK  [0m] Stopped target [0;1;39mSlice Units[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mUser and Session Slice[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mSocket Units[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mSystem Initialization[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mLocal Encrypted Volumes[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mDispatch Password …ts to Console Directory Watch[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mForward Password R…uests to Wall Directory Watch[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mSwaps[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mLocal Verity Protected Volumes[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mSyslog Socket[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mApply Kernel Variables[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mLoad Kernel Modules[0m.
+         Stopping [0;1;39mNetwork Time Synchronization[0m...
+         Stopping [0;1;39mRecord System Boot/Shutdown in UTMP[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mRecord System Boot/Shutdown in UTMP[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mNetwork Time Synchronization[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mCreate Volatile Files and Directories[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mLocal File Systems[0m.
+         Unmounting [0;1;39m/run/credentials/systemd-sysusers.service[0m...
+[[0;32m  OK  [0m] Unmounted [0;1;39m/run/credentials/systemd-sysusers.service[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mPreparation for Local File Systems[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mUnmount All Filesystems[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mCreate Static Device Nodes in /dev[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mCreate System Users[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mRemount Root and Kernel File Systems[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Shutdown[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLate Shutdown Services[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mSystem Power Off[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Power Off[0m.
+[   10.815125] reboot: Power down
+
+========================================
+SUMMARY
+========================================
+  Status:       passed
+  Tests Passed: 1
+  Tests Failed: 0
+========================================
+
+========================================
+TIMING BREAKDOWN
+========================================
+  Boot time:      7.738s  (host launch -> guest autorun start)
+  Solution time:  0.015s  (solution.sh execution)
+  Test time:      2.930s  (pytest execution)
+  Task total:     2.967s  (boot-done -> pre-shutdown)
+  Shutdown time:  1.339s  (poweroff -> process exit)
+  ────────────────────────
+  Total lifecycle: 12.043s (host launch -> process exit)
+========================================
+
+Task PASSED

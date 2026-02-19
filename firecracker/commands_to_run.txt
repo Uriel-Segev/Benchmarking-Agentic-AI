@@ -24,6 +24,7 @@ Building blocks (called automatically, you don't run these directly):
 What you actually run for benchmarks:
   run_scaling.sh            - Powers of 2 (1, 2, 4, 8, 16, 32, ...)
   run_scaling_linear.sh     - Linear increments (10, 20, 30, 40, ...)
+  run_bottleneck.sh         - Fine-grained sweep around CPU saturation point
 
 
 --------------------------------------------------------------------------------
@@ -58,10 +59,8 @@ ip route | head
 # Create base rootfs
 sudo Benchmarking-Agentic-AI/firecracker/scripts/setup_base_rootfs.sh
 
-# Clone the task repo
-sudo apt-get update
-sudo apt-get install -y git
-git clone https://github.com/laude-institute/terminal-bench.git
+# Install sysstat (needed for monitoring during bottleneck runs)
+sudo apt-get update && sudo apt-get install -y sysstat
 
 
 --------------------------------------------------------------------------------
@@ -69,41 +68,73 @@ STEP 3: PREPARE TASK ROOTFS (once per task)
 --------------------------------------------------------------------------------
 
 # Build the rootfs for a task (only needed once, reuse the .ext4 file after)
-sudo Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh terminal-bench/original-tasks/hello-world
+# Tasks live in Benchmarking-Agentic-AI/tasks/ — no terminal-bench clone needed.
 
-# This creates /opt/firecracker/rootfs-task.ext4
-# Pass the .ext4 file to scaling scripts to avoid re-downloading packages every run
+# hello-world (baseline, no extra deps)
+sudo Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh \
+    Benchmarking-Agentic-AI/tasks/hello-world \
+    /opt/firecracker/rootfs-hello-world.ext4
+
+# parallelize-compute-squares (no extra deps)
+sudo Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh \
+    Benchmarking-Agentic-AI/tasks/parallelize-compute-squares \
+    /opt/firecracker/rootfs-parallelize-compute-squares.ext4
+
+# pytorch-model-recovery (installs torch CPU ~200MB — needs extra disk space)
+sudo EXTRA_SPACE=3G Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh \
+    Benchmarking-Agentic-AI/tasks/pytorch-model-recovery \
+    /opt/firecracker/rootfs-pytorch-model-recovery.ext4
+
+# hf-model-inference (installs transformers+flask+torch, downloads ~250MB distilbert model)
+sudo EXTRA_SPACE=3G Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh \
+    Benchmarking-Agentic-AI/tasks/hf-model-inference \
+    /opt/firecracker/rootfs-hf-model-inference.ext4
+
+# Each command creates a named .ext4 file — pass that to the scaling/bottleneck scripts
+# to avoid re-installing deps every run.
 
 
 --------------------------------------------------------------------------------
 STEP 4: RUN BENCHMARKS
 --------------------------------------------------------------------------------
 
+# --label sets the experiment label (used to organize results in ~/results/)
+# Results are auto-saved to ~/results/<task>/firecracker/<label>/<timestamp>/
+
+# Bottleneck analysis (custom VM counts around CPU saturation point, with host monitoring)
+sudo Benchmarking-Agentic-AI/firecracker/scripts/run_bottleneck.sh \
+  /opt/firecracker/rootfs-parallelize-compute-squares.ext4 \
+  --label 16c
+
+sudo Benchmarking-Agentic-AI/firecracker/scripts/run_bottleneck.sh \
+  /opt/firecracker/rootfs-pytorch-model-recovery.ext4 \
+  --label 16c
+
+sudo Benchmarking-Agentic-AI/firecracker/scripts/run_bottleneck.sh \
+  /opt/firecracker/rootfs-hf-model-inference.ext4 \
+  --label 16c
+
 # Exponential scaling (powers of 2): 1, 2, 4, 8, 16, 32, 64
 sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling.sh \
-  /opt/firecracker/rootfs-task.ext4 64 \
-  --output scaling_fr_64.json \
-  --cooldown 10
+    /opt/firecracker/rootfs-parallelize-compute-squares.ext4 64 \
+    --label 16c \
+    --repeats 5 \
+    --cooldown 10
 
 # Linear scaling (increments of 10): 10, 20, 30, 40, ..., 100
 sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling_linear.sh \
-  /opt/firecracker/rootfs-task.ext4 100 \
-  --output scaling_fr_linear_100.json \
-  --cooldown 10
+    /opt/firecracker/rootfs-parallelize-compute-squares.ext4 100 \
+    --label 16c \
+    --repeats 5 \
+    --cooldown 10
 
-# Custom step size (increments of 5): 5, 10, 15, 20, ..., 50
-sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling_linear.sh \
-  /opt/firecracker/rootfs-task.ext4 50 \
-  --output scaling_fr_linear_50.json \
-  --cooldown 10 \
-  --step 5
-
-# Resume a failed/interrupted run (skips completed VM counts)
+# Resume a failed/interrupted run (pass --output with the interrupted run's JSON path)
 sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling.sh \
-  /opt/firecracker/rootfs-task.ext4 64 \
-  --output scaling_fr_64.json \
+  /opt/firecracker/rootfs-parallelize-compute-squares.ext4 64 \
+  --label 16c \
   --cooldown 10 \
-  --resume
+  --resume \
+  --output ~/results/parallelize-compute-squares/firecracker/16c/<timestamp>/scaling.json
 
 
 --------------------------------------------------------------------------------
@@ -111,18 +142,26 @@ STEP 5: COPY RESULTS TO LOCAL MACHINE
 --------------------------------------------------------------------------------
 
 # Run from your local machine (PowerShell), not from node0
-scp -i ~/.ssh/id_ed25519 NAME@IP:~/scaling_fr_64.json .
-scp -i ~/.ssh/id_ed25519 NAME@IP:~/scaling_fr_linear_100.json .
+# Results are organized by task / hypervisor / label — copy what you need:
+
+# Copy all results for a task:
+scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/parallelize-compute-squares/ .
+
+# Copy a specific label (e.g. 16c):
+scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/parallelize-compute-squares/firecracker/16c/ .
 
 # to get ip: hostname -I
+
 
 --------------------------------------------------------------------------------
 STEP 6: DISPLAY RESULTS
 --------------------------------------------------------------------------------
 
 # Run from local machine, generates bar charts with completion rate overlay
-python display_json_time.py scaling_fr_64.json
-python display_json_time.py scaling_fr_linear_100.json
+python display_json_time.py results/parallelize-compute-squares/firecracker/16c/<timestamp>/scaling.json
+
+# Same display_json_time.py works for both Firecracker and Cloud Hypervisor results
+# (identical JSON format — now includes machine: {hostname, logical_cpus, physical_cores, total_mem_mb})
 
 
 --------------------------------------------------------------------------------
@@ -138,6 +177,24 @@ Per-instance timing breakdown:
   total_vm_lifecycle_s  - Host launch to process exit
 
 Aggregate stats (min/max/avg) are computed across all completed instances.
+
+
+--------------------------------------------------------------------------------
+RESULTS STRUCTURE
+--------------------------------------------------------------------------------
+
+Results are automatically organized as:
+  ~/results/<task>/<hypervisor>/<label>/<timestamp>/
+    scaling.json          (from run_scaling.sh or run_scaling_linear.sh)
+    results.json          (from run_bottleneck.sh)
+    bottleneck_logs/      (from run_bottleneck.sh)
+      machine_info.txt
+      vm1_repeat1_vmstat.log
+      vm1_repeat1_iostat.log
+      ...
+
+The label is user-provided (e.g. "16c" for a 16-core machine).
+The timestamp is auto-generated (YYYYMMDD_HHMMSS).
 
 
 --------------------------------------------------------------------------------

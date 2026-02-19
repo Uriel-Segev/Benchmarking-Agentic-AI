@@ -1,0 +1,116 @@
+
+[run-task] Running task in Firecracker (instance 0)
+
+  Rootfs: /opt/firecracker/rootfs-instance-0.ext4
+  Kernel: /opt/firecracker/vmlinux.bin
+  Timeout: 300s
+  Rootfs prep skipped (SKIP_ROOTFS_PREP=1)
+  Safety checks skipped (SKIP_SAFETY_CHECKS=1)
+
+[run-task] Starting Firecracker VM
+
+  Firecracker PID: 77111
+  Console output: /tmp/tmp.qTo8KasYeR
+
+[run-task] Waiting for task completion (timeout: 300s)
+
+  Elapsed: 0s / 300s  Elapsed: 1s / 300s  Elapsed: 2s / 300s  Elapsed: 3s / 300s  Elapsed: 4s / 300s  VM has shut down after 5s
+
+
+[run-task] Extracting results from rootfs
+
+  Task completed successfully
+
+========================================
+RESULTS
+========================================
+{
+  "status": "passed",
+  "tests_passed": 1,
+  "tests_failed": 0,
+  "exit_code": 0,
+  "timestamp": "2026-02-18T01:14:32+00:00"
+}
+
+
+========================================
+RUN LOG (last 50 lines)
+========================================
+========================================
+Terminal-Bench Task Runner
+Boot completed at: 2026-02-18T01:14:29+00:00
+========================================
+
+[SOLUTION] Running solution.sh...
+[SOLUTION] Completed
+
+[TESTS] Running pytest...
+============================= test session starts ==============================
+platform linux -- Python 3.10.4, pytest-8.4.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /app
+collecting ... collected 1 item
+
+tests/test_outputs.py::test_parallel_pbkdf2_correct_and_faster PASSED    [100%]
+
+============================== 1 passed in 2.76s ===============================
+
+========================================
+Results: passed (Passed: 1, Failed: 0)
+========================================
+
+========================================
+CONSOLE OUTPUT (last 30 lines)
+========================================
+[    0.888898] bash[863]: ========================================
+[[0;32m  OK  [0m] Finished [0;1;39mRemove Stale Onli…ext4 Metadata Check Snapshots[0m.
+[    0.893439] bash[863]: [SOLUTION] Running solution.sh...
+[[0;32m  OK  [0m] Started [0;1;39mSystem Logging Service[0m.
+[    0.905541] bash[863]: [SOLUTION] Completed
+[[0;32m  OK  [0m] Reached target [0;1;39mHost and Network Name Lookups[0m.
+[    0.912673] bash[863]: [TESTS] Running pytest...
+[[0;32m  OK  [0m] Started [0;1;39mSerial Getty on ttyS0[0m.
+         Starting [0;1;39mSet console scheme[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mSet console scheme[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/getty[0m.
+[[0;32m  OK  [0m] Started [0;1;39mGetty on tty1[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLogin Prompts[0m.
+[[0;32m  OK  [0m] Started [0;1;39mUser Login Management[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDispatcher daemon for systemd-networkd[0m.
+[    4.033429] bash[863]: ============================= test session starts ==============================
+[    4.034676] bash[863]: platform linux -- Python 3.10.4, pytest-8.4.1, pluggy-1.6.0 -- /usr/bin/python3
+[    4.035802] bash[863]: cachedir: .pytest_cache
+[    4.036598] bash[863]: rootdir: /app
+[    4.037237] bash[863]: collecting ... collected 1 item
+[    4.037854] bash[863]: tests/test_outputs.py::test_parallel_pbkdf2_correct_and_faster PASSED    [100%]
+[    4.038753] bash[863]: ============================== 1 passed in 2.76s ===============================
+[    4.045912] bash[863]: ========================================
+[    4.046710] bash[863]: Results: passed (Passed: 1, Failed: 0)
+[    4.047474] bash[863]: ========================================
+[    4.063639] b[    4.128307] reboot: Restarting system
+ash[863]: Rebooting.
+2026-02-17T18:14:32.464264703 [anonymous-instance:main] Vmm is stopping.
+2026-02-17T18:14:32.464612223 [anonymous-instance:main] Vmm is stopping.
+2026-02-17T18:14:32.531965461 [anonymous-instance:main] Firecracker exiting successfully. exit_code=0
+
+========================================
+SUMMARY
+========================================
+  Status:       passed
+  Tests Passed: 1
+  Tests Failed: 0
+========================================
+
+========================================
+TIMING BREAKDOWN
+========================================
+  Boot time:      0.905s  (host launch -> guest autorun start)
+  Solution time:  0.017s  (solution.sh execution)
+  Test time:      3.122s  (pytest execution)
+  Task total:     3.167s  (boot-done -> pre-shutdown)
+  Shutdown time:  0.951s  (reboot -f -> process exit)
+  ────────────────────────
+  Total lifecycle: 5.023s (host launch -> process exit)
+========================================
+
+Task PASSED

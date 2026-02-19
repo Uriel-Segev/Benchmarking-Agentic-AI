@@ -6,19 +6,22 @@
 # and collects all results into a single JSON file for analysis / visualization.
 #
 # Usage:
-#   sudo ./run_scaling_linear.sh <task-dir-or-rootfs> <max_vms> [options]
+#   sudo ./run_scaling_linear.sh <task-dir-or-rootfs> <max_vms> --label <name> [options]
 #
 # Options:
-#   --output <path>       Output JSON path (default: scaling_linear_results.json)
+#   --label <name>        Experiment label, e.g. "16c" (required)
+#   --output <path>       Override output JSON path (default: auto in ~/results/)
 #   --cooldown <seconds>  Pause between runs (default: 5)
 #   --repeats <n>         Repeat each VM count n times (default: 1)
 #   --resume              Skip VM counts that already have results in output file
 #   --step <n>            Increment between VM counts (default: 10)
 #
+# Results are saved to:
+#   ~/results/<task>/firecracker/<label>/<timestamp>/scaling.json
+#
 # Examples:
-#   sudo ./run_scaling_linear.sh terminal-bench/original-tasks/hello-world 100
-#   sudo ./run_scaling_linear.sh /opt/firecracker/rootfs-task.ext4 80 --step 5
-#   sudo ./run_scaling_linear.sh terminal-bench/original-tasks/hello-world 100 --resume
+#   sudo ./run_scaling_linear.sh /opt/firecracker/rootfs-task.ext4 100 --label 16c --repeats 5
+#   sudo ./run_scaling_linear.sh /opt/firecracker/rootfs-task.ext4 80 --label 16c --step 5
 # =============================================================================
 
 set -euo pipefail
@@ -31,11 +34,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 INPUT=""
 MAX_VMS=""
-OUTPUT="scaling_linear_results.json"
+LABEL=""
+OUTPUT_EXPLICIT=""
 COOLDOWN=5
 REPEATS=1
 RESUME=false
 STEP=10
+HYPERVISOR="firecracker"
 
 # ---------------------------
 # Parse arguments
@@ -44,16 +49,18 @@ STEP=10
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --output)    OUTPUT="$2";   shift 2 ;;
-    --cooldown)  COOLDOWN="$2"; shift 2 ;;
-    --repeats)   REPEATS="$2";  shift 2 ;;
-    --resume)    RESUME=true;   shift   ;;
-    --step)      STEP="$2";     shift 2 ;;
+    --label)     LABEL="$2";           shift 2 ;;
+    --output)    OUTPUT_EXPLICIT="$2"; shift 2 ;;
+    --cooldown)  COOLDOWN="$2";        shift 2 ;;
+    --repeats)   REPEATS="$2";         shift 2 ;;
+    --resume)    RESUME=true;          shift   ;;
+    --step)      STEP="$2";            shift 2 ;;
     -h|--help)
-      echo "Usage: sudo $0 <task-dir-or-rootfs> <max_vms> [options]"
+      echo "Usage: sudo $0 <task-dir-or-rootfs> <max_vms> --label <name> [options]"
       echo ""
       echo "Options:"
-      echo "  --output <path>       Output JSON path (default: scaling_linear_results.json)"
+      echo "  --label <name>        Experiment label, e.g. '16c' (required)"
+      echo "  --output <path>       Override output JSON path (default: auto in ~/results/)"
       echo "  --cooldown <seconds>  Pause between runs (default: 5)"
       echo "  --repeats <n>         Repeat each VM count n times (default: 1)"
       echo "  --resume              Skip VM counts already present in output file"
@@ -85,16 +92,17 @@ if [[ "${EUID}" -ne 0 ]]; then
   die "Run as root: sudo $0 $*"
 fi
 
-[[ -n "${INPUT}" ]]    || die "Usage: $0 <task-dir-or-rootfs> <max_vms> [options]"
-[[ -n "${MAX_VMS}" ]]  || die "Usage: $0 <task-dir-or-rootfs> <max_vms> [options]"
+[[ -n "${INPUT}" ]]    || die "Usage: $0 <task-dir-or-rootfs> <max_vms> --label <name> [options]"
+[[ -n "${MAX_VMS}" ]]  || die "Usage: $0 <task-dir-or-rootfs> <max_vms> --label <name> [options]"
+[[ -n "${LABEL}" ]]    || die "--label is required (e.g. --label 16c)"
 
 [[ "${MAX_VMS}" =~ ^[0-9]+$ ]]  || die "max_vms must be a positive integer"
 [[ "${MAX_VMS}" -ge 1 ]]        || die "max_vms must be at least 1"
 [[ "${COOLDOWN}" =~ ^[0-9]+$ ]] || die "cooldown must be a non-negative integer"
 [[ "${REPEATS}" =~ ^[0-9]+$ ]]  || die "repeats must be a positive integer"
 [[ "${REPEATS}" -ge 1 ]]        || die "repeats must be at least 1"
-[[ "${STEP}" =~ ^[0-9]+$ ]]    || die "step must be a positive integer"
-[[ "${STEP}" -ge 1 ]]          || die "step must be at least 1"
+[[ "${STEP}" =~ ^[0-9]+$ ]]     || die "step must be a positive integer"
+[[ "${STEP}" -ge 1 ]]           || die "step must be at least 1"
 
 if [[ -d "${INPUT}" ]]; then
   log "Task directory: ${INPUT}"
@@ -103,6 +111,41 @@ elif [[ -f "${INPUT}" ]]; then
 else
   die "Input not found: ${INPUT}"
 fi
+
+# ---------------------------
+# Derive task name and compute results directory
+# ---------------------------
+
+if [[ -f "${INPUT}" ]]; then
+  TASK_NAME=$(basename "${INPUT}" .ext4 | sed 's/^rootfs-//')
+else
+  TASK_NAME=$(basename "${INPUT}")
+fi
+
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+RESULTS_DIR="${HOME}/results/${TASK_NAME}/${HYPERVISOR}/${LABEL}/${TIMESTAMP}"
+mkdir -p "${RESULTS_DIR}"
+
+if [[ -n "${OUTPUT_EXPLICIT}" ]]; then
+  OUTPUT="${OUTPUT_EXPLICIT}"
+else
+  OUTPUT="${RESULTS_DIR}/scaling.json"
+fi
+
+log "Results dir: ${RESULTS_DIR}"
+
+# ---------------------------
+# Capture machine info (collected before experiment starts; does not affect timing)
+# ---------------------------
+
+MACHINE_HOSTNAME=$(hostname 2>/dev/null || echo "unknown")
+MACHINE_CPUS=$(nproc 2>/dev/null || echo "0")
+MACHINE_CORES=$(lscpu 2>/dev/null | awk '/^Core\(s\) per socket:/ {print $NF}' || echo "0")
+MACHINE_SOCKETS=$(lscpu 2>/dev/null | awk '/^Socket\(s\):/ {print $NF}' || echo "0")
+MACHINE_MEM_TOTAL=$(awk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo 2>/dev/null || echo "0")
+PHYSICAL_CORES=$(( MACHINE_CORES * MACHINE_SOCKETS ))
+
+log "Machine: ${MACHINE_HOSTNAME} | ${MACHINE_CPUS} logical CPUs | ${PHYSICAL_CORES} physical cores | ${MACHINE_MEM_TOTAL}MB RAM"
 
 # ---------------------------
 # Build list of VM counts (linear increments of STEP up to MAX_VMS)
@@ -136,9 +179,8 @@ if [[ ${AVAIL_MEM_MB} -gt 0 ]] && [[ ${NEEDED_MEM_MB} -gt ${AVAIL_MEM_MB} ]]; th
 fi
 
 # CPU check (informational)
-CPU_COUNT=$(nproc 2>/dev/null || echo "0")
-if [[ ${CPU_COUNT} -gt 0 ]]; then
-  log "Host CPUs: ${CPU_COUNT} | Max parallel VMs: ${MAX_COUNT} (2 vCPUs each = $((MAX_COUNT * 2)) vCPUs)"
+if [[ ${MACHINE_CPUS} -gt 0 ]]; then
+  log "Host CPUs: ${MACHINE_CPUS} | Max parallel VMs: ${MAX_COUNT} (2 vCPUs each = $((MAX_COUNT * 2)) vCPUs)"
 fi
 
 # ---------------------------
@@ -301,6 +343,12 @@ if command -v jq >/dev/null 2>&1; then
 
   jq -n \
     --arg task "${INPUT}" \
+    --arg hypervisor "${HYPERVISOR}" \
+    --arg label "${LABEL}" \
+    --arg hostname "${MACHINE_HOSTNAME}" \
+    --argjson logical_cpus "${MACHINE_CPUS}" \
+    --argjson physical_cores "${PHYSICAL_CORES}" \
+    --argjson total_mem_mb "${MACHINE_MEM_TOTAL}" \
     --argjson max_vms "${MAX_VMS}" \
     --argjson repeats "${REPEATS}" \
     --argjson total_runs "${TOTAL_RUNS}" \
@@ -312,6 +360,14 @@ if command -v jq >/dev/null 2>&1; then
     --slurpfile runs "${RUNS_TMP}" \
     '{
       task: $task,
+      hypervisor: $hypervisor,
+      label: $label,
+      machine: {
+        hostname: $hostname,
+        logical_cpus: $logical_cpus,
+        physical_cores: $physical_cores,
+        total_mem_mb: $total_mem_mb
+      },
       max_vms: $max_vms,
       vm_counts: ($vm_counts | split(" ") | map(tonumber)),
       repeats_per_count: $repeats,
@@ -330,6 +386,9 @@ else
   {
     echo "{"
     echo "  \"task\": \"${INPUT}\","
+    echo "  \"hypervisor\": \"${HYPERVISOR}\","
+    echo "  \"label\": \"${LABEL}\","
+    echo "  \"machine\": {\"hostname\": \"${MACHINE_HOSTNAME}\", \"logical_cpus\": ${MACHINE_CPUS}, \"physical_cores\": ${PHYSICAL_CORES}, \"total_mem_mb\": ${MACHINE_MEM_TOTAL}},"
     echo "  \"max_vms\": ${MAX_VMS},"
     echo "  \"vm_counts\": [$(IFS=,; echo "${VM_COUNTS[*]}")],"
     echo "  \"repeats_per_count\": ${REPEATS},"
@@ -366,6 +425,8 @@ echo "========================================"
 echo "SCALING BENCHMARK COMPLETE"
 echo "========================================"
 echo "  Task:            ${INPUT}"
+echo "  Hypervisor:      ${HYPERVISOR}"
+echo "  Label:           ${LABEL}"
 echo "  VM counts:       ${VM_COUNTS[*]}"
 echo "  Repeats:         ${REPEATS}"
 echo "  Total runs:      ${TOTAL_RUNS}"

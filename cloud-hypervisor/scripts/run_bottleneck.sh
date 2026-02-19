@@ -7,19 +7,23 @@
 # saving per-run monitor logs alongside JSON results.
 #
 # Usage:
-#   sudo ./run_bottleneck.sh <task-dir-or-rootfs> [options]
+#   sudo ./run_bottleneck.sh <task-dir-or-rootfs> --label <name> [options]
 #
 # Options:
-#   --output <path>       Output JSON path (default: bottleneck_results.json)
+#   --label <name>        Experiment label, e.g. "48c" (required)
+#   --output <path>       Override output JSON path (default: auto in ~/results/)
 #   --cooldown <seconds>  Pause between runs (default: 10)
 #   --repeats <n>         Repeats per VM count (default: 3)
 #   --resume              Skip already-completed runs
-#   --log-dir <path>      Directory for monitor logs (default: ./bottleneck_logs/)
+#   --log-dir <path>      Override monitor log directory (default: auto in ~/results/)
+#
+# Results are saved to:
+#   ~/results/<task>/cloud-hypervisor/<label>/<timestamp>/results.json
+#   ~/results/<task>/cloud-hypervisor/<label>/<timestamp>/bottleneck_logs/
 #
 # Examples:
-#   sudo ./run_bottleneck.sh terminal-bench/original-tasks/hello-world
-#   sudo ./run_bottleneck.sh /opt/cloud-hypervisor/rootfs-task.ext4 --repeats 3
-#   sudo ./run_bottleneck.sh terminal-bench/original-tasks/hello-world --resume
+#   sudo ./run_bottleneck.sh /opt/cloud-hypervisor/rootfs-task.ext4 --label 48c
+#   sudo ./run_bottleneck.sh /opt/cloud-hypervisor/rootfs-task.ext4 --label 48c --repeats 3
 # =============================================================================
 
 set -euo pipefail
@@ -31,11 +35,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # ---------------------------
 
 INPUT=""
-OUTPUT="bottleneck_results.json"
+LABEL=""
+OUTPUT_EXPLICIT=""
+LOG_DIR_EXPLICIT=""
 COOLDOWN=10
 REPEATS=3
 RESUME=false
-LOG_DIR="./bottleneck_logs"
+HYPERVISOR="cloud-hypervisor"
 
 # VM_COUNTS is computed after machine info capture (see below)
 
@@ -46,20 +52,22 @@ LOG_DIR="./bottleneck_logs"
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --output)    OUTPUT="$2";   shift 2 ;;
-    --cooldown)  COOLDOWN="$2"; shift 2 ;;
-    --repeats)   REPEATS="$2";  shift 2 ;;
-    --resume)    RESUME=true;   shift   ;;
-    --log-dir)   LOG_DIR="$2";  shift 2 ;;
+    --label)     LABEL="$2";            shift 2 ;;
+    --output)    OUTPUT_EXPLICIT="$2";  shift 2 ;;
+    --cooldown)  COOLDOWN="$2";         shift 2 ;;
+    --repeats)   REPEATS="$2";          shift 2 ;;
+    --resume)    RESUME=true;           shift   ;;
+    --log-dir)   LOG_DIR_EXPLICIT="$2"; shift 2 ;;
     -h|--help)
-      echo "Usage: sudo $0 <task-dir-or-rootfs> [options]"
+      echo "Usage: sudo $0 <task-dir-or-rootfs> --label <name> [options]"
       echo ""
       echo "Options:"
-      echo "  --output <path>       Output JSON path (default: bottleneck_results.json)"
+      echo "  --label <name>        Experiment label, e.g. '48c' (required)"
+      echo "  --output <path>       Override output JSON path (default: auto in ~/results/)"
       echo "  --cooldown <seconds>  Pause between runs (default: 10)"
       echo "  --repeats <n>         Repeats per VM count (default: 3)"
       echo "  --resume              Skip already-completed runs"
-      echo "  --log-dir <path>      Directory for monitor logs (default: ./bottleneck_logs/)"
+      echo "  --log-dir <path>      Override monitor log directory (default: auto in ~/results/)"
       exit 0
       ;;
     *)
@@ -86,7 +94,8 @@ if [[ "${EUID}" -ne 0 ]]; then
   die "Run as root: sudo $0 $*"
 fi
 
-[[ -n "${INPUT}" ]]                || die "Usage: $0 <task-dir-or-rootfs> [options]"
+[[ -n "${INPUT}" ]]                || die "Usage: $0 <task-dir-or-rootfs> --label <name> [options]"
+[[ -n "${LABEL}" ]]                || die "--label is required (e.g. --label 48c)"
 [[ "${COOLDOWN}" =~ ^[0-9]+$ ]]   || die "cooldown must be a non-negative integer"
 [[ "${REPEATS}" =~ ^[0-9]+$ ]]    || die "repeats must be a positive integer"
 [[ "${REPEATS}" -ge 1 ]]          || die "repeats must be at least 1"
@@ -103,6 +112,34 @@ fi
 for cmd in vmstat iostat mpstat; do
   command -v "${cmd}" >/dev/null || die "${cmd} not found — install sysstat (apt install sysstat)"
 done
+
+# ---------------------------
+# Derive task name and compute results directory
+# ---------------------------
+
+if [[ -f "${INPUT}" ]]; then
+  TASK_NAME=$(basename "${INPUT}" .ext4 | sed 's/^rootfs-//')
+else
+  TASK_NAME=$(basename "${INPUT}")
+fi
+
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+RESULTS_DIR="${HOME}/results/${TASK_NAME}/${HYPERVISOR}/${LABEL}/${TIMESTAMP}"
+mkdir -p "${RESULTS_DIR}"
+
+if [[ -n "${OUTPUT_EXPLICIT}" ]]; then
+  OUTPUT="${OUTPUT_EXPLICIT}"
+else
+  OUTPUT="${RESULTS_DIR}/results.json"
+fi
+
+if [[ -n "${LOG_DIR_EXPLICIT}" ]]; then
+  LOG_DIR="${LOG_DIR_EXPLICIT}"
+else
+  LOG_DIR="${RESULTS_DIR}/bottleneck_logs"
+fi
+
+log "Results dir: ${RESULTS_DIR}"
 
 # ---------------------------
 # Create monitor log directory
@@ -148,6 +185,7 @@ MACHINE_THREADS=$(lscpu 2>/dev/null | awk '/^Thread\(s\) per core:/ {print $NF}'
 MACHINE_SOCKETS=$(lscpu 2>/dev/null | awk '/^Socket\(s\):/ {print $NF}' || echo "0")
 MACHINE_MEM_TOTAL=$(awk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo 2>/dev/null || echo "0")
 MACHINE_MODEL=$(lscpu 2>/dev/null | grep 'Model name:' | sed 's/Model name: *//' || echo "unknown")
+PHYSICAL_CORES=$(( MACHINE_CORES * MACHINE_SOCKETS ))
 
 log "Machine: ${MACHINE_HOSTNAME} | ${MACHINE_CPUS} logical CPUs (${MACHINE_SOCKETS}s × ${MACHINE_CORES}c × ${MACHINE_THREADS}t) | ${MACHINE_MEM_TOTAL}MB RAM"
 log "CPU model: ${MACHINE_MODEL}"
@@ -156,7 +194,6 @@ log "CPU model: ${MACHINE_MODEL}"
 # Auto-compute VM count sequence based on physical cores
 # ---------------------------
 
-PHYSICAL_CORES=$((MACHINE_CORES * MACHINE_SOCKETS))
 # Inflection point: physical_cores / vcpus_per_vm (2 vCPUs per VM)
 VCPU_COUNT="${VCPU_COUNT:-2}"
 INFLECTION=$((PHYSICAL_CORES / VCPU_COUNT))
@@ -247,6 +284,8 @@ save_results() {
 
   jq -n \
     --arg task "${INPUT}" \
+    --arg hypervisor "${HYPERVISOR}" \
+    --arg label "${LABEL}" \
     --argjson repeats "${REPEATS}" \
     --argjson total_runs "${TOTAL_RUNS}" \
     --argjson completed "${COMPLETED_RUNS}" \
@@ -257,6 +296,7 @@ save_results() {
     --arg log_dir "${LOG_DIR}" \
     --arg hostname "${MACHINE_HOSTNAME}" \
     --argjson logical_cpus "${MACHINE_CPUS}" \
+    --argjson physical_cores "${PHYSICAL_CORES}" \
     --argjson cores_per_socket "${MACHINE_CORES}" \
     --argjson threads_per_core "${MACHINE_THREADS}" \
     --argjson sockets "${MACHINE_SOCKETS}" \
@@ -265,9 +305,12 @@ save_results() {
     --slurpfile runs "${runs_tmp}" \
     '{
       task: $task,
+      hypervisor: $hypervisor,
+      label: $label,
       machine: {
         hostname: $hostname,
         logical_cpus: $logical_cpus,
+        physical_cores: $physical_cores,
         cores_per_socket: $cores_per_socket,
         threads_per_core: $threads_per_core,
         sockets: $sockets,
@@ -459,6 +502,8 @@ echo "========================================"
 echo "BOTTLENECK ANALYSIS COMPLETE"
 echo "========================================"
 echo "  Task:            ${INPUT}"
+echo "  Hypervisor:      ${HYPERVISOR}"
+echo "  Label:           ${LABEL}"
 echo "  VM counts:       ${VM_COUNTS[*]}"
 echo "  Repeats:         ${REPEATS}"
 echo "  Total runs:      ${TOTAL_RUNS}"

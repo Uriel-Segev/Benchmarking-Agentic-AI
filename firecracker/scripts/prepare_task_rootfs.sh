@@ -87,9 +87,10 @@ log "Creating task rootfs from base image"
 # Copy base rootfs
 cp -f "${BASE_ROOTFS}" "${OUTPUT_ROOTFS}"
 
-# Resize to ensure enough space (add 512MB)
-log "Resizing rootfs to ensure space for dependencies"
-truncate -s +512M "${OUTPUT_ROOTFS}"
+# Resize to ensure enough space
+EXTRA_SPACE="${EXTRA_SPACE:-512M}"
+log "Resizing rootfs to ensure space for dependencies (+${EXTRA_SPACE})"
+truncate -s +"${EXTRA_SPACE}" "${OUTPUT_ROOTFS}"
 e2fsck -f -y "${OUTPUT_ROOTFS}" || true
 resize2fs "${OUTPUT_ROOTFS}"
 
@@ -172,6 +173,18 @@ echo "Dependencies installed successfully"
 CHROOT_INSTALL
 
 # ---------------------------
+# Run task-specific setup (if provided)
+# ---------------------------
+
+if [[ -f "${TASK_DIR}/setup.sh" ]]; then
+  log "Running task-specific setup.sh"
+  cp "${TASK_DIR}/setup.sh" "${MOUNT_POINT}/tmp/task-setup.sh"
+  chmod +x "${MOUNT_POINT}/tmp/task-setup.sh"
+  chroot "${MOUNT_POINT}" /bin/bash /tmp/task-setup.sh
+  rm -f "${MOUNT_POINT}/tmp/task-setup.sh"
+fi
+
+# ---------------------------
 # Copy task files
 # ---------------------------
 
@@ -220,6 +233,11 @@ echo "Boot completed at: $(date -Iseconds)"
 echo "========================================"
 
 cd /app
+
+# Load task-specific environment variables (if any)
+if [[ -f /app/task_env.sh ]]; then
+  source /app/task_env.sh
+fi
 
 # Initialize results
 echo '{"status":"running","tests_passed":0,"tests_failed":0}' > "${RESULTS_FILE}"
