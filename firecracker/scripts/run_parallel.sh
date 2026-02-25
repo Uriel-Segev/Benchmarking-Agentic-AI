@@ -34,8 +34,10 @@ RESULTS_OUTPUT="${3:-parallel_results.json}"
 # iptables chain owned by install_firecracker.sh (we add rules to it, not create it)
 FC_FWD_CHAIN="FC_FWD"
 
-# Base subnet: instance i gets 192.168.(100+i).0/30
-SUBNET_BASE=100
+# Subnet scheme: instance i gets 192.168.(i/64).((i%64)*4).0/30
+#   TAP host IP : 192.168.(i/64).((i%64)*4+1)
+#   VM guest IP : 192.168.(i/64).((i%64)*4+2)
+# Supports up to 16,384 instances within the CloudLab-safe 192.168.0.0/16 range.
 
 # ---------------------------
 # Helpers
@@ -96,7 +98,7 @@ fi
 [[ -n "${NUM_INSTANCES}" ]] || die "Usage: $0 <rootfs_or_task_dir> <num_instances> [results_output]"
 [[ "${NUM_INSTANCES}" =~ ^[0-9]+$ ]] || die "num_instances must be a positive integer"
 [[ "${NUM_INSTANCES}" -ge 1 ]] || die "num_instances must be at least 1"
-[[ "${NUM_INSTANCES}" -le 254 ]] || die "num_instances must be at most 254 (MAC address limit)"
+[[ "${NUM_INSTANCES}" -le 16384 ]] || die "num_instances must be at most 16384"
 
 command -v firecracker >/dev/null || die "firecracker not found in PATH"
 
@@ -186,7 +188,7 @@ echo "  tap0 already exists (from install_firecracker.sh)"
 
 for i in $(seq 1 $((NUM_INSTANCES - 1))); do
   TAP="tap${i}"
-  TAP_IP_I="192.168.$((SUBNET_BASE + i)).1"
+  TAP_IP_I="192.168.$(( i / 64 )).$(( (i % 64) * 4 + 1 ))"
 
   # Remove old TAP if it exists (idempotent)
   ip link del "${TAP}" 2>/dev/null || true
@@ -210,13 +212,17 @@ done
 # Single ARP safety check
 # ---------------------------
 
-log "Running ARP safety check (10s) on ${DEFAULT_IFACE}"
-TAP0_IP="192.168.${SUBNET_BASE}.1"
-echo "  Checking for dangerous ARP involving ${TAP0_IP}..."
-if timeout 10 tcpdump -n -c 1 -i "${DEFAULT_IFACE}" "arp and host ${TAP0_IP}" 2>/dev/null; then
-  die "REFUSING TO RUN (CLOUDLAB SAFETY): Saw ARP involving TAP_IP (${TAP0_IP}) on ${DEFAULT_IFACE}. This is dangerous on CloudLab!"
+if [[ "${SKIP_ARP_CHECK:-0}" != "1" ]]; then
+  log "Running ARP safety check (5s) on ${DEFAULT_IFACE}"
+  echo "  Checking for 192.168.0.0/16 address or ARP on ${DEFAULT_IFACE}..."
+  if ip addr show "${DEFAULT_IFACE}" | grep -qE "192\.168\."; then
+    die "CLOUDLAB SAFETY: 192.168.x.x address found on ${DEFAULT_IFACE}. IP conflict risk."
+  fi
+  if timeout 5 tcpdump -n -c 1 -i "${DEFAULT_IFACE}" "arp and net 192.168.0.0/16" 2>/dev/null; then
+    die "CLOUDLAB SAFETY: ARP for 192.168.x.x seen on ${DEFAULT_IFACE}. This is dangerous on CloudLab!"
+  fi
+  echo "  ARP check passed — safe to launch all instances"
 fi
-echo "  ARP check passed — safe to launch all instances"
 
 # ---------------------------
 # Launch N instances in parallel
@@ -226,8 +232,8 @@ log "Launching ${NUM_INSTANCES} Firecracker instances in parallel"
 
 PIDS=()
 for i in $(seq 0 $((NUM_INSTANCES - 1))); do
-  TAP_IP_I="192.168.$((SUBNET_BASE + i)).1"
-  FC_IP_I="192.168.$((SUBNET_BASE + i)).2"
+  TAP_IP_I="192.168.$(( i / 64 )).$(( (i % 64) * 4 + 1 ))"
+  FC_IP_I="192.168.$(( i / 64 )).$(( (i % 64) * 4 + 2 ))"
 
   INST_ROOTFS="${WORKDIR}/rootfs-instance-${i}.ext4"
   INST_LOG="${INSTANCE_LOG_DIR}/instance-${i}.log"

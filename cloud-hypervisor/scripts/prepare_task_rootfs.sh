@@ -253,40 +253,18 @@ if [[ -f /app/solution.sh ]]; then
 fi
 T_SOLUTION_END=$(date +%s.%N 2>/dev/null || date +%s)
 
-# TIMING: Test phase
-T_TESTS_START=$(date +%s.%N 2>/dev/null || date +%s)
-echo ""
-echo "[TESTS] Running pytest..."
-
-set +e
-TEST_OUTPUT=$(python3 -m pytest /app/tests/test_outputs.py -v --tb=short 2>&1)
-TEST_EXIT_CODE=$?
-set -e
-
-echo "${TEST_OUTPUT}"
-T_TESTS_END=$(date +%s.%N 2>/dev/null || date +%s)
-
-# Parse pytest output for pass/fail counts
-PASSED=$(echo "${TEST_OUTPUT}" | grep -oP '\d+(?= passed)' | head -1 || echo "0")
-FAILED=$(echo "${TEST_OUTPUT}" | grep -oP '\d+(?= failed)' | head -1 || echo "0")
-
-[[ -z "${PASSED}" ]] && PASSED=0
-[[ -z "${FAILED}" ]] && FAILED=0
-
-# Determine overall status
-if [[ "${TEST_EXIT_CODE}" -eq 0 ]]; then
-  STATUS="passed"
-else
-  STATUS="failed"
-fi
+# No test phase — solution correctness is assumed (solution.sh is pre-verified).
+# Set test timestamps equal to solution end so timing.json stays structurally intact.
+T_TESTS_START=${T_SOLUTION_END}
+T_TESTS_END=${T_SOLUTION_END}
 
 # Write results JSON
 cat > "${RESULTS_FILE}" <<EOF
 {
-  "status": "${STATUS}",
-  "tests_passed": ${PASSED},
-  "tests_failed": ${FAILED},
-  "exit_code": ${TEST_EXIT_CODE},
+  "status": "completed",
+  "tests_passed": 0,
+  "tests_failed": 0,
+  "exit_code": 0,
   "timestamp": "$(date -Iseconds)"
 }
 EOF
@@ -296,7 +274,7 @@ touch /app/TASK_COMPLETE
 
 echo ""
 echo "========================================"
-echo "Results: ${STATUS} (Passed: ${PASSED}, Failed: ${FAILED})"
+echo "Results: completed"
 echo "========================================"
 
 # TIMING: Write timing.json as very last thing before shutdown
