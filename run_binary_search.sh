@@ -106,12 +106,12 @@ fi
 case "${HYPERVISOR}" in
   firecracker)
     HV_SCRIPT_DIR="${SCRIPT_DIR}/firecracker/scripts"
-    WORKDIR="/opt/firecracker"
+    WORKDIR="${WORKDIR:-/opt/firecracker}"
     HV_BIN="firecracker"
     ;;
   cloud-hypervisor)
     HV_SCRIPT_DIR="${SCRIPT_DIR}/cloud-hypervisor/scripts"
-    WORKDIR="/opt/cloud-hypervisor"
+    WORKDIR="${WORKDIR:-/opt/cloud-hypervisor}"
     HV_BIN="cloud-hypervisor"
     ;;
   *)
