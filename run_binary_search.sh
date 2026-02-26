@@ -197,23 +197,18 @@ fi
 # Compute initial upper bound (hi)
 # ---------------------------
 
-AVAIL_RAM_MB=$(awk '/MemAvailable/ {printf "%d", $2/1024}' /proc/meminfo 2>/dev/null || echo "0")
-RAM_LIMIT=$(( AVAIL_RAM_MB / VM_RAM_MB ))
-
 ROOTFS_SIZE_KB=$(du -k "${PROBE_INPUT}" | awk '{print $1}')
 ROOTFS_SIZE_MB=$(( (ROOTFS_SIZE_KB + 1023) / 1024 ))
 AVAIL_DISK_KB=$(df -k "$(dirname "${PROBE_INPUT}")" | awk 'NR==2{print $4}')
 AVAIL_DISK_MB=$(( AVAIL_DISK_KB / 1024 ))
 DISK_LIMIT=$(( ROOTFS_SIZE_MB > 0 ? AVAIL_DISK_MB / ROOTFS_SIZE_MB : 9999 ))
 
-AUTO_HI=$(( RAM_LIMIT < DISK_LIMIT ? RAM_LIMIT : DISK_LIMIT ))
-
 if [[ -n "${MAX_VMS_OVERRIDE}" ]]; then
   INIT_HI="${MAX_VMS_OVERRIDE}"
   log "Upper bound: ${INIT_HI} VMs (user override)"
 else
-  INIT_HI="${AUTO_HI}"
-  log "Upper bound: ${INIT_HI} VMs (RAM allows ~${RAM_LIMIT}, disk allows ~${DISK_LIMIT})"
+  INIT_HI="${DISK_LIMIT}"
+  log "Upper bound: ${INIT_HI} VMs (disk allows ~${DISK_LIMIT}; RAM limit removed — binary search finds the real crash point)"
 fi
 
 [[ "${INIT_HI}" -ge 2 ]] || die "Upper bound (${INIT_HI}) is too low — not enough RAM or disk for even 2 VMs"
@@ -321,6 +316,51 @@ if [[ "${RESUME}" == "true" ]]; then
 fi
 
 # ---------------------------
+# System snapshot + failure diagnosis helpers
+# ---------------------------
+
+_avail_ram_mb() {
+  awk '/MemAvailable/ {printf "%d", $2/1024}' /proc/meminfo 2>/dev/null || echo "0"
+}
+
+# _capture_probe_diagnosis <probe_iter> <vm_count> [inst_log_dir]
+# Saves dmesg, memory, fd, tap stats + instance logs to RESULTS_DIR/diagnosis/.
+# Prints "reason|diag_dir" on stdout.
+_capture_probe_diagnosis() {
+  local probe_iter="$1"
+  local vm_count="$2"
+  local inst_log_dir="${3:-}"
+
+  local diag_dir="${RESULTS_DIR}/diagnosis/probe_${probe_iter}_n${vm_count}"
+  mkdir -p "${diag_dir}"
+
+  free -m                                  > "${diag_dir}/memory.txt"        2>/dev/null || true
+  dmesg | tail -200                        > "${diag_dir}/dmesg.txt"         2>/dev/null || true
+  cat /proc/sys/fs/file-nr                 > "${diag_dir}/file_nr.txt"       2>/dev/null || true
+  cat /proc/sys/vm/max_map_count           > "${diag_dir}/max_map_count.txt" 2>/dev/null || true
+  ip link show 2>/dev/null | grep -c "tap" > "${diag_dir}/tap_count.txt"     2>/dev/null || true
+
+  if [[ -n "${inst_log_dir}" ]] && [[ -d "${inst_log_dir}" ]]; then
+    cp -r "${inst_log_dir}" "${diag_dir}/instance_logs" 2>/dev/null || true
+  fi
+
+  local reason="unknown"
+  if grep -qi "out of memory\|oom.*kill\|killed process" "${diag_dir}/dmesg.txt" 2>/dev/null; then
+    reason="oom_killer"
+  elif grep -qi "file table overflow\|too many open files" "${diag_dir}/dmesg.txt" 2>/dev/null; then
+    reason="fd_exhaustion"
+  elif grep -qi "cannot allocate memory" "${diag_dir}/dmesg.txt" 2>/dev/null; then
+    reason="memory_alloc_failure"
+  elif [[ -n "${inst_log_dir}" ]] && \
+       grep -rqi "mmap\|map_count\|Cannot allocate" "${inst_log_dir}" 2>/dev/null; then
+    reason="mmap_limit"
+  fi
+
+  log "Diagnosis saved: ${diag_dir} (likely: ${reason})"
+  echo "${reason}|${diag_dir}"
+}
+
+# ---------------------------
 # run_probe <vm_count> <is_baseline> <repeat_num> <total_repeats>
 #
 # Calls run_parallel.sh with SKIP_ARP_CHECK=1 and appends one JSON line to
@@ -342,6 +382,10 @@ run_probe() {
   log "========================================"
 
   local probe_start exit_code=0
+  local avail_ram_before failure_reason diagnosis_dir
+  avail_ram_before=$(_avail_ram_mb)
+  failure_reason=""
+  diagnosis_dir=""
   probe_start=$(date +%s)
 
   SKIP_ARP_CHECK=1 \
@@ -385,8 +429,11 @@ run_probe() {
       --argjson is_baseline  "${is_baseline}" \
       --argjson repeat_num   "${repeat_num}" \
       --argjson total_reps   "${total_repeats}" \
-      --argjson timing       "${timing_json}" \
-      --arg     timestamp    "${timestamp}" \
+      --argjson timing          "${timing_json}" \
+      --argjson avail_ram_mb    "${avail_ram_before}" \
+      --arg     failure_reason  "${failure_reason}" \
+      --arg     diagnosis_dir   "${diagnosis_dir}" \
+      --arg     timestamp       "${timestamp}" \
       '{
         iteration:          $iteration,
         vm_count:           $vm_count,
@@ -400,6 +447,9 @@ run_probe() {
         total:              $total,
         wall_clock_seconds: $wall_clock,
         is_baseline:        $is_baseline,
+        avail_ram_mb_before: $avail_ram_mb,
+        failure_reason:     (if ($failure_reason | length) > 0 then $failure_reason else null end),
+        diagnosis_dir:      (if ($diagnosis_dir | length) > 0 then $diagnosis_dir else null end),
         timing_summary:     $timing,
         timestamp:          $timestamp
       }' >> "${ALL_PROBES_FILE}" 2>/dev/null || true
@@ -408,11 +458,23 @@ run_probe() {
       >> "${ALL_PROBES_FILE}"
   fi
 
+  # On failure, capture diagnosis (dmesg, memory, fd stats, instance logs)
+  if [[ "${stable}" == "false" ]]; then
+    local inst_log_dir=""
+    if [[ -f "${TMP_PROBE}" ]] && command -v jq >/dev/null 2>&1; then
+      inst_log_dir=$(jq -r '.instance_log_dir // ""' "${TMP_PROBE}" 2>/dev/null || echo "")
+    fi
+    local diag_result
+    diag_result=$(_capture_probe_diagnosis "${PROBE_ITERATION}" "${vm_count}" "${inst_log_dir}")
+    failure_reason="${diag_result%%|*}"
+    diagnosis_dir="${diag_result##*|}"
+  fi
+
   if [[ "${stable}" == "true" ]]; then
     echo "  Result: STABLE  (${completed}/${vm_count} completed in ${wall_clock}s)"
     return 0
   else
-    echo "  Result: UNSTABLE  (${completed}/${vm_count} completed, exit_code=${exit_code})"
+    echo "  Result: UNSTABLE  (${completed}/${vm_count} completed, exit_code=${exit_code}, likely: ${failure_reason})"
     return 1
   fi
 }
@@ -550,7 +612,7 @@ if command -v jq >/dev/null 2>&1; then
     '{
       task:               $task,
       hypervisor:         $hypervisor,
-      label:              $label,
+      "label":            $label,
       machine: {
         hostname:         $hostname,
         logical_cpus:     $logical_cpus,

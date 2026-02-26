@@ -418,6 +418,7 @@ cat > "${RESULTS_OUTPUT}" <<EOF
   "total_tests_passed": ${TOTAL_PASSED},
   "total_tests_failed": ${TOTAL_FAILED},
   "wall_clock_seconds": ${WALL_CLOCK},
+  "instance_log_dir": "${INSTANCE_LOG_DIR}",
   ${TIMING_SUMMARY_JSON}
   "instances": [
 ${INSTANCES_JSON}
