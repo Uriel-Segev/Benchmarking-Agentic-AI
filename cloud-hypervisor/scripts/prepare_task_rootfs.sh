@@ -261,7 +261,7 @@ T_TESTS_END=${T_SOLUTION_END}
 # Write results JSON
 cat > "${RESULTS_FILE}" <<EOF
 {
-  "status": "completed",
+  "status": "passed",
   "tests_passed": 0,
   "tests_failed": 0,
   "exit_code": 0,
