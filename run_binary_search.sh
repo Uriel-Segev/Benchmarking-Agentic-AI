@@ -243,8 +243,8 @@ echo "  ARP check passed — safe to proceed"
 # ---------------------------
 
 TMP_PROBE=$(mktemp /tmp/bsearch-probe-XXXXXX.json)
-ALL_PROBES_FILE=$(mktemp /tmp/bsearch-all-probes-XXXXXX.jsonl)
-trap "rm -f '${TMP_PROBE}' '${ALL_PROBES_FILE}'" EXIT
+ALL_PROBES_FILE="${RESULTS_DIR}/probes.jsonl"
+trap "rm -f '${TMP_PROBE}'" EXIT
 
 # ---------------------------
 # Binary search state
