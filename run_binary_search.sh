@@ -389,6 +389,7 @@ run_probe() {
   probe_start=$(date +%s)
 
   SKIP_ARP_CHECK=1 \
+  WORKDIR="${WORKDIR}" \
     "${PARALLEL_SH}" "${PROBE_INPUT}" "${vm_count}" "${TMP_PROBE}" \
     || exit_code=$?
 
