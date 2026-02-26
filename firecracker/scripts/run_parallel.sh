@@ -152,7 +152,7 @@ log "Instance logs: ${INSTANCE_LOG_DIR}"
 log "Creating ${NUM_INSTANCES} rootfs copies and preparing each for fresh run"
 for i in $(seq 0 $((NUM_INSTANCES - 1))); do
   INST_ROOTFS="${WORKDIR}/rootfs-instance-${i}.ext4"
-  cp "${SOURCE_ROOTFS}" "${INST_ROOTFS}"
+  cp --sparse=always "${SOURCE_ROOTFS}" "${INST_ROOTFS}"
   CREATED_ROOTFS+=("${INST_ROOTFS}")
 
   # Prepare rootfs sequentially here (clear old markers) so run_task.sh
@@ -165,7 +165,6 @@ for i in $(seq 0 $((NUM_INSTANCES - 1))); do
   rm -f "${MNT}/app/run.log"
   rm -f "${MNT}/app/timing.json"
   rm -f "${MNT}/app/timing_combined.json"
-  sync
   umount "${MNT}"
 
   echo "  Created and prepared rootfs-instance-${i}.ext4"
