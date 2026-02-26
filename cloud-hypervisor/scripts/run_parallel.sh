@@ -149,26 +149,19 @@ log "Instance logs: ${INSTANCE_LOG_DIR}"
 # Copy rootfs for each instance
 # ---------------------------
 
-log "Creating ${NUM_INSTANCES} rootfs copies and preparing each for fresh run"
+COPY_BATCH=32
+log "Creating ${NUM_INSTANCES} rootfs copies in parallel batches of ${COPY_BATCH}"
 for i in $(seq 0 $((NUM_INSTANCES - 1))); do
   INST_ROOTFS="${WORKDIR}/rootfs-instance-${i}.ext4"
-  cp --sparse=always "${SOURCE_ROOTFS}" "${INST_ROOTFS}"
+  cp --sparse=always "${SOURCE_ROOTFS}" "${INST_ROOTFS}" &
   CREATED_ROOTFS+=("${INST_ROOTFS}")
-
-  # Prepare rootfs sequentially here (clear old markers) so run_task.sh
-  # doesn't need to mount/umount 30+ rootfs images simultaneously
-  MNT="/mnt/ch-rootfs-${i}"
-  mkdir -p "${MNT}"
-  mount -o loop "${INST_ROOTFS}" "${MNT}"
-  rm -f "${MNT}/app/TASK_COMPLETE"
-  rm -f "${MNT}/app/results.json"
-  rm -f "${MNT}/app/run.log"
-  rm -f "${MNT}/app/timing.json"
-  rm -f "${MNT}/app/timing_combined.json"
-  umount "${MNT}"
-
-  echo "  Created and prepared rootfs-instance-${i}.ext4"
+  if (( (i + 1) % COPY_BATCH == 0 )); then
+    wait
+    echo "  Copied instances $((i + 1 - COPY_BATCH))..$i"
+  fi
 done
+wait
+echo "  All ${NUM_INSTANCES} rootfs copies complete"
 
 # ---------------------------
 # Detect default interface
