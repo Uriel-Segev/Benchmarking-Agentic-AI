@@ -19,15 +19,23 @@
 #   --task <name>         shorthand for tasks/<name>/ (e.g. --task hello-world)
 #   --repeats <n>         run_parallel.sh calls per binary search probe (default: 3)
 #                         all repeats must pass for a probe to be considered stable
-#   --resume              resume from the most recent binary_search.json for this
+#   --resume              resume the most recent in-progress run for this
 #                         task/hypervisor/label, or from --output if specified
 #   --max-vms <n>         override upper bound (default: auto from RAM + disk)
-#   --vm-ram <mb>         RAM per VM in MB for ceiling estimate (default: 1024)
+#   --vm-ram <mb>         RAM per VM in MB; skips auto-profiling (default: auto-profiled)
 #   --cooldown <s>        seconds to wait between every run_parallel.sh call (default: 10)
-#   --output <path>       override output JSON path (also used as resume source)
+#   --output <dir>        override output directory (also used as resume source)
 #
 # Results saved to:
-#   ~/results/<task>/<hypervisor>/<label>/<timestamp>/binary_search.json
+#   ~/results/<task>/<hypervisor>/<label>/<timestamp>/
+#     summary.json           top-level metadata, updated after every probe
+#     probes/
+#       probe_001_n064_r1.json
+#       probe_002_n128_r1.json
+#       ...
+#     diagnosis/
+#       probe_001_n064/
+#         dmesg.txt  memory.txt  ...
 #
 # NOTE: If no failures are found within the search range, max_stable_vms will
 # equal hi_initial and ceiling_found will be false. Re-run with a larger
@@ -52,6 +60,7 @@ MAX_VMS_OVERRIDE=""
 VM_RAM_MB=1024
 COOLDOWN=10
 OUTPUT_EXPLICIT=""
+VM_RAM_EXPLICIT=false
 
 # ---------------------------
 # Parse arguments
@@ -66,7 +75,7 @@ while [[ $# -gt 0 ]]; do
     --repeats)    REPEATS="$2";          shift 2 ;;
     --resume)     RESUME=true;           shift   ;;
     --max-vms)    MAX_VMS_OVERRIDE="$2"; shift 2 ;;
-    --vm-ram)     VM_RAM_MB="$2";        shift 2 ;;
+    --vm-ram)     VM_RAM_MB="$2"; VM_RAM_EXPLICIT=true; shift 2 ;;
     --cooldown)   COOLDOWN="$2";         shift 2 ;;
     --output)     OUTPUT_EXPLICIT="$2";  shift 2 ;;
     -h|--help)
@@ -147,24 +156,29 @@ fi
 
 if [[ "${RESUME}" == "true" ]]; then
   if [[ -n "${OUTPUT_EXPLICIT}" ]]; then
-    OUTPUT="${OUTPUT_EXPLICIT}"
-    [[ -f "${OUTPUT}" ]] || die "Resume file not found: ${OUTPUT}"
+    RESULTS_DIR="${OUTPUT_EXPLICIT}"
+    [[ -d "${RESULTS_DIR}" ]] || die "Resume directory not found: ${RESULTS_DIR}"
+    [[ -f "${RESULTS_DIR}/summary.json" ]] || die "No summary.json in: ${RESULTS_DIR}"
   else
-    # Find the most recent binary_search.json for this task/hypervisor/label
+    # Find the most recent in-progress run for this task/hypervisor/label
     RESUME_SEARCH_DIR="${HOME}/results/${TASK_NAME}/${HYPERVISOR}/${LABEL}"
-    OUTPUT=$(find "${RESUME_SEARCH_DIR}" -name "binary_search.json" -type f 2>/dev/null \
+    RESULTS_DIR=$(find "${RESUME_SEARCH_DIR}" -name "summary.json" -type f 2>/dev/null \
+      | xargs grep -l '"in_progress"' 2>/dev/null \
+      | xargs -I{} dirname {} 2>/dev/null \
       | sort | tail -1 || true)
-    [[ -n "${OUTPUT}" ]] || die "Resume requested but no binary_search.json found in ${RESUME_SEARCH_DIR}/"
+    [[ -n "${RESULTS_DIR}" ]] || die "No in-progress run found in ${RESUME_SEARCH_DIR}/. Use --output <dir> to specify explicitly."
   fi
-  RESULTS_DIR="$(dirname "${OUTPUT}")"
-  log "Resuming from: ${OUTPUT}"
+  log "Resuming from: ${RESULTS_DIR}/"
 else
   TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-  RESULTS_DIR="${HOME}/results/${TASK_NAME}/${HYPERVISOR}/${LABEL}/${TIMESTAMP}"
+  RESULTS_DIR="${OUTPUT_EXPLICIT:-${HOME}/results/${TASK_NAME}/${HYPERVISOR}/${LABEL}/${TIMESTAMP}}"
   mkdir -p "${RESULTS_DIR}"
-  OUTPUT="${OUTPUT_EXPLICIT:-${RESULTS_DIR}/binary_search.json}"
-  log "Results will be written to: ${OUTPUT}"
+  log "Results will be written to: ${RESULTS_DIR}/"
 fi
+
+PROBES_DIR="${RESULTS_DIR}/probes"
+mkdir -p "${PROBES_DIR}"
+SUMMARY_FILE="${RESULTS_DIR}/summary.json"
 
 # ---------------------------
 # Machine info
@@ -243,7 +257,6 @@ echo "  ARP check passed — safe to proceed"
 # ---------------------------
 
 TMP_PROBE=$(mktemp /tmp/bsearch-probe-XXXXXX.json)
-ALL_PROBES_FILE="${RESULTS_DIR}/probes.jsonl"
 trap "rm -f '${TMP_PROBE}'" EXIT
 
 # ---------------------------
@@ -261,7 +274,7 @@ BASELINE_DONE=false
 declare -A CACHED_VM_STABLE
 
 # ---------------------------
-# Resume: load existing probes, reconstruct lo/hi, seed ALL_PROBES_FILE
+# Resume: load existing probes from probes/ dir, reconstruct lo/hi
 # ---------------------------
 
 if [[ "${RESUME}" == "true" ]]; then
@@ -269,48 +282,44 @@ if [[ "${RESUME}" == "true" ]]; then
     log "WARNING: jq not found — resume disabled, starting fresh"
     RESUME=false
   else
-    log "Loading existing probes from ${OUTPUT}"
+    log "Scanning probe files from ${PROBES_DIR}/"
 
-    # Seed ALL_PROBES_FILE with the existing probe entries
-    jq -c '.probes[]' "${OUTPUT}" >> "${ALL_PROBES_FILE}" 2>/dev/null || true
+    # Two associative arrays to track per-vm_count stability across repeats:
+    #   _rvm_seen[N]=1          — vm_count N was probed at least once
+    #   _rvm_any_failed[N]=1    — at least one repeat for vm_count N failed
+    declare -A _rvm_seen _rvm_any_failed
 
-    # Count how many probe entries were loaded
-    EXISTING_COUNT=$(wc -l < "${ALL_PROBES_FILE}" || echo 0)
-    log "Loaded ${EXISTING_COUNT} existing probe entries"
+    for probe_file in $(ls -v "${PROBES_DIR}"/probe_*.json 2>/dev/null || true); do
+      [[ -f "${probe_file}" ]] || continue
 
-    # Check if baseline was already completed
-    baseline_count=$(jq '[.probes[] | select(.is_baseline == true)] | length' \
-      "${OUTPUT}" 2>/dev/null || echo "0")
-    [[ "${baseline_count}" -gt 0 ]] && BASELINE_DONE=true
+      _p_iter=$(jq -r '.iteration'   "${probe_file}" 2>/dev/null || echo "0")
+      _p_vmc=$(jq -r  '.vm_count'   "${probe_file}" 2>/dev/null || echo "0")
+      _p_stable=$(jq -r '.stable'   "${probe_file}" 2>/dev/null || echo "false")
+      _p_base=$(jq -r  '.is_baseline' "${probe_file}" 2>/dev/null || echo "false")
 
-    # Reconstruct lo and hi by replaying each binary search step.
-    # Group non-baseline probes by vm_count. If any repeat failed at that
-    # vm_count, the step is unstable (hi = vm_count). Otherwise stable (lo = vm_count).
-    while IFS=$'\t' read -r vm_count any_failed; do
-      if [[ "${any_failed}" == "false" ]]; then
-        CACHED_VM_STABLE["${vm_count}"]="true"
-        [[ "${vm_count}" -gt "${LO}" ]] && LO="${vm_count}"
-      else
-        CACHED_VM_STABLE["${vm_count}"]="false"
-        [[ "${vm_count}" -lt "${HI}" ]] && HI="${vm_count}"
-        GOT_FAILURE=true
+      [[ "${_p_iter}" -gt "${PROBE_ITERATION}" ]] && PROBE_ITERATION="${_p_iter}"
+      [[ "${_p_base}" == "true" ]] && BASELINE_DONE=true
+
+      if [[ "${_p_base}" == "false" ]]; then
+        _rvm_seen["${_p_vmc}"]=1
+        [[ "${_p_stable}" == "false" ]] && _rvm_any_failed["${_p_vmc}"]=1
       fi
-    done < <(jq -r '
-      .probes
-      | map(select(.is_baseline == false))
-      | group_by(.vm_count)
-      | map({
-          vm_count: .[0].vm_count,
-          any_failed: (map(.stable) | any(. == false))
-        })
-      | .[]
-      | [.vm_count, (.any_failed | tostring)]
-      | @tsv
-    ' "${OUTPUT}" 2>/dev/null || true)
+    done
 
-    # Recover PROBE_ITERATION from the highest iteration already recorded
-    PROBE_ITERATION=$(jq '[.probes[].iteration] | max // 0' "${OUTPUT}" 2>/dev/null || echo "0")
+    # Reconstruct lo/hi from per-vm_count stability
+    for _p_vmc in "${!_rvm_seen[@]}"; do
+      if [[ -n "${_rvm_any_failed[${_p_vmc}]+_}" ]]; then
+        CACHED_VM_STABLE["${_p_vmc}"]="false"
+        [[ "${_p_vmc}" -lt "${HI}" ]] && HI="${_p_vmc}"
+        GOT_FAILURE=true
+      else
+        CACHED_VM_STABLE["${_p_vmc}"]="true"
+        [[ "${_p_vmc}" -gt "${LO}" ]] && LO="${_p_vmc}"
+      fi
+    done
 
+    _existing_count=$(ls "${PROBES_DIR}"/probe_*.json 2>/dev/null | wc -l || echo 0)
+    log "Loaded ${_existing_count} probe files"
     log "Resumed state: lo=${LO}, hi=${HI}, baseline_done=${BASELINE_DONE}, cached_counts=${#CACHED_VM_STABLE[@]}"
   fi
 fi
@@ -323,13 +332,25 @@ _avail_ram_mb() {
   awk '/MemAvailable/ {printf "%d", $2/1024}' /proc/meminfo 2>/dev/null || echo "0"
 }
 
-# _capture_probe_diagnosis <probe_iter> <vm_count> [inst_log_dir]
+# _capture_probe_diagnosis <probe_iter> <vm_count> <completed> <exit_code> <wall_clock> [inst_log_dir]
 # Saves dmesg, memory, fd, tap stats + instance logs to RESULTS_DIR/diagnosis/.
+# Classifies failure into one of:
+#   host_oom         — host OOM killer fired (dmesg OOM or SIGKILL exit 137)
+#   guest_oom        — guest-side OOM (FC exited cleanly, OOM in guest log)
+#   vmm_crash        — VMM crashed for non-OOM reason (e.g. SIGPIPE / exit 141)
+#   timeout          — VMs exceeded TASK_TIMEOUT
+#   fd_exhaustion    — host file descriptor limit hit
+#   mmap_limit       — mmap / max_map_count limit hit
+#   partial_completion — some VMs succeeded, some failed
+#   unknown          — no clear signal
 # Prints "reason|diag_dir" on stdout.
 _capture_probe_diagnosis() {
   local probe_iter="$1"
   local vm_count="$2"
-  local inst_log_dir="${3:-}"
+  local completed="$3"
+  local exit_code="$4"
+  local wall_clock="$5"
+  local inst_log_dir="${6:-}"
 
   local diag_dir="${RESULTS_DIR}/diagnosis/probe_${probe_iter}_n${vm_count}"
   mkdir -p "${diag_dir}"
@@ -345,26 +366,228 @@ _capture_probe_diagnosis() {
   fi
 
   local reason="unknown"
-  if grep -qi "out of memory\|oom.*kill\|killed process" "${diag_dir}/dmesg.txt" 2>/dev/null; then
-    reason="oom_killer"
+
+  # partial_completion: a mix of success and failure — not a hard crash
+  if [[ "${completed}" -gt 0 ]] && [[ "${completed}" -lt "${vm_count}" ]]; then
+    reason="partial_completion"
+
+  # host_oom: OOM killer in dmesg, or any instance process was SIGKILLed (exit 137)
+  elif grep -qi "out of memory\|oom.*kill\|killed process" "${diag_dir}/dmesg.txt" 2>/dev/null; then
+    reason="host_oom"
+  elif [[ -f "${TMP_PROBE}" ]] && command -v jq >/dev/null 2>&1 && \
+       jq -e '[.instances[]?.exit_code] | any(. == 137)' "${TMP_PROBE}" >/dev/null 2>&1; then
+    reason="host_oom"
+
+  # timeout: instance logs show the timeout message from run_task.sh
+  elif [[ -n "${inst_log_dir}" ]] && \
+       grep -rql "Timeout reached" "${inst_log_dir}" 2>/dev/null; then
+    reason="timeout"
+
+  # fd_exhaustion: file descriptor limit hit
   elif grep -qi "file table overflow\|too many open files" "${diag_dir}/dmesg.txt" 2>/dev/null; then
     reason="fd_exhaustion"
-  elif grep -qi "cannot allocate memory" "${diag_dir}/dmesg.txt" 2>/dev/null; then
-    reason="memory_alloc_failure"
-  elif [[ -n "${inst_log_dir}" ]] && \
-       grep -rqi "mmap\|map_count\|Cannot allocate" "${inst_log_dir}" 2>/dev/null; then
+
+  # mmap_limit: mmap or max_map_count failures
+  elif grep -qi "mmap\|max_map_count\|cannot allocate memory" "${diag_dir}/dmesg.txt" 2>/dev/null || \
+       { [[ -n "${inst_log_dir}" ]] && grep -rql "mmap\|Cannot allocate" "${inst_log_dir}" 2>/dev/null; }; then
     reason="mmap_limit"
+
+  # guest_oom: OOM inside the guest (FC process exited cleanly, OOM in guest logs)
+  elif [[ -n "${inst_log_dir}" ]] && \
+       grep -rql "out of memory\|oom-kill\|Killed" "${inst_log_dir}" 2>/dev/null; then
+    reason="guest_oom"
+
+  # vmm_crash: VMM exited non-zero with no other explanation (e.g. SIGPIPE / exit 141)
+  elif [[ "${exit_code}" -ne 0 ]]; then
+    reason="vmm_crash"
   fi
 
-  log "Diagnosis saved: ${diag_dir} (likely: ${reason})"
+  log "Diagnosis saved: ${diag_dir}  reason=${reason}"
   echo "${reason}|${diag_dir}"
+}
+
+# _profile_vm_ram
+# Launches up to 16 VMs through the task, samples Firecracker process RSS and
+# MemAvailable during the run, then sets VM_RAM_MB = ceil((peak_rss + kernel_overhead) * 1.2).
+# Falls back to the current VM_RAM_MB on any error.
+_profile_vm_ram() {
+  local profile_n=16
+
+  # Scale down if current RAM limit × N would exceed available memory
+  local avail
+  avail=$(_avail_ram_mb)
+  while [[ "${profile_n}" -gt 1 ]] && [[ $(( profile_n * VM_RAM_MB )) -gt "${avail}" ]]; do
+    profile_n=$(( profile_n / 2 ))
+  done
+
+  log "RAM PROFILING: launching ${profile_n} VM(s) to measure actual per-VM memory usage"
+  log "  (current limit: ${VM_RAM_MB}MB — measures real working set, then right-sizes)"
+
+  local profile_output profile_log
+  profile_output=$(mktemp /tmp/bsearch-profile-XXXXXX.json)
+  profile_log="${RESULTS_DIR}/profile_ram.log"
+
+  local mem_before mem_available_min
+  mem_before=$(_avail_ram_mb)
+  mem_available_min="${mem_before}"
+
+  # Launch profiling run, suppress console output
+  SKIP_ARP_CHECK=1 WORKDIR="${WORKDIR}" MEM_SIZE_MIB="${VM_RAM_MB}" \
+    "${PARALLEL_SH}" "${PROBE_INPUT}" "${profile_n}" "${profile_output}" \
+    >"${profile_log}" 2>&1 &
+  local parallel_pid=$!
+
+  # Sample RSS of all hypervisor processes while they run
+  local peak_total_rss_kb=0 sample_count=0
+  while kill -0 "${parallel_pid}" 2>/dev/null; do
+    local total_rss_kb=0 pid
+    while IFS= read -r pid; do
+      [[ -z "${pid}" ]] && continue
+      local rss
+      rss=$(awk '/^VmRSS:/{print $2; exit}' "/proc/${pid}/status" 2>/dev/null || echo "0")
+      total_rss_kb=$(( total_rss_kb + rss ))
+    done < <(pgrep "${HV_BIN}" 2>/dev/null || true)
+    [[ "${total_rss_kb}" -gt "${peak_total_rss_kb}" ]] && peak_total_rss_kb="${total_rss_kb}"
+
+    local avail_now
+    avail_now=$(_avail_ram_mb)
+    [[ "${avail_now}" -lt "${mem_available_min}" ]] && mem_available_min="${avail_now}"
+
+    sample_count=$(( sample_count + 1 ))
+    sleep 0.5
+  done
+
+  local profile_exit=0
+  wait "${parallel_pid}" || profile_exit=$?
+  rm -f "${profile_output}"
+
+  if [[ "${profile_exit}" -ne 0 ]]; then
+    log "WARNING: RAM profiling run failed (exit ${profile_exit}) — keeping default ${VM_RAM_MB}MB"
+    log "  See ${profile_log} for details"
+    return
+  fi
+
+  if [[ "${sample_count}" -eq 0 ]] || [[ "${peak_total_rss_kb}" -eq 0 ]]; then
+    log "WARNING: RAM profiling got no RSS samples (task too fast?) — keeping default ${VM_RAM_MB}MB"
+    return
+  fi
+
+  # Convert peak total RSS to MB (ceiling division)
+  local peak_total_rss_mb=$(( (peak_total_rss_kb + 1023) / 1024 ))
+  local peak_rss_per_vm=$(( peak_total_rss_mb / profile_n ))
+  [[ "${peak_rss_per_vm}" -eq 0 ]] && peak_rss_per_vm=1
+
+  # Kernel overhead per VM: total MemAvailable drop minus FC process RSS, divided by N
+  local total_mem_used=$(( mem_before - mem_available_min ))
+  local kernel_overhead_total=$(( total_mem_used - peak_total_rss_mb ))
+  [[ "${kernel_overhead_total}" -lt 0 ]] && kernel_overhead_total=0
+  local kernel_overhead_per_vm=$(( kernel_overhead_total / profile_n ))
+
+  # allocation = (peak_rss + kernel_overhead) * 1.2, minimum 256MB
+  local computed_mb=$(( (peak_rss_per_vm + kernel_overhead_per_vm) * 6 / 5 ))
+  [[ "${computed_mb}" -lt 256 ]] && computed_mb=256
+
+  log "RAM profiling results:"
+  log "  VMs profiled:       ${profile_n}"
+  log "  Peak RSS per VM:    ${peak_rss_per_vm}MB"
+  log "  Kernel overhead/VM: ${kernel_overhead_per_vm}MB"
+  log "  Allocated per VM:   ${computed_mb}MB  (x1.2 margin, min 256MB)"
+
+  VM_RAM_MB="${computed_mb}"
+  export VM_RAM_MB
+}
+
+# ---------------------------
+# _save_summary <status>
+#
+# Atomically writes RESULTS_DIR/summary.json with current search state.
+# <status> is "in_progress" or "completed".
+# Uses write-to-tmp + mv so a crash mid-write never corrupts the file.
+# ---------------------------
+
+_save_summary() {
+  local status="$1"
+  local tmp
+  tmp=$(mktemp "${RESULTS_DIR}/.summary-XXXXXX.tmp")
+
+  local max_stable_json="null" ceiling_json="null" wall_json="null"
+  if [[ "${status}" == "completed" ]]; then
+    max_stable_json="${MAX_STABLE_VMS}"
+    ceiling_json="${GOT_FAILURE}"
+    wall_json="${SEARCH_WALL}"
+  fi
+
+  if command -v jq >/dev/null 2>&1; then
+    jq -n \
+      --arg     status             "${status}" \
+      --arg     task               "${INPUT}" \
+      --arg     hypervisor         "${HYPERVISOR}" \
+      --arg     label              "${LABEL}" \
+      --arg     hostname           "${MACHINE_HOSTNAME}" \
+      --argjson logical_cpus       "${MACHINE_CPUS}" \
+      --argjson physical_cores     "${PHYSICAL_CORES}" \
+      --argjson total_mem_mb       "${MACHINE_MEM_TOTAL}" \
+      --argjson vm_ram_mb          "${VM_RAM_MB}" \
+      --arg     vm_ram_mb_source   "${VM_RAM_MB_SOURCE}" \
+      --argjson repeats_per_probe  "${REPEATS}" \
+      --argjson lo_initial         1 \
+      --argjson hi_initial         "${INIT_HI}" \
+      --argjson lo_current         "${LO}" \
+      --argjson hi_current         "${HI}" \
+      --argjson total_probes       "${PROBE_ITERATION}" \
+      --argjson max_stable_vms     "${max_stable_json}" \
+      --argjson ceiling_found      "${ceiling_json}" \
+      --argjson total_wall         "${wall_json}" \
+      --arg     timestamp_updated  "$(date -Iseconds)" \
+      '{
+        status:                   $status,
+        task:                     $task,
+        hypervisor:               $hypervisor,
+        label:                    $label,
+        machine: {
+          hostname:               $hostname,
+          logical_cpus:           $logical_cpus,
+          physical_cores:         $physical_cores,
+          total_mem_mb:           $total_mem_mb
+        },
+        vm_ram_mb:                $vm_ram_mb,
+        vm_ram_mb_source:         $vm_ram_mb_source,
+        repeats_per_probe:        $repeats_per_probe,
+        search_bounds: {
+          lo_initial:             $lo_initial,
+          hi_initial:             $hi_initial
+        },
+        lo_current:               $lo_current,
+        hi_current:               $hi_current,
+        total_probes:             $total_probes,
+        max_stable_vms:           $max_stable_vms,
+        ceiling_found:            $ceiling_found,
+        total_wall_clock_seconds: $total_wall,
+        timestamp_updated:        $timestamp_updated
+      }' > "${tmp}" 2>/dev/null && mv "${tmp}" "${SUMMARY_FILE}" || rm -f "${tmp}"
+  else
+    {
+      echo "{"
+      echo "  \"status\": \"${status}\","
+      echo "  \"task\": \"${INPUT}\","
+      echo "  \"hypervisor\": \"${HYPERVISOR}\","
+      echo "  \"label\": \"${LABEL}\","
+      echo "  \"vm_ram_mb\": ${VM_RAM_MB},"
+      echo "  \"lo_current\": ${LO},"
+      echo "  \"hi_current\": ${HI},"
+      echo "  \"total_probes\": ${PROBE_ITERATION},"
+      echo "  \"max_stable_vms\": ${max_stable_json},"
+      echo "  \"ceiling_found\": ${ceiling_json}"
+      echo "}"
+    } > "${tmp}" && mv "${tmp}" "${SUMMARY_FILE}" || rm -f "${tmp}"
+  fi
 }
 
 # ---------------------------
 # run_probe <vm_count> <is_baseline> <repeat_num> <total_repeats>
 #
-# Calls run_parallel.sh with SKIP_ARP_CHECK=1 and appends one JSON line to
-# ALL_PROBES_FILE. Returns 0 if all VMs completed successfully, 1 otherwise.
+# Calls run_parallel.sh with SKIP_ARP_CHECK=1, writes one probe JSON file to
+# PROBES_DIR, updates summary.json, and returns 0 if stable, 1 otherwise.
 # ---------------------------
 
 run_probe() {
@@ -390,6 +613,7 @@ run_probe() {
 
   SKIP_ARP_CHECK=1 \
   WORKDIR="${WORKDIR}" \
+  MEM_SIZE_MIB="${VM_RAM_MB}" \
     "${PARALLEL_SH}" "${PROBE_INPUT}" "${vm_count}" "${TMP_PROBE}" \
     || exit_code=$?
 
@@ -413,8 +637,24 @@ run_probe() {
     fi
   fi
 
+  # Capture diagnosis and classify failure BEFORE writing probe JSON
+  if [[ "${stable}" == "false" ]]; then
+    local inst_log_dir=""
+    if [[ -f "${TMP_PROBE}" ]] && command -v jq >/dev/null 2>&1; then
+      inst_log_dir=$(jq -r '.instance_log_dir // ""' "${TMP_PROBE}" 2>/dev/null || echo "")
+    fi
+    local diag_result
+    diag_result=$(_capture_probe_diagnosis \
+      "${PROBE_ITERATION}" "${vm_count}" "${completed}" "${exit_code}" "${wall_clock}" "${inst_log_dir}")
+    failure_reason="${diag_result%%|*}"
+    diagnosis_dir="${diag_result##*|}"
+  fi
+
   local timestamp
   timestamp=$(date -Iseconds)
+
+  local probe_file
+  probe_file="${PROBES_DIR}/probe_$(printf '%03d' "${PROBE_ITERATION}")_n$(printf '%04d' "${vm_count}")_r${repeat_num}.json"
 
   if command -v jq >/dev/null 2>&1; then
     jq -n \
@@ -436,40 +676,30 @@ run_probe() {
       --arg     diagnosis_dir   "${diagnosis_dir}" \
       --arg     timestamp       "${timestamp}" \
       '{
-        iteration:          $iteration,
-        vm_count:           $vm_count,
-        repeat:             $repeat_num,
-        total_repeats:      $total_reps,
-        lo_before:          $lo,
-        hi_before:          $hi,
-        stable:             $stable,
-        exit_code:          $exit_code,
-        completed:          $completed,
-        total:              $total,
-        wall_clock_seconds: $wall_clock,
-        is_baseline:        $is_baseline,
+        iteration:           $iteration,
+        vm_count:            $vm_count,
+        repeat:              $repeat_num,
+        total_repeats:       $total_reps,
+        lo_before:           $lo,
+        hi_before:           $hi,
+        stable:              $stable,
+        exit_code:           $exit_code,
+        completed:           $completed,
+        total:               $total,
+        wall_clock_seconds:  $wall_clock,
+        is_baseline:         $is_baseline,
         avail_ram_mb_before: $avail_ram_mb,
-        failure_reason:     (if ($failure_reason | length) > 0 then $failure_reason else null end),
-        diagnosis_dir:      (if ($diagnosis_dir | length) > 0 then $diagnosis_dir else null end),
-        timing_summary:     $timing,
-        timestamp:          $timestamp
-      }' >> "${ALL_PROBES_FILE}" 2>/dev/null || true
+        failure_reason:      (if ($failure_reason | length) > 0 then $failure_reason else null end),
+        diagnosis_dir:       (if ($diagnosis_dir | length) > 0 then $diagnosis_dir else null end),
+        timing_summary:      $timing,
+        timestamp:           $timestamp
+      }' > "${probe_file}" 2>/dev/null || true
   else
     echo "{\"iteration\": ${PROBE_ITERATION}, \"vm_count\": ${vm_count}, \"repeat\": ${repeat_num}, \"total_repeats\": ${total_repeats}, \"lo_before\": ${lo_now}, \"hi_before\": ${hi_now}, \"stable\": ${stable}, \"exit_code\": ${exit_code}, \"completed\": ${completed}, \"total\": ${vm_count}, \"wall_clock_seconds\": ${wall_clock}, \"is_baseline\": ${is_baseline}, \"timestamp\": \"${timestamp}\"}" \
-      >> "${ALL_PROBES_FILE}"
+      > "${probe_file}"
   fi
 
-  # On failure, capture diagnosis (dmesg, memory, fd stats, instance logs)
-  if [[ "${stable}" == "false" ]]; then
-    local inst_log_dir=""
-    if [[ -f "${TMP_PROBE}" ]] && command -v jq >/dev/null 2>&1; then
-      inst_log_dir=$(jq -r '.instance_log_dir // ""' "${TMP_PROBE}" 2>/dev/null || echo "")
-    fi
-    local diag_result
-    diag_result=$(_capture_probe_diagnosis "${PROBE_ITERATION}" "${vm_count}" "${inst_log_dir}")
-    failure_reason="${diag_result%%|*}"
-    diagnosis_dir="${diag_result##*|}"
-  fi
+  _save_summary "in_progress"
 
   if [[ "${stable}" == "true" ]]; then
     echo "  Result: STABLE  (${completed}/${vm_count} completed in ${wall_clock}s)"
@@ -533,8 +763,21 @@ between_probes() {
 }
 
 # ---------------------------
-# Baseline: verify N=1 works and capture timing reference
+# RAM profiling (skipped if --vm-ram was explicitly set, or if resuming)
 # ---------------------------
+
+VM_RAM_MB_SOURCE="default"
+if [[ "${VM_RAM_EXPLICIT}" == "true" ]]; then
+  VM_RAM_MB_SOURCE="user_specified"
+  log "VM RAM: ${VM_RAM_MB}MB per VM (user-specified via --vm-ram)"
+elif [[ "${RESUME}" == "false" ]]; then
+  _profile_vm_ram
+  between_probes 0
+  VM_RAM_MB_SOURCE="profiled"
+else
+  VM_RAM_MB_SOURCE="default"
+  log "VM RAM: ${VM_RAM_MB}MB per VM (resume mode — re-using prior allocation)"
+fi
 
 SEARCH_START=$(date +%s)
 
@@ -584,85 +827,11 @@ SEARCH_WALL=$(( SEARCH_END - SEARCH_START ))
 MAX_STABLE_VMS="${LO}"
 
 # ---------------------------
-# Assemble output JSON
+# Save completed summary
 # ---------------------------
 
-log "Writing results to ${OUTPUT}"
-
-if command -v jq >/dev/null 2>&1; then
-  RUNS_TMP=$(mktemp /tmp/bsearch-runs-XXXXXX.json)
-  jq -s '.' "${ALL_PROBES_FILE}" > "${RUNS_TMP}" 2>/dev/null || echo "[]" > "${RUNS_TMP}"
-
-  jq -n \
-    --arg     task             "${INPUT}" \
-    --arg     hypervisor       "${HYPERVISOR}" \
-    --arg     label            "${LABEL}" \
-    --arg     hostname         "${MACHINE_HOSTNAME}" \
-    --argjson logical_cpus     "${MACHINE_CPUS}" \
-    --argjson physical_cores   "${PHYSICAL_CORES}" \
-    --argjson total_mem_mb     "${MACHINE_MEM_TOTAL}" \
-    --argjson vm_ram_mb        "${VM_RAM_MB}" \
-    --argjson repeats_per_probe "${REPEATS}" \
-    --argjson lo_initial       1 \
-    --argjson hi_initial       "${INIT_HI}" \
-    --argjson max_stable       "${MAX_STABLE_VMS}" \
-    --argjson got_failure      "${GOT_FAILURE}" \
-    --argjson total_wall       "${SEARCH_WALL}" \
-    --argjson total_probes     "${PROBE_ITERATION}" \
-    --slurpfile probes         "${RUNS_TMP}" \
-    '{
-      task:               $task,
-      hypervisor:         $hypervisor,
-      "label":            $label,
-      machine: {
-        hostname:         $hostname,
-        logical_cpus:     $logical_cpus,
-        physical_cores:   $physical_cores,
-        total_mem_mb:     $total_mem_mb
-      },
-      vm_ram_mb:          $vm_ram_mb,
-      repeats_per_probe:  $repeats_per_probe,
-      search_bounds: {
-        lo_initial:       $lo_initial,
-        hi_initial:       $hi_initial
-      },
-      max_stable_vms:     $max_stable,
-      ceiling_found:      $got_failure,
-      total_probes:       $total_probes,
-      total_wall_clock_seconds: $total_wall,
-      probes:             $probes[0]
-    }' > "${OUTPUT}"
-
-  rm -f "${RUNS_TMP}"
-else
-  # Fallback: assemble JSON without jq
-  {
-    echo "{"
-    echo "  \"task\": \"${INPUT}\","
-    echo "  \"hypervisor\": \"${HYPERVISOR}\","
-    echo "  \"label\": \"${LABEL}\","
-    echo "  \"machine\": {\"hostname\": \"${MACHINE_HOSTNAME}\", \"logical_cpus\": ${MACHINE_CPUS}, \"physical_cores\": ${PHYSICAL_CORES}, \"total_mem_mb\": ${MACHINE_MEM_TOTAL}},"
-    echo "  \"vm_ram_mb\": ${VM_RAM_MB},"
-    echo "  \"repeats_per_probe\": ${REPEATS},"
-    echo "  \"search_bounds\": {\"lo_initial\": 1, \"hi_initial\": ${INIT_HI}},"
-    echo "  \"max_stable_vms\": ${MAX_STABLE_VMS},"
-    echo "  \"ceiling_found\": ${GOT_FAILURE},"
-    echo "  \"total_probes\": ${PROBE_ITERATION},"
-    echo "  \"total_wall_clock_seconds\": ${SEARCH_WALL},"
-    echo "  \"probes\": ["
-    first=true
-    while IFS= read -r line; do
-      if [[ "${first}" == "true" ]]; then
-        echo "    ${line}"
-        first=false
-      else
-        echo "    ,${line}"
-      fi
-    done < "${ALL_PROBES_FILE}"
-    echo "  ]"
-    echo "}"
-  } > "${OUTPUT}"
-fi
+log "Saving final summary to ${SUMMARY_FILE}"
+_save_summary "completed"
 
 # ---------------------------
 # Final report
@@ -675,6 +844,7 @@ echo "========================================"
 echo "  Task:              ${INPUT}"
 echo "  Hypervisor:        ${HYPERVISOR}"
 echo "  Label:             ${LABEL}"
+echo "  VM RAM:            ${VM_RAM_MB}MB per VM  (${VM_RAM_MB_SOURCE})"
 echo "  Search range:      1 .. ${INIT_HI}"
 echo "  Repeats per probe: ${REPEATS}"
 echo "  Total probes:      ${PROBE_ITERATION}"
@@ -686,7 +856,9 @@ if [[ "${GOT_FAILURE}" == "false" ]]; then
   echo "  Re-run with --max-vms <larger_value> to find it."
 fi
 echo "  Total wall time:   ${SEARCH_WALL}s"
-echo "  Results:           ${OUTPUT}"
+echo "  Results dir:       ${RESULTS_DIR}/"
+echo "  Summary:           ${SUMMARY_FILE}"
+echo "  Probes:            ${PROBES_DIR}/"
 echo "========================================"
 
 exit 0
