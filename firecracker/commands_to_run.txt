@@ -2,7 +2,10 @@
 FIRECRACKER BENCHMARKING - COMMANDS & WORKFLOW
 ================================================================================
 
-All scripts are in Benchmarking-Agentic-AI/firecracker/scripts/
+Scripts:
+  firecracker/scripts/    - Firecracker-specific scripts
+  run_binary_search.sh    - Primary benchmark (repo root)
+  run_campaign.sh         - Multi-task campaign runner (repo root)
 
 
 --------------------------------------------------------------------------------
@@ -15,13 +18,17 @@ One-time setup (run once per machine):
 
 Building blocks (called automatically, you don't run these directly):
   prepare_task_rootfs.sh    - Installs python/deps into rootfs for a task
-                              (called by run_parallel.sh when given a task directory)
   run_task.sh               - Launches a single Firecracker VM
-                              (called by run_parallel.sh for each instance)
-  run_parallel.sh           - Launches N VMs in parallel, collects results
-                              (called by both scaling scripts)
+  run_parallel.sh           - Launches N VMs in parallel, collects per-parallel results
 
-What you actually run for benchmarks:
+Primary benchmark scripts (repo root — use these):
+  run_binary_search.sh      - Binary search for max stable parallel VM count,
+                              with RAM auto-profiling, crash classification,
+                              crash-safe per-probe results, and resume support
+  run_campaign.sh           - Runs a cartesian product of tasks × hypervisors
+                              sequentially with state tracking and resume support
+
+Legacy scripts (still functional, pre-date binary search):
   run_scaling.sh            - Powers of 2 (1, 2, 4, 8, 16, 32, ...)
   run_scaling_linear.sh     - Linear increments (10, 20, 30, 40, ...)
   run_bottleneck.sh         - Fine-grained sweep around CPU saturation point
@@ -43,6 +50,8 @@ STEP 2: ONE-TIME SETUP
 
 # Make all scripts executable
 chmod +x Benchmarking-Agentic-AI/firecracker/scripts/*.sh
+chmod +x Benchmarking-Agentic-AI/run_binary_search.sh
+chmod +x Benchmarking-Agentic-AI/run_campaign.sh
 
 # Dry run to verify setup
 sudo DRY_RUN=1 Benchmarking-Agentic-AI/firecracker/scripts/install_firecracker.sh
@@ -59,16 +68,17 @@ ip route | head
 # Create base rootfs
 sudo Benchmarking-Agentic-AI/firecracker/scripts/setup_base_rootfs.sh
 
-# Install sysstat (needed for monitoring during bottleneck runs)
-sudo apt-get update && sudo apt-get install -y sysstat
+# Install jq (used for probe JSON writes and resume)
+sudo apt-get update && sudo apt-get install -y jq
 
 
 --------------------------------------------------------------------------------
-STEP 3: PREPARE TASK ROOTFS (once per task)
+STEP 3: PREPARE TASK ROOTFS (optional — run_binary_search.sh does this automatically)
 --------------------------------------------------------------------------------
 
-# Build the rootfs for a task (only needed once, reuse the .ext4 file after)
-# Tasks live in Benchmarking-Agentic-AI/tasks/ — no terminal-bench clone needed.
+# run_binary_search.sh --task <name> builds the rootfs once before probing.
+# Pre-build manually only if you want to reuse the same rootfs across many runs
+# without rebuilding it each time.
 
 # hello-world (baseline, no extra deps)
 sudo Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh \
@@ -80,7 +90,7 @@ sudo Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh \
     Benchmarking-Agentic-AI/tasks/parallelize-compute-squares \
     /opt/firecracker/rootfs-parallelize-compute-squares.ext4
 
-# pytorch-model-recovery (installs torch CPU ~200MB — needs extra disk space)
+# pytorch-model-recovery (installs torch CPU — needs extra disk space)
 sudo EXTRA_SPACE=3G Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_rootfs.sh \
     Benchmarking-Agentic-AI/tasks/pytorch-model-recovery \
     /opt/firecracker/rootfs-pytorch-model-recovery.ext4
@@ -90,51 +100,79 @@ sudo EXTRA_SPACE=3G Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_roo
     Benchmarking-Agentic-AI/tasks/hf-model-inference \
     /opt/firecracker/rootfs-hf-model-inference.ext4
 
-# Each command creates a named .ext4 file — pass that to the scaling/bottleneck scripts
-# to avoid re-installing deps every run.
-
 
 --------------------------------------------------------------------------------
 STEP 4: RUN BENCHMARKS
 --------------------------------------------------------------------------------
 
-# --label sets the experiment label (used to organize results in ~/results/)
-# Results are auto-saved to ~/results/<task>/firecracker/<label>/<timestamp>/
+cd Benchmarking-Agentic-AI/
 
-# Bottleneck analysis (custom VM counts around CPU saturation point, with host monitoring)
-sudo Benchmarking-Agentic-AI/firecracker/scripts/run_bottleneck.sh \
+# --- Single task, single hypervisor ---
+# --task builds the rootfs automatically; --label tags the results dir.
+# RAM per VM is auto-profiled (16 VMs sampled before binary search begins).
+
+sudo ./run_binary_search.sh \
+  --hypervisor firecracker \
+  --task hello-world \
+  --label 48c \
+  --repeats 3 \
+  --cooldown 10
+
+# With a pre-built rootfs (skips rootfs prep):
+sudo ./run_binary_search.sh \
+  --hypervisor firecracker \
   /opt/firecracker/rootfs-parallelize-compute-squares.ext4 \
-  --label 16c
+  --label 48c \
+  --repeats 3 \
+  --cooldown 10
 
-sudo Benchmarking-Agentic-AI/firecracker/scripts/run_bottleneck.sh \
-  /opt/firecracker/rootfs-pytorch-model-recovery.ext4 \
-  --label 16c
+# Override RAM per VM (skips auto-profiling):
+sudo ./run_binary_search.sh \
+  --hypervisor firecracker \
+  --task hello-world \
+  --label 48c \
+  --vm-ram 512
 
-sudo Benchmarking-Agentic-AI/firecracker/scripts/run_bottleneck.sh \
-  /opt/firecracker/rootfs-hf-model-inference.ext4 \
-  --label 16c
+# Resume an interrupted run (finds the most recent in-progress run automatically):
+sudo ./run_binary_search.sh \
+  --hypervisor firecracker \
+  --task hello-world \
+  --label 48c \
+  --resume
 
-# Exponential scaling (powers of 2): 1, 2, 4, 8, 16, 32, 64
-sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling.sh \
-    /opt/firecracker/rootfs-parallelize-compute-squares.ext4 64 \
-    --label 16c \
-    --repeats 5 \
-    --cooldown 10
-
-# Linear scaling (increments of 10): 10, 20, 30, 40, ..., 100
-sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling_linear.sh \
-    /opt/firecracker/rootfs-parallelize-compute-squares.ext4 100 \
-    --label 16c \
-    --repeats 5 \
-    --cooldown 10
-
-# Resume a failed/interrupted run (pass --output with the interrupted run's JSON path)
-sudo Benchmarking-Agentic-AI/firecracker/scripts/run_scaling.sh \
-  /opt/firecracker/rootfs-parallelize-compute-squares.ext4 64 \
-  --label 16c \
-  --cooldown 10 \
+# Resume from a specific directory:
+sudo ./run_binary_search.sh \
+  --hypervisor firecracker \
+  --task hello-world \
+  --label 48c \
   --resume \
-  --output ~/results/parallelize-compute-squares/firecracker/16c/<timestamp>/scaling.json
+  --output ~/results/hello-world/firecracker/48c/20260301_120000
+
+
+# --- Multiple tasks / hypervisors (campaign) ---
+# Runs every combination of --task × --hypervisor sequentially.
+# Run inside tmux for unattended multi-day sessions.
+
+tmux new -s campaign
+
+sudo ./run_campaign.sh \
+  --task hello-world \
+  --task parallelize-compute-squares \
+  --task pytorch-model-recovery \
+  --task hf-model-inference \
+  --hypervisor firecracker \
+  --label 48c \
+  --repeats 3 \
+  --cooldown 10 \
+  --between-runs 60
+
+# Resume an interrupted campaign:
+sudo ./run_campaign.sh \
+  --task hello-world \
+  --task parallelize-compute-squares \
+  --hypervisor firecracker \
+  --label 48c \
+  --resume
 
 
 --------------------------------------------------------------------------------
@@ -145,10 +183,13 @@ STEP 5: COPY RESULTS TO LOCAL MACHINE
 # Results are organized by task / hypervisor / label — copy what you need:
 
 # Copy all results for a task:
-scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/parallelize-compute-squares/ .
+scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/hello-world/ .
 
-# Copy a specific label (e.g. 16c):
-scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/parallelize-compute-squares/firecracker/16c/ .
+# Copy a specific label:
+scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/hello-world/firecracker/48c/ .
+
+# Copy a full campaign:
+scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/campaigns/48c/ .
 
 # to get ip: hostname -I
 
@@ -157,11 +198,10 @@ scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/parallelize-compute-squares/firecr
 STEP 6: DISPLAY RESULTS
 --------------------------------------------------------------------------------
 
-# Run from local machine, generates bar charts with completion rate overlay
-python display_json_time.py results/parallelize-compute-squares/firecracker/16c/<timestamp>/scaling.json
+# Run from local machine — pass the run directory (not a JSON file)
+python display_json_time_print.py results/hello-world/firecracker/48c/<timestamp>/
 
-# Same display_json_time.py works for both Firecracker and Cloud Hypervisor results
-# (identical JSON format — now includes machine: {hostname, logical_cpus, physical_cores, total_mem_mb})
+# Works for any hypervisor — same script, same format.
 
 
 --------------------------------------------------------------------------------
@@ -183,26 +223,45 @@ Aggregate stats (min/max/avg) are computed across all completed instances.
 RESULTS STRUCTURE
 --------------------------------------------------------------------------------
 
-Results are automatically organized as:
-  ~/results/<task>/<hypervisor>/<label>/<timestamp>/
-    scaling.json          (from run_scaling.sh or run_scaling_linear.sh)
-    results.json          (from run_bottleneck.sh)
-    bottleneck_logs/      (from run_bottleneck.sh)
-      machine_info.txt
-      vm1_repeat1_vmstat.log
-      vm1_repeat1_iostat.log
+Each run directory:
+  ~/results/<task>/firecracker/<label>/<timestamp>/
+    summary.json          top-level metadata; updated after every probe
+                          (status: in_progress / completed, lo/hi bounds,
+                           max_stable_vms, vm_ram_mb, vm_ram_mb_source, ...)
+    probes/
+      probe_001_n0001_r1.json   baseline (N=1) probe
+      probe_002_n0064_r1.json   binary search probe, repeat 1
+      probe_003_n0064_r2.json   binary search probe, repeat 2
       ...
+    diagnosis/
+      probe_002_n0064/
+        dmesg.txt         kernel messages at time of failure
+        memory.txt        free -m output
+        file_nr.txt       fd usage
+        instance_logs/    per-VM stdout/stderr
 
-The label is user-provided (e.g. "16c" for a 16-core machine).
-The timestamp is auto-generated (YYYYMMDD_HHMMSS).
+Each probe file contains: vm_count, stable, exit_code, completed, wall_clock,
+  failure_reason (host_oom / guest_oom / vmm_crash / timeout / fd_exhaustion /
+                  mmap_limit / partial_completion / unknown),
+  timing_summary (boot/solution/shutdown min/max/avg), timestamp.
+
+Campaign directory:
+  ~/results/campaigns/<label>/<timestamp>/
+    campaign.json         state for all runs (pending/in_progress/completed/failed)
+    hello-world_firecracker.log
+    parallelize-compute-squares_firecracker.log
+    ...
 
 
 --------------------------------------------------------------------------------
 NOTES
 --------------------------------------------------------------------------------
 
-- Each VM uses 2 vCPUs and 1024 MiB RAM by default
-- Override with: sudo MEM_SIZE_MIB=512 VCPU_COUNT=1 ./scripts/run_scaling.sh ...
+- RAM per VM is auto-profiled before the binary search begins (runs 16 VMs,
+  measures peak RSS + kernel overhead, allocates ceil(measured * 1.2), min 256MB).
+  Override with --vm-ram <mb> to skip profiling.
+- Override vCPU count: sudo VCPU_COUNT=1 ./run_binary_search.sh ...
 - With 48 cores, expect slowdown around 24+ VMs (48 vCPUs saturated)
 - The "pip as root" warning during prepare is harmless (runs inside disposable rootfs)
 - Pass the .ext4 rootfs file (not task directory) to avoid re-installing deps every run
+- Use tmux for unattended multi-day campaign runs
