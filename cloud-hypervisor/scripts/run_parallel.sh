@@ -240,6 +240,7 @@ for i in $(seq 0 $((NUM_INSTANCES - 1))); do
   SKIP_SAFETY_CHECKS=1 \
   SKIP_ROOTFS_PREP=1 \
   INSTANCE_ID="${i}" \
+  MEM_SIZE_MIB="${MEM_SIZE_MIB:-1024}" \
     "${SCRIPT_DIR}/run_task.sh" "${INST_ROOTFS}" > "${INST_LOG}" 2>&1 &
 
   PIDS+=($!)
