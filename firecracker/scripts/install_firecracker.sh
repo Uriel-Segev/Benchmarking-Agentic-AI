@@ -23,7 +23,7 @@ set -euo pipefail
 # ---------------------------
 
 # Work directory (everything goes here)
-WORKDIR="${WORKDIR:-/opt/firecracker}"
+WORKDIR="${WORKDIR:-/mydata/firecracker}"
 
 # Network config (safe defaults)
 TAP_DEV="${TAP_DEV:-tap0}"

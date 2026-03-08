@@ -21,7 +21,7 @@ set -euo pipefail
 # Configuration
 # ---------------------------
 
-WORKDIR="${WORKDIR:-/opt/firecracker}"
+WORKDIR="${WORKDIR:-/mydata/firecracker}"
 TASK_ROOTFS="${1:-${WORKDIR}/rootfs-task.ext4}"
 KERNEL="${KERNEL:-${WORKDIR}/vmlinux.bin}"
 SOCKET_PATH="${SOCKET_PATH:-/tmp/firecracker-task.socket}"

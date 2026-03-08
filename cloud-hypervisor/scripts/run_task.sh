@@ -21,7 +21,7 @@ set -euo pipefail
 # Configuration
 # ---------------------------
 
-WORKDIR="${WORKDIR:-/opt/cloud-hypervisor}"
+WORKDIR="${WORKDIR:-/mydata/cloud-hypervisor}"
 TASK_ROOTFS="${1:-${WORKDIR}/rootfs-task.ext4}"
 KERNEL="${KERNEL:-${WORKDIR}/vmlinuz}"
 INITRAMFS="${INITRAMFS:-${WORKDIR}/initrd.img}"

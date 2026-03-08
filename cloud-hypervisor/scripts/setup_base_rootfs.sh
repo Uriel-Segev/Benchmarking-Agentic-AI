@@ -19,7 +19,7 @@ set -euo pipefail
 # Configuration
 # ---------------------------
 
-WORKDIR="${WORKDIR:-/opt/cloud-hypervisor}"
+WORKDIR="${WORKDIR:-/mydata/cloud-hypervisor}"
 ROOTFS_PATH="${ROOTFS_PATH:-${WORKDIR}/rootfs-ubuntu22.ext4}"
 ROOTFS_SIZE_MB="${ROOTFS_SIZE_MB:-2048}"
 MOUNT_POINT="${MOUNT_POINT:-/mnt/ch-rootfs}"

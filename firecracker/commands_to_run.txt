@@ -35,7 +35,24 @@ Legacy scripts (still functional, pre-date binary search):
 
 
 --------------------------------------------------------------------------------
-STEP 1: MACHINE VERIFICATION
+STEP 1: MOUNT LARGE DISK
+--------------------------------------------------------------------------------
+
+# Check if /mydata is already mounted (profile may have done it automatically)
+mountpoint -q /mydata && df -h /mydata || echo "not mounted"
+
+# If not mounted, run this to carve out remaining disk space (~1.8TB on this node):
+sudo /usr/local/etc/emulab/mkextrafs.pl /mydata
+
+# Verify — should show ~1.7-1.8T available
+df -h /mydata
+
+# Create WORKDIR on the large disk (all rootfs copies will go here)
+sudo mkdir -p /mydata/firecracker
+
+
+--------------------------------------------------------------------------------
+STEP 2: MACHINE VERIFICATION
 --------------------------------------------------------------------------------
 
 hostname
@@ -45,7 +62,7 @@ ls -l /dev/kvm
 
 
 --------------------------------------------------------------------------------
-STEP 2: ONE-TIME SETUP
+STEP 3: ONE-TIME SETUP
 --------------------------------------------------------------------------------
 
 # Make all scripts executable
@@ -56,8 +73,9 @@ chmod +x Benchmarking-Agentic-AI/run_campaign.sh
 # Dry run to verify setup
 sudo DRY_RUN=1 Benchmarking-Agentic-AI/firecracker/scripts/install_firecracker.sh
 
-# Install firecracker and networking
-sudo ROOTFS_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/ubuntu-22.04.ext4" \
+# Install firecracker and networking (WORKDIR points to the large disk)
+sudo WORKDIR=/mydata/firecracker \
+     ROOTFS_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/ubuntu-22.04.ext4" \
      KERNEL_URL="https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.9/$(uname -m)/vmlinux-5.10.225" \
      Benchmarking-Agentic-AI/firecracker/scripts/install_firecracker.sh
 
@@ -73,7 +91,7 @@ sudo apt-get update && sudo apt-get install -y jq
 
 
 --------------------------------------------------------------------------------
-STEP 3: PREPARE TASK ROOTFS (optional — run_binary_search.sh does this automatically)
+STEP 4: PREPARE TASK ROOTFS (optional — run_binary_search.sh does this automatically)
 --------------------------------------------------------------------------------
 
 # run_binary_search.sh --task <name> builds the rootfs once before probing.
@@ -102,7 +120,7 @@ sudo EXTRA_SPACE=3G Benchmarking-Agentic-AI/firecracker/scripts/prepare_task_roo
 
 
 --------------------------------------------------------------------------------
-STEP 4: RUN BENCHMARKS
+STEP 5: RUN BENCHMARKS
 --------------------------------------------------------------------------------
 
 cd Benchmarking-Agentic-AI/
@@ -176,7 +194,7 @@ sudo ./run_campaign.sh \
 
 
 --------------------------------------------------------------------------------
-STEP 5: COPY RESULTS TO LOCAL MACHINE
+STEP 6: COPY RESULTS TO LOCAL MACHINE
 --------------------------------------------------------------------------------
 
 # Run from your local machine (PowerShell), not from node0
@@ -195,7 +213,7 @@ scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/campaigns/48c/ .
 
 
 --------------------------------------------------------------------------------
-STEP 6: DISPLAY RESULTS
+STEP 7: DISPLAY RESULTS
 --------------------------------------------------------------------------------
 
 # Run from local machine — pass the run directory (not a JSON file)

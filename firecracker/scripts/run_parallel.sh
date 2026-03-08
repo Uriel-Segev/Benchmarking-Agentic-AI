@@ -26,7 +26,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Configuration
 # ---------------------------
 
-WORKDIR="${WORKDIR:-/opt/firecracker}"
+WORKDIR="${WORKDIR:-/mydata/firecracker}"
 INPUT="${1:-}"
 NUM_INSTANCES="${2:-}"
 RESULTS_OUTPUT="${3:-parallel_results.json}"

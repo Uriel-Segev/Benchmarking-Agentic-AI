@@ -115,12 +115,12 @@ fi
 case "${HYPERVISOR}" in
   firecracker)
     HV_SCRIPT_DIR="${SCRIPT_DIR}/firecracker/scripts"
-    WORKDIR="${WORKDIR:-/opt/firecracker}"
+    WORKDIR="${WORKDIR:-/mydata/firecracker}"
     HV_BIN="firecracker"
     ;;
   cloud-hypervisor)
     HV_SCRIPT_DIR="${SCRIPT_DIR}/cloud-hypervisor/scripts"
-    WORKDIR="${WORKDIR:-/opt/cloud-hypervisor}"
+    WORKDIR="${WORKDIR:-/mydata/cloud-hypervisor}"
     HV_BIN="cloud-hypervisor"
     ;;
   *)
@@ -483,15 +483,14 @@ _profile_vm_ram() {
   [[ "${kernel_overhead_total}" -lt 0 ]] && kernel_overhead_total=0
   local kernel_overhead_per_vm=$(( kernel_overhead_total / profile_n ))
 
-  # allocation = (peak_rss + kernel_overhead) * 1.2, minimum 256MB
+  # allocation = (peak_rss + kernel_overhead) * 1.2
   local computed_mb=$(( (peak_rss_per_vm + kernel_overhead_per_vm) * 6 / 5 ))
-  [[ "${computed_mb}" -lt 256 ]] && computed_mb=256
 
   log "RAM profiling results:"
   log "  VMs profiled:       ${profile_n}"
   log "  Peak RSS per VM:    ${peak_rss_per_vm}MB"
   log "  Kernel overhead/VM: ${kernel_overhead_per_vm}MB"
-  log "  Allocated per VM:   ${computed_mb}MB  (x1.2 margin, min 256MB)"
+  log "  Allocated per VM:   ${computed_mb}MB  (x1.2 margin)"
 
   VM_RAM_MB="${computed_mb}"
   export VM_RAM_MB

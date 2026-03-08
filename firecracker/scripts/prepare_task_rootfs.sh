@@ -21,7 +21,7 @@ set -euo pipefail
 # Configuration
 # ---------------------------
 
-WORKDIR="${WORKDIR:-/opt/firecracker}"
+WORKDIR="${WORKDIR:-/mydata/firecracker}"
 BASE_ROOTFS="${BASE_ROOTFS:-${WORKDIR}/rootfs-ubuntu22.ext4}"
 MOUNT_POINT="${MOUNT_POINT:-/mnt/fc-rootfs}"
 

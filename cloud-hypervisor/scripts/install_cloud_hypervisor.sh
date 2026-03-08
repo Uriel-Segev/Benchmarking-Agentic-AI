@@ -22,7 +22,7 @@ set -euo pipefail
 # User-configurable settings
 # ---------------------------
 
-WORKDIR="${WORKDIR:-/opt/cloud-hypervisor}"
+WORKDIR="${WORKDIR:-/mydata/cloud-hypervisor}"
 
 # Network config (safe defaults — identical to Firecracker setup)
 TAP_DEV="${TAP_DEV:-tap0}"
