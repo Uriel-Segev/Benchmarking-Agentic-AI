@@ -149,7 +149,7 @@ fi
 # ---------------------------
 
 # MAC address: use instance ID for uniqueness in parallel runs
-MAC="AA:C0:00:00:00:$(printf '%02X' $((INSTANCE_ID + 1)))"
+MAC="AA:C0:00:$(printf '%02X' $(( (INSTANCE_ID + 1) >> 16 ))):$(printf '%02X' $(( ((INSTANCE_ID + 1) >> 8) & 0xFF ))):$(printf '%02X' $(( (INSTANCE_ID + 1) & 0xFF )))"
 
 # Kernel command line
 CMDLINE="console=ttyS0 root=/dev/vda rw ip=${FC_IP}::${TAP_IP}:${NETMASK}::eth0:off"

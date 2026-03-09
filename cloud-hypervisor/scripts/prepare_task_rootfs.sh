@@ -307,7 +307,7 @@ log "Configuring auto-start on boot"
 cat > "${MOUNT_POINT}/etc/systemd/system/task-runner.service" <<'SYSTEMD_SERVICE'
 [Unit]
 Description=Terminal-Bench Task Runner
-After=network.target
+After=local-fs.target
 ConditionPathExists=/app/autorun.sh
 
 [Service]

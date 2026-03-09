@@ -288,6 +288,7 @@ cat > "${TIMING_FILE}" <<EOF
 }
 EOF
 sync
+echo u > /proc/sysrq-trigger
 reboot -f
 AUTORUN_SCRIPT
 

@@ -172,7 +172,7 @@ cat > "${VM_CONFIG}" <<EOF
   "network-interfaces": [
     {
       "iface_id": "eth0",
-      "guest_mac": "AA:FC:00:00:00:$(printf '%02X' $((INSTANCE_ID + 1)))",
+      "guest_mac": "AA:FC:00:$(printf '%02X' $(( (INSTANCE_ID + 1) >> 16 ))):$(printf '%02X' $(( ((INSTANCE_ID + 1) >> 8) & 0xFF ))):$(printf '%02X' $(( (INSTANCE_ID + 1) & 0xFF )))",
       "host_dev_name": "${TAP_DEV}"
     }
   ],
