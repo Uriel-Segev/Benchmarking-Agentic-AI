@@ -461,15 +461,31 @@ _profile_vm_ram() {
   wait "${parallel_pid}" || profile_exit=$?
   rm -f "${profile_output}"
 
+  # If the profiling run exited non-zero, save instance logs for diagnosis.
+  # This does NOT automatically abort — we first check if RSS samples were collected.
+  # The most common cause is post-VM mount failures in run_task.sh (exit 32), which
+  # happen AFTER the VMs have already run and RSS was sampled, so the data is valid.
   if [[ "${profile_exit}" -ne 0 ]]; then
-    log "WARNING: RAM profiling run failed (exit ${profile_exit}) — keeping default ${VM_RAM_MB}MB"
+    log "WARNING: profiling run exited with code ${profile_exit} — checking if RSS samples are usable"
     log "  See ${profile_log} for details"
-    return
+    local _inst_log_dir
+    _inst_log_dir=$(grep 'Instance logs:' "${profile_log}" 2>/dev/null \
+      | tail -1 | sed 's/.*Instance logs: *//' | tr -d '[:space:]' || true)
+    if [[ -n "${_inst_log_dir}" ]] && [[ -d "${_inst_log_dir}" ]]; then
+      local _saved="${RESULTS_DIR}/profile_ram_instance_logs"
+      cp -r "${_inst_log_dir}" "${_saved}" 2>/dev/null || true
+      log "  Profiling instance logs saved to: ${_saved}"
+    fi
   fi
 
+  # If we collected no RSS samples at all, the VMs never started — fatal.
+  # (Don't silently fall back to the default; that ruins the whole benchmark run.)
   if [[ "${sample_count}" -eq 0 ]] || [[ "${peak_total_rss_kb}" -eq 0 ]]; then
-    log "WARNING: RAM profiling got no RSS samples (task too fast?) — keeping default ${VM_RAM_MB}MB"
-    return
+    die "RAM profiling collected no RSS data (${sample_count} samples, peak=${peak_total_rss_kb}KB). VMs may not have started. See ${profile_log}. Use --vm-ram <mb> to skip profiling."
+  fi
+
+  if [[ "${profile_exit}" -ne 0 ]]; then
+    log "NOTE: RSS data is valid (${sample_count} samples captured while VMs ran). Proceeding with measured values."
   fi
 
   # Convert peak total RSS to MB (ceiling division)

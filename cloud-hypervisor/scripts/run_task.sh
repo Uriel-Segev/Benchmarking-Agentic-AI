@@ -235,11 +235,16 @@ log "Extracting results from rootfs"
 
 # Mount read-write first (ext4 may refuse ro mount if dirty after VM kill)
 # Then we'll sync and it will be fine
-mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}" || {
-  # If mount fails, try fsck first
-  log "Mount failed, attempting fsck..."
-  e2fsck -y "${TASK_ROOTFS}" || true
-  mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}"
+mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}" 2>/dev/null || {
+  # If mount fails, try fsck then retry.
+  # sleep 1 helps when many concurrent instances race for loop devices.
+  log "Mount failed, attempting fsck and retry..."
+  sleep 1
+  e2fsck -y "${TASK_ROOTFS}" >/dev/null 2>&1 || true
+  mount -o loop "${TASK_ROOTFS}" "${MOUNT_POINT}" || {
+    log "ERROR: Could not mount rootfs after fsck — task results unavailable"
+    exit 1
+  }
 }
 
 # Check for completion marker

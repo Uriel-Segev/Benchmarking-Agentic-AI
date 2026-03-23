@@ -209,6 +209,9 @@ scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/hello-world/firecracker/48c/ .
 # Copy a full campaign:
 scp -r -i ~/.ssh/id_ed25519 NAME@IP:~/results/campaigns/48c/ .
 
+scp -r -i ~/.ssh/id_ed25519 Uriel@130.127.134.28:~/results/ .
+
+
 # to get ip: hostname -I
 
 
