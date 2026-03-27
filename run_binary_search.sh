@@ -446,7 +446,7 @@ _profile_vm_ram() {
       local rss
       rss=$(awk '/^VmRSS:/{print $2; exit}' "/proc/${pid}/status" 2>/dev/null || echo "0")
       total_rss_kb=$(( total_rss_kb + rss ))
-    done < <(pgrep "${HV_BIN}" 2>/dev/null || true)
+    done < <(pgrep -f "${HV_BIN}" 2>/dev/null || true)
     [[ "${total_rss_kb}" -gt "${peak_total_rss_kb}" ]] && peak_total_rss_kb="${total_rss_kb}"
 
     local avail_now
