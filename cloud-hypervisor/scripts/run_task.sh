@@ -32,7 +32,7 @@ VCPU_COUNT="${VCPU_COUNT:-2}"
 MEM_SIZE_MIB="${MEM_SIZE_MIB:-1024}"
 
 # Timeout for task completion (seconds)
-TASK_TIMEOUT="${TASK_TIMEOUT:-300}"
+TASK_TIMEOUT="${TASK_TIMEOUT:-3600}"
 
 # Network config (from install_cloud_hypervisor.sh defaults)
 TAP_DEV="${TAP_DEV:-tap0}"
